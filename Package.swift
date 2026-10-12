@@ -14,7 +14,15 @@ let package = Package(
             name: "AuraDesk",
             path: "Sources/AuraDesk",
             resources: [
-                .copy("Resources/curated_4k_catalog.json")
+                .copy("Resources/curated_4k_catalog.json"),
+                .copy("Resources/hero-center-mac.png"),
+                .copy("Resources/mac-battery.png"),
+                .copy("Resources/mac-cloud.png"),
+                .copy("Resources/mac-desktop.png"),
+                .copy("Resources/mac-lockscreen.png"),
+                .copy("Resources/mac-mchip.png"),
+                .copy("Resources/mac-multimonitor.png"),
+                .copy("Resources/mac-screensaver.png")
             ],
             linkerSettings: [
                 .linkedFramework("AppKit"),

@@ -21,8 +21,8 @@ mkdir -p "${MACOS_DIR}" "${RESOURCES_DIR}"
 cp "${EXECUTABLE}" "${MACOS_DIR}/${APP_NAME}"
 chmod +x "${MACOS_DIR}/${APP_NAME}"
 
-if [ -f "Sources/AuraDesk/Resources/curated_4k_catalog.json" ]; then
-    cp "Sources/AuraDesk/Resources/curated_4k_catalog.json" "${RESOURCES_DIR}/curated_4k_catalog.json"
+if [ -d "Sources/AuraDesk/Resources" ]; then
+    cp -f Sources/AuraDesk/Resources/* "${RESOURCES_DIR}/"
 fi
 
 cat > "${CONTENTS_DIR}/Info.plist" <<EOF
@@ -43,9 +43,9 @@ cat > "${CONTENTS_DIR}/Info.plist" <<EOF
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.0.0</string>
+    <string>1.1.0</string>
     <key>CFBundleVersion</key>
-    <string>1</string>
+    <string>2</string>
     <key>LSMinimumSystemVersion</key>
     <string>14.0</string>
     <key>NSHighResolutionCapable</key>
