@@ -315,7 +315,7 @@ public final class WallpaperStore: ObservableObject {
             let meta = await extractMetadataAndThumbnail(for: outputURL, id: id)
             let sampleItem = WallpaperItem(
                 id: id,
-                title: "AuraDesk Aurora Horizon (4K Sample)",
+                title: "AuraDesk Neon Saffron Horizon (4K)",
                 category: "Synthesized 4K",
                 filePath: outputURL.path,
                 thumbnailPath: meta.thumbnailPath,
@@ -398,28 +398,28 @@ public final class WallpaperStore: ObservableObject {
                     let angle = progress * 2.0 * .pi
 
                     let c1 = CGColor(
-                        red: 0.04 + 0.03 * sin(angle),
-                        green: 0.07 + 0.05 * cos(angle),
-                        blue: 0.18 + 0.08 * sin(angle),
+                        red: 0.02,
+                        green: 0.01,
+                        blue: 0.005,
                         alpha: 1.0
                     )
                     let c2 = CGColor(
-                        red: 0.08 + 0.12 * cos(angle),
-                        green: 0.38 + 0.18 * sin(angle),
-                        blue: 0.52 + 0.15 * cos(angle),
+                        red: 0.22 + 0.08 * cos(angle),
+                        green: 0.08 + 0.04 * sin(angle),
+                        blue: 0.01,
                         alpha: 1.0
                     )
                     let c3 = CGColor(
-                        red: 0.35 + 0.20 * sin(angle + 1.2),
-                        green: 0.12 + 0.10 * cos(angle + 0.8),
-                        blue: 0.58 + 0.18 * sin(angle),
+                        red: 0.75 + 0.20 * sin(angle + 0.8),
+                        green: 0.30 + 0.12 * cos(angle + 0.6),
+                        blue: 0.02,
                         alpha: 1.0
                     )
 
                     if let grad = CGGradient(
                         colorsSpace: colorSpace,
                         colors: [c1, c2, c3] as CFArray,
-                        locations: [0.0, 0.55, 1.0]
+                        locations: [0.0, 0.60, 1.0]
                     ) {
                         let startPt = CGPoint(
                             x: Double(width) * (0.25 + 0.2 * cos(angle)),
@@ -442,8 +442,8 @@ public final class WallpaperStore: ObservableObject {
                         y: Double(height) * (0.5 + 0.22 * cos(angle))
                     )
                     let orbColors = [
-                        CGColor(red: 0.18, green: 0.92, blue: 0.76, alpha: 0.45),
-                        CGColor(red: 0.18, green: 0.92, blue: 0.76, alpha: 0.0)
+                        CGColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.55),
+                        CGColor(red: 1.0, green: 0.60, blue: 0.15, alpha: 0.0)
                     ] as CFArray
                     if let radial = CGGradient(colorsSpace: colorSpace, colors: orbColors, locations: [0.0, 1.0]) {
                         ctx.drawRadialGradient(

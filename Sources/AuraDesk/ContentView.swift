@@ -2,16 +2,14 @@ import SwiftUI
 import AppKit
 import UniformTypeIdentifiers
 
-// MARK: - Figma Dark Botanical Forest Theme Tokens (#171E15)
+// MARK: - Neon Saffron on Pure OLED Black Theme Tokens
 
 public enum AuraTheme {
-    public static let forestBg = Color(red: 0.090, green: 0.118, blue: 0.082)       // #171E15
-    public static let forestDeep = Color(red: 0.067, green: 0.086, blue: 0.059)     // #11160F
-    public static let emeraldGlow = Color(red: 0.220, green: 0.720, blue: 0.420)
-    public static let mintAccent = Color(red: 0.655, green: 0.953, blue: 0.816)     // #A7F3D0
-    public static let glassTop = Color.white.opacity(0.095)
-    public static let glassBottom = Color.white.opacity(0.025)
-    public static let glassStroke = Color.white.opacity(0.22)
+    public static let pureBlack = Color(red: 0.020, green: 0.020, blue: 0.022)       // #050505
+    public static let carbonHeader = Color(red: 0.045, green: 0.035, blue: 0.025)    // #0B0906
+    public static let saffronNeon = Color(red: 1.000, green: 0.416, blue: 0.000)     // #FF6A00
+    public static let saffronBright = Color(red: 1.000, green: 0.600, blue: 0.200)   // #FF9933
+    public static let saffronGold = Color(red: 1.000, green: 0.750, blue: 0.350)     // #FFBF59
 
     @MainActor
     public static func load3DAsset(_ name: String) -> NSImage? {
@@ -37,9 +35,9 @@ public enum AuraTheme {
     }
 }
 
-// MARK: - Figma Custom View Modifiers & Components
+// MARK: - Neon Saffron Box & Curve Modifiers
 
-struct FigmaGlassCardModifier: ViewModifier {
+struct FigmaSaffronCardModifier: ViewModifier {
     var cornerRadius: CGFloat = 38
     var isHighlighted: Bool = false
 
@@ -50,16 +48,13 @@ struct FigmaGlassCardModifier: ViewModifier {
                     .fill(
                         LinearGradient(
                             colors: [
-                                Color.white.opacity(isHighlighted ? 0.14 : 0.09),
-                                Color.white.opacity(isHighlighted ? 0.05 : 0.025)
+                                AuraTheme.saffronNeon.opacity(isHighlighted ? 0.28 : 0.16),
+                                Color(red: 0.08, green: 0.04, blue: 0.01).opacity(0.92),
+                                Color(red: 0.03, green: 0.015, blue: 0.005).opacity(0.97)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
-                    )
-                    .background(
-                        .ultraThinMaterial.opacity(0.45),
-                        in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     )
             )
             .overlay(
@@ -67,33 +62,35 @@ struct FigmaGlassCardModifier: ViewModifier {
                     .strokeBorder(
                         LinearGradient(
                             colors: isHighlighted
-                                ? [AuraTheme.mintAccent.opacity(0.75), AuraTheme.emeraldGlow.opacity(0.35)]
-                                : [Color.white.opacity(0.28), Color.white.opacity(0.08)],
+                                ? [AuraTheme.saffronGold, AuraTheme.saffronNeon]
+                                : [AuraTheme.saffronBright.opacity(0.88), AuraTheme.saffronNeon.opacity(0.45)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
-                        lineWidth: isHighlighted ? 2.0 : 1.3
+                        lineWidth: isHighlighted ? 2.4 : 1.8
                     )
             )
-            .shadow(color: Color.black.opacity(0.55), radius: 22, x: 0, y: 14)
+            .shadow(color: AuraTheme.saffronNeon.opacity(isHighlighted ? 0.36 : 0.18), radius: 22, x: 0, y: 8)
+            .shadow(color: Color.black.opacity(0.85), radius: 24, x: 0, y: 14)
     }
 }
 
 extension View {
     func figmaGlassCard(cornerRadius: CGFloat = 38, isHighlighted: Bool = false) -> some View {
-        modifier(FigmaGlassCardModifier(cornerRadius: cornerRadius, isHighlighted: isHighlighted))
+        modifier(FigmaSaffronCardModifier(cornerRadius: cornerRadius, isHighlighted: isHighlighted))
     }
 }
 
-/// Figma Section Title with Top-Right and Bottom-Left Emerald Corner Brackets: `[ Our Trendy Surfaces ]`
+/// Section Title with Full Neon Saffron Curved Corner Brackets: `[ Our Trendy Surfaces ]`
 struct FigmaBracketTitle: View {
     let title: String
 
     var body: some View {
         Text(title)
-            .font(.system(size: 22, weight: .semibold, design: .rounded))
+            .font(.system(size: 22, weight: .bold, design: .rounded))
             .foregroundStyle(.white)
-            .padding(.horizontal, 24)
+            .shadow(color: AuraTheme.saffronNeon.opacity(0.55), radius: 12)
+            .padding(.horizontal, 26)
             .padding(.vertical, 8)
             .overlay(alignment: .topTrailing) {
                 Path { path in
@@ -108,7 +105,11 @@ struct FigmaBracketTitle: View {
                     )
                     path.addLine(to: CGPoint(x: 22, y: 22))
                 }
-                .stroke(AuraTheme.mintAccent.opacity(0.8), lineWidth: 2.2)
+                .stroke(
+                    LinearGradient(colors: [AuraTheme.saffronGold, AuraTheme.saffronNeon], startPoint: .top, endPoint: .bottom),
+                    style: StrokeStyle(lineWidth: 2.8, lineCap: .round)
+                )
+                .shadow(color: AuraTheme.saffronNeon, radius: 6)
                 .frame(width: 22, height: 22)
             }
             .overlay(alignment: .bottomLeading) {
@@ -124,43 +125,59 @@ struct FigmaBracketTitle: View {
                     )
                     path.addLine(to: CGPoint(x: 22, y: 22))
                 }
-                .stroke(AuraTheme.mintAccent.opacity(0.8), lineWidth: 2.2)
+                .stroke(
+                    LinearGradient(colors: [AuraTheme.saffronNeon, AuraTheme.saffronGold], startPoint: .top, endPoint: .bottom),
+                    style: StrokeStyle(lineWidth: 2.8, lineCap: .round)
+                )
+                .shadow(color: AuraTheme.saffronNeon, radius: 6)
                 .frame(width: 22, height: 22)
             }
     }
 }
 
-/// Figma Pill Outline Button (`1.5px solid rgba(255,255,255,0.65)`, `cornerRadius: 12`)
+/// Neon Saffron Curved Pill Button
 struct FigmaOutlineButtonStyle: ButtonStyle {
     var prominent: Bool = false
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.system(size: 12.5, weight: .semibold))
-            .foregroundStyle(prominent ? Color(red: 0.06, green: 0.09, blue: 0.05) : .white)
+            .font(.system(size: 12.5, weight: .bold))
+            .foregroundStyle(prominent ? Color.black : .white)
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(
                         prominent
-                            ? AuraTheme.mintAccent.opacity(configuration.isPressed ? 0.75 : 0.95)
-                            : Color.white.opacity(configuration.isPressed ? 0.18 : 0.05)
+                            ? LinearGradient(
+                                colors: [AuraTheme.saffronNeon, AuraTheme.saffronBright],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                            : LinearGradient(
+                                colors: [
+                                    AuraTheme.saffronNeon.opacity(configuration.isPressed ? 0.35 : 0.16),
+                                    AuraTheme.saffronBright.opacity(configuration.isPressed ? 0.25 : 0.08)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
                     )
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .strokeBorder(
-                        prominent ? AuraTheme.mintAccent : Color.white.opacity(0.65),
-                        lineWidth: 1.4
+                        prominent ? AuraTheme.saffronGold : AuraTheme.saffronBright,
+                        lineWidth: 1.6
                     )
             )
+            .shadow(color: AuraTheme.saffronNeon.opacity(prominent ? 0.45 : 0.22), radius: 10, y: 2)
             .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
             .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
     }
 }
 
-// MARK: - Main ContentView Matching Marketing Website
+// MARK: - Main ContentView (Neon Saffron on Pure Black)
 
 public struct ContentView: View {
     @ObservedObject var store = WallpaperStore.shared
@@ -187,38 +204,28 @@ public struct ContentView: View {
             case .settings: return "slider.horizontal.3"
             }
         }
-
-        public var asset3DName: String {
-            switch self {
-            case .discover4K: return "mac-cloud"
-            case .myLibrary: return "mac-desktop"
-            case .lockScreen: return "mac-lockscreen"
-            case .screenSaver: return "mac-screensaver"
-            case .settings: return "mac-mchip"
-            }
-        }
     }
 
     public init() {}
 
     public var body: some View {
         ZStack {
-            // Deep Botanical Forest Background with Radial Emerald Glows (Matches Figma `#171E15`)
-            AuraTheme.forestBg
+            // Pure Black Background with Neon Saffron Radial Glows
+            AuraTheme.pureBlack
                 .ignoresSafeArea()
 
             GeometryReader { geo in
                 ZStack {
                     Circle()
-                        .fill(AuraTheme.emeraldGlow.opacity(0.18))
+                        .fill(AuraTheme.saffronNeon.opacity(0.22))
                         .frame(width: 560, height: 560)
-                        .blur(radius: 110)
-                        .position(x: geo.size.width * 0.48, y: 140)
+                        .blur(radius: 120)
+                        .position(x: geo.size.width * 0.48, y: 150)
 
                     Circle()
-                        .fill(AuraTheme.emeraldGlow.opacity(0.12))
+                        .fill(AuraTheme.saffronBright.opacity(0.14))
                         .frame(width: 480, height: 480)
-                        .blur(radius: 100)
+                        .blur(radius: 110)
                         .position(x: geo.size.width * 0.82, y: geo.size.height * 0.65)
                 }
             }
@@ -226,7 +233,7 @@ public struct ContentView: View {
 
             VStack(spacing: 0) {
                 figmaTopNavigationBar
-                Divider().overlay(Color.white.opacity(0.1))
+                Divider().overlay(AuraTheme.saffronNeon.opacity(0.35))
 
                 Group {
                     switch store.selectedSection {
@@ -252,7 +259,7 @@ public struct ContentView: View {
         }
     }
 
-    // MARK: - Top Navigation Bar (Matches Figma Top Header)
+    // MARK: - Top Navigation Bar
 
     private var figmaTopNavigationBar: some View {
         HStack(spacing: 20) {
@@ -260,24 +267,29 @@ public struct ContentView: View {
             HStack(spacing: 10) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(AuraTheme.emeraldGlow.opacity(0.22))
+                        .fill(AuraTheme.saffronNeon.opacity(0.22))
                         .overlay(
                             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                .strokeBorder(AuraTheme.mintAccent.opacity(0.55), lineWidth: 1.2)
+                                .strokeBorder(AuraTheme.saffronBright, lineWidth: 1.6)
                         )
                         .frame(width: 34, height: 34)
                     Image(systemName: "desktopcomputer")
                         .font(.system(size: 15, weight: .bold))
-                        .foregroundStyle(AuraTheme.mintAccent)
+                        .foregroundStyle(AuraTheme.saffronBright)
                 }
-                Text("AuraDesk.")
-                    .font(.system(size: 20, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
+                HStack(spacing: 0) {
+                    Text("Aura")
+                        .font(.system(size: 20, weight: .heavy, design: .rounded))
+                        .foregroundStyle(.white)
+                    Text("Desk.")
+                        .font(.system(size: 20, weight: .heavy, design: .rounded))
+                        .foregroundStyle(AuraTheme.saffronBright)
+                }
             }
 
             Spacer()
 
-            // Center Navigation Pills (Matching Figma Header Links)
+            // Center Navigation Pills with Neon Saffron Curves
             HStack(spacing: 6) {
                 ForEach(SidebarSection.allCases) { section in
                     let isSelected = store.selectedSection == section
@@ -296,23 +308,23 @@ public struct ContentView: View {
                                     .font(.system(size: 10, weight: .bold, design: .monospaced))
                                     .padding(.horizontal, 6)
                                     .padding(.vertical, 2)
-                                    .background(Color.black.opacity(0.35), in: Capsule())
+                                    .background(Color.black.opacity(0.45), in: Capsule())
                             }
                         }
                         .padding(.horizontal, 14)
                         .padding(.vertical, 8)
                         .background(
                             Capsule()
-                                .fill(isSelected ? Color.white.opacity(0.14) : Color.clear)
+                                .fill(isSelected ? AuraTheme.saffronNeon.opacity(0.24) : Color.clear)
                         )
                         .overlay(
                             Capsule()
                                 .strokeBorder(
-                                    isSelected ? AuraTheme.mintAccent.opacity(0.6) : Color.clear,
-                                    lineWidth: 1.2
+                                    isSelected ? AuraTheme.saffronBright : Color.clear,
+                                    lineWidth: 1.5
                                 )
                         )
-                        .foregroundStyle(isSelected ? .white : Color.white.opacity(0.72))
+                        .foregroundStyle(isSelected ? AuraTheme.saffronGold : Color.white.opacity(0.78))
                     }
                     .buttonStyle(.plain)
                 }
@@ -324,35 +336,35 @@ public struct ContentView: View {
             HStack(spacing: 10) {
                 HStack(spacing: 6) {
                     Circle()
-                        .fill(desktop.isPlaying ? AuraTheme.mintAccent : Color.white.opacity(0.3))
+                        .fill(desktop.isPlaying ? AuraTheme.saffronNeon : Color.white.opacity(0.3))
                         .frame(width: 8, height: 8)
                     Text(desktop.isPlaying ? "4K Live" : "Idle")
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundStyle(.white.opacity(0.85))
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.9))
                     if desktop.currentVideoURL != nil {
                         Button(desktop.isPlaying ? "Pause" : "Play") {
                             desktop.togglePlayPause()
                         }
                         .buttonStyle(.plain)
                         .font(.system(size: 11, weight: .bold))
-                        .foregroundStyle(AuraTheme.mintAccent)
+                        .foregroundStyle(AuraTheme.saffronBright)
                         .padding(.leading, 4)
                     }
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 7)
-                .background(Color.white.opacity(0.06), in: Capsule())
-                .overlay(Capsule().strokeBorder(Color.white.opacity(0.18), lineWidth: 1))
+                .background(AuraTheme.saffronNeon.opacity(0.12), in: Capsule())
+                .overlay(Capsule().strokeBorder(AuraTheme.saffronBright.opacity(0.65), lineWidth: 1.2))
 
                 Button {
                     store.isMuted.toggle()
                 } label: {
                     Image(systemName: store.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
                         .font(.system(size: 13))
-                        .foregroundStyle(store.isMuted ? .white.opacity(0.65) : AuraTheme.mintAccent)
+                        .foregroundStyle(store.isMuted ? .white.opacity(0.65) : AuraTheme.saffronBright)
                         .frame(width: 32, height: 32)
-                        .background(Color.white.opacity(0.06), in: Circle())
-                        .overlay(Circle().strokeBorder(Color.white.opacity(0.18), lineWidth: 1))
+                        .background(AuraTheme.saffronNeon.opacity(0.12), in: Circle())
+                        .overlay(Circle().strokeBorder(AuraTheme.saffronBright.opacity(0.65), lineWidth: 1.2))
                 }
                 .buttonStyle(.plain)
                 .help(store.isMuted ? "Unmute Desktop Audio" : "Mute Desktop Audio")
@@ -367,26 +379,25 @@ public struct ContentView: View {
         }
         .padding(.horizontal, 26)
         .padding(.vertical, 14)
-        .background(AuraTheme.forestDeep.opacity(0.65))
+        .background(AuraTheme.carbonHeader.opacity(0.92))
     }
 
-    // MARK: - Home & 4K Catalog ScrollView (Exact Figma Hero + Trendy Banners + 3D Pop-Out Grid)
+    // MARK: - Home & 4K Catalog ScrollView
 
     private var figmaHomeAndCatalogScrollView: some View {
         ScrollView {
             VStack(spacing: 36) {
 
-                // Status notification pill if Lock Screen injection was recently run
                 if let status = lockScreen.statusMessage {
                     HStack(spacing: 8) {
                         if lockScreen.isBusy {
                             ProgressView().controlSize(.small)
                         } else {
                             Image(systemName: lockScreen.statusIsError ? "exclamationmark.triangle.fill" : "checkmark.seal.fill")
-                                .foregroundStyle(lockScreen.statusIsError ? .red : AuraTheme.mintAccent)
+                                .foregroundStyle(lockScreen.statusIsError ? .red : AuraTheme.saffronBright)
                         }
                         Text(status)
-                            .font(.system(size: 12, weight: .medium))
+                            .font(.system(size: 12, weight: .semibold))
                             .foregroundStyle(.white)
                         Spacer()
                         Button("Dismiss") {
@@ -401,29 +412,47 @@ public struct ContentView: View {
                     .figmaGlassCard(cornerRadius: 20)
                 }
 
-                // 1. FIGMA HERO SECTION WITH CENTRAL 3D MAC STUDIO SPINE & POP-OUT RIGHT CARD
+                // 1. HERO SECTION WITH CENTRAL 3D NEON SAFFRON MAC SPINE & POP-OUT SAFFRON BOX
                 ZStack(alignment: .top) {
-                    // Central Giant 3D Mac Studio Display Spine
                     if let centerImg = AuraTheme.load3DAsset("hero-center-mac") {
                         Image(nsImage: centerImg)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 420, height: 480)
-                            .shadow(color: .black.opacity(0.85), radius: 30, y: 20)
+                            .shadow(color: .black.opacity(0.9), radius: 30, y: 20)
                             .offset(y: -10)
                             .allowsHitTesting(false)
                     }
 
                     HStack(alignment: .top, spacing: 24) {
-                        // Left Column: "Breathe 4K Motion" + Buttons + Floating Glass Review Card
+                        // Left Column
                         VStack(alignment: .leading, spacing: 18) {
-                            Text("Breathe 4K Motion")
-                                .font(.system(size: 46, weight: .bold, design: .rounded))
-                                .foregroundStyle(.white)
+                            HStack(spacing: 8) {
+                                Circle()
+                                    .fill(AuraTheme.saffronNeon)
+                                    .frame(width: 7, height: 7)
+                                Text("100% FREE & OPEN SOURCE MAC 4K ENGINE")
+                                    .font(.system(size: 10, weight: .bold, design: .monospaced))
+                                    .foregroundStyle(AuraTheme.saffronBright)
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 5)
+                            .background(AuraTheme.saffronNeon.opacity(0.15), in: Capsule())
+                            .overlay(Capsule().strokeBorder(AuraTheme.saffronBright.opacity(0.65), lineWidth: 1))
 
-                            Text("Apply any 4K 60/240fps live animation or video to your macOS Desktop, Screen Saver, and native Lock Screen — 100% free.")
+                            Text("Breathe 4K Motion")
+                                .font(.system(size: 46, weight: .heavy, design: .rounded))
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        colors: [.white, AuraTheme.saffronGold, AuraTheme.saffronNeon],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+
+                            Text("Apply any 4K 60/240fps live animation or video to your macOS Desktop, Screen Saver, and native Lock Screen — zero paywalls.")
                                 .font(.system(size: 14))
-                                .foregroundStyle(.white.opacity(0.74))
+                                .foregroundStyle(.white.opacity(0.82))
                                 .frame(maxWidth: 340, alignment: .leading)
                                 .lineSpacing(3)
 
@@ -433,7 +462,7 @@ public struct ContentView: View {
                                 } label: {
                                     Text("Import 4K Video")
                                 }
-                                .buttonStyle(FigmaOutlineButtonStyle())
+                                .buttonStyle(FigmaOutlineButtonStyle(prominent: true))
 
                                 Button {
                                     Task { await store.generateSample4KVideo() }
@@ -441,71 +470,74 @@ public struct ContentView: View {
                                     HStack(spacing: 10) {
                                         ZStack {
                                             Circle()
-                                                .strokeBorder(Color.white.opacity(0.55), lineWidth: 1.4)
+                                                .fill(AuraTheme.saffronNeon.opacity(0.18))
+                                                .overlay(
+                                                    Circle().strokeBorder(AuraTheme.saffronBright, lineWidth: 1.6)
+                                                )
                                                 .frame(width: 36, height: 36)
                                             if store.isGeneratingSample {
                                                 ProgressView().controlSize(.small)
                                             } else {
                                                 Image(systemName: "play.fill")
                                                     .font(.system(size: 12))
-                                                    .foregroundStyle(.white)
+                                                    .foregroundStyle(AuraTheme.saffronGold)
                                             }
                                         }
                                         Text(store.isGeneratingSample ? "Synthesizing 4K..." : "Synthesize 4K Demo...")
-                                            .font(.system(size: 13, weight: .medium))
-                                            .foregroundStyle(.white.opacity(0.88))
+                                            .font(.system(size: 13, weight: .semibold))
+                                            .foregroundStyle(AuraTheme.saffronGold)
                                     }
                                 }
                                 .buttonStyle(.plain)
                                 .disabled(store.isGeneratingSample)
                             }
 
-                            // Floating Glass Card on Mid-Left (Matches Figma Testimonial Card)
+                            // Floating Saffron Box on Mid-Left
                             VStack(alignment: .leading, spacing: 10) {
                                 HStack(spacing: 12) {
                                     ZStack {
                                         Circle()
                                             .fill(
                                                 LinearGradient(
-                                                    colors: [AuraTheme.emeraldGlow, AuraTheme.mintAccent],
+                                                    colors: [AuraTheme.saffronNeon, AuraTheme.saffronGold],
                                                     startPoint: .topLeading,
                                                     endPoint: .bottomTrailing
                                                 )
                                             )
                                             .frame(width: 38, height: 38)
                                         Image(systemName: "cpu.fill")
-                                            .foregroundStyle(AuraTheme.forestDeep)
+                                            .foregroundStyle(Color.black)
                                             .font(.system(size: 16, weight: .bold))
                                     }
                                     VStack(alignment: .leading, spacing: 2) {
                                         Text("Apple Silicon Hardware HEVC")
-                                            .font(.system(size: 13, weight: .semibold))
+                                            .font(.system(size: 13, weight: .bold))
                                             .foregroundStyle(.white)
                                         Text("★★★★★  < 1% CPU Overhead")
-                                            .font(.system(size: 11, weight: .medium))
-                                            .foregroundStyle( Color.yellow.opacity(0.9) )
+                                            .font(.system(size: 11, weight: .bold))
+                                            .foregroundStyle(AuraTheme.saffronBright)
                                     }
                                 }
                                 Text("Zero Dock clutter, instant sleep auto-pause, and native `idleassetsd` Lock Screen injection with 1-click backup restore.")
                                     .font(.system(size: 11.5))
-                                    .foregroundStyle(.white.opacity(0.7))
+                                    .foregroundStyle(.white.opacity(0.8))
                                     .lineSpacing(2)
                             }
                             .padding(18)
-                            .frame(width: 300, alignment: .leading)
+                            .frame(width: 310, alignment: .leading)
                             .figmaGlassCard(cornerRadius: 32)
                             .padding(.top, 16)
                         }
 
                         Spacer()
 
-                        // Right Column: 3D Pop-Out Card (Mac Desktop Icon popping out of top border!)
+                        // Right Column: 3D Pop-Out Saffron Box
                         VStack(alignment: .leading, spacing: 10) {
                             Spacer().frame(height: 95)
 
                             Text("ACTIVE SURFACE ENGINE")
                                 .font(.system(size: 10, weight: .bold, design: .monospaced))
-                                .foregroundStyle(AuraTheme.mintAccent)
+                                .foregroundStyle(AuraTheme.saffronBright)
 
                             Text("4K Desktop & Lock")
                                 .font(.system(size: 20, weight: .bold, design: .rounded))
@@ -513,7 +545,7 @@ public struct ContentView: View {
 
                             Text("\(catalog.allRemoteItems.count) Cloud 4K videos ready + \(store.items.count) downloaded locally.")
                                 .font(.system(size: 12))
-                                .foregroundStyle(.white.opacity(0.7))
+                                .foregroundStyle(.white.opacity(0.78))
 
                             HStack {
                                 Button("My Library (\(store.items.count))") {
@@ -528,11 +560,12 @@ public struct ContentView: View {
                                         screenSaver.startScreenSaver(with: activeItem.fileURL)
                                     } label: {
                                         Image(systemName: "play.tv.fill")
-                                            .foregroundStyle(.white)
+                                            .foregroundStyle(AuraTheme.saffronGold)
                                             .frame(width: 34, height: 34)
+                                            .background(AuraTheme.saffronNeon.opacity(0.15), in: RoundedRectangle(cornerRadius: 10))
                                             .overlay(
                                                 RoundedRectangle(cornerRadius: 10)
-                                                    .strokeBorder(Color.white.opacity(0.55), lineWidth: 1.3)
+                                                    .strokeBorder(AuraTheme.saffronBright, lineWidth: 1.5)
                                             )
                                     }
                                     .buttonStyle(.plain)
@@ -550,7 +583,7 @@ public struct ContentView: View {
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 190, height: 190)
-                                    .shadow(color: .black.opacity(0.8), radius: 20, y: 12)
+                                    .shadow(color: .black.opacity(0.85), radius: 20, y: 12)
                                     .offset(y: -68)
                                     .allowsHitTesting(false)
                             }
@@ -560,7 +593,7 @@ public struct ContentView: View {
                 }
                 .padding(.top, 10)
 
-                // 2. "OUR TRENDY SURFACES" WIDE HORIZONTAL GLASS BANNER (Matches Figma Wide Banner!)
+                // 2. "OUR TRENDY SURFACES" WIDE HORIZONTAL NEON SAFFRON BANNER
                 VStack(spacing: 22) {
                     FigmaBracketTitle(title: "Our Trendy Surfaces")
 
@@ -579,16 +612,16 @@ public struct ContentView: View {
                                 .font(.system(size: 20, weight: .bold, design: .rounded))
                                 .foregroundStyle(.white)
 
-                            Text("Unlike basic desktop players, AuraDesk remuxes any 4K video into `.mov`, backs up Apple's original `4KSDR240FPS` Aerial file, updates `Index.plist`, and injects your video into `idleassetsd` for real Lock Screen motion.")
+                            Text("AuraDesk remuxes any 4K video into `.mov`, backs up Apple's original `4KSDR240FPS` Aerial file, updates `Index.plist`, and injects your video into `idleassetsd` for real Lock Screen motion.")
                                 .font(.system(size: 12.5))
-                                .foregroundStyle(.white.opacity(0.72))
+                                .foregroundStyle(.white.opacity(0.80))
                                 .lineSpacing(2)
 
                             HStack(spacing: 12) {
                                 Button("Configure Lock Screen Slot") {
                                     store.selectedSection = .lockScreen
                                 }
-                                .buttonStyle(FigmaOutlineButtonStyle())
+                                .buttonStyle(FigmaOutlineButtonStyle(prominent: true))
 
                                 Button("Screen Saver Clock") {
                                     store.selectedSection = .screenSaver
@@ -605,16 +638,16 @@ public struct ContentView: View {
                     .figmaGlassCard(cornerRadius: 52)
                 }
 
-                // 3. "OUR TOP 4K WALLPAPERS" — 3D POP-OUT CARDS GRID (Matches Figma 3-Col Grid!)
+                // 3. "OUR TOP 4K WALLPAPERS" — 3D POP-OUT SAFFRON BOXES GRID
                 VStack(spacing: 22) {
                     FigmaBracketTitle(title: "Our Top 4K Wallpapers")
 
-                    // Search & Category Filter Bar inside a Glass Pill
+                    // Search & Category Filter Bar inside a Saffron Box
                     VStack(spacing: 12) {
                         HStack(spacing: 12) {
                             HStack(spacing: 8) {
                                 Image(systemName: "magnifyingglass")
-                                    .foregroundStyle(AuraTheme.mintAccent)
+                                    .foregroundStyle(AuraTheme.saffronBright)
                                 TextField("Search 350+ 4K wallpapers (SpaceX, Porsche, Cyberpunk, Nature, Aerial)...", text: $catalog.searchQuery)
                                     .textFieldStyle(.plain)
                                     .foregroundStyle(.white)
@@ -623,17 +656,17 @@ public struct ContentView: View {
                                         catalog.searchQuery = ""
                                     } label: {
                                         Image(systemName: "xmark.circle.fill")
-                                            .foregroundStyle(.white.opacity(0.6))
+                                            .foregroundStyle(AuraTheme.saffronBright)
                                     }
                                     .buttonStyle(.plain)
                                 }
                             }
                             .padding(.horizontal, 14)
                             .padding(.vertical, 9)
-                            .background(Color.black.opacity(0.28), in: RoundedRectangle(cornerRadius: 14))
+                            .background(Color.black.opacity(0.55), in: RoundedRectangle(cornerRadius: 14))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 14)
-                                    .strokeBorder(Color.white.opacity(0.18), lineWidth: 1)
+                                    .strokeBorder(AuraTheme.saffronBright.opacity(0.65), lineWidth: 1.4)
                             )
 
                             Picker("Source", selection: $catalog.selectedSourceFilter) {
@@ -652,18 +685,25 @@ public struct ContentView: View {
                                         catalog.selectedCategory = category
                                     } label: {
                                         Text(category)
-                                            .font(.system(size: 12, weight: isSelected ? .bold : .medium))
+                                            .font(.system(size: 12, weight: isSelected ? .bold : .semibold))
                                             .padding(.horizontal, 14)
                                             .padding(.vertical, 7)
                                             .background(
                                                 Capsule()
-                                                    .fill(isSelected ? AuraTheme.mintAccent : Color.white.opacity(0.07))
+                                                    .fill(
+                                                        isSelected
+                                                            ? LinearGradient(colors: [AuraTheme.saffronNeon, AuraTheme.saffronBright], startPoint: .leading, endPoint: .trailing)
+                                                            : LinearGradient(colors: [AuraTheme.saffronNeon.opacity(0.14), Color.black.opacity(0.4)], startPoint: .top, endPoint: .bottom)
+                                                    )
                                             )
                                             .overlay(
                                                 Capsule()
-                                                    .strokeBorder(Color.white.opacity(isSelected ? 0 : 0.2), lineWidth: 1)
+                                                    .strokeBorder(
+                                                        isSelected ? AuraTheme.saffronGold : AuraTheme.saffronBright.opacity(0.55),
+                                                        lineWidth: 1.3
+                                                    )
                                             )
-                                            .foregroundStyle(isSelected ? AuraTheme.forestDeep : .white)
+                                            .foregroundStyle(isSelected ? Color.black : .white)
                                     }
                                     .buttonStyle(.plain)
                                 }
@@ -673,7 +713,6 @@ public struct ContentView: View {
                     .padding(18)
                     .figmaGlassCard(cornerRadius: 30)
 
-                    // Grid of Figma Pop-Out 4K Cards
                     LazyVGrid(
                         columns: [GridItem(.adaptive(minimum: 285, maximum: 360), spacing: 22)],
                         spacing: 42
@@ -689,7 +728,7 @@ public struct ContentView: View {
         }
     }
 
-    // MARK: - My Downloaded Library View (Figma Styled)
+    // MARK: - My Downloaded Library View
 
     private var libraryGridView: some View {
         ScrollView {
@@ -730,14 +769,14 @@ public struct ContentView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 210, height: 210)
-                    .shadow(color: .black.opacity(0.8), radius: 24, y: 12)
+                    .shadow(color: .black.opacity(0.85), radius: 24, y: 12)
             }
             Text("No Local 4K Wallpapers Yet")
                 .font(.system(size: 24, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
-            Text("Explore 350+ free 4K wallpapers in **Home & 4K Catalog**, drop any `.mp4` or `.mov` video here, or synthesize a 4K Aurora Borealis sample.")
+            Text("Explore 350+ free 4K wallpapers in **Home & 4K Catalog**, drop any `.mp4` or `.mov` video here, or synthesize a 4K sample.")
                 .font(.system(size: 13.5))
-                .foregroundStyle(.white.opacity(0.72))
+                .foregroundStyle(.white.opacity(0.78))
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: 480)
 
@@ -759,7 +798,7 @@ public struct ContentView: View {
         .figmaGlassCard(cornerRadius: 44)
     }
 
-    // MARK: - Lock Screen & Aerial Injection View (Figma Styled)
+    // MARK: - Lock Screen & Aerial Injection View
 
     private var lockScreenDetailView: some View {
         ScrollView {
@@ -776,18 +815,17 @@ public struct ContentView: View {
                         FigmaBracketTitle(title: "Native Lock Screen Engine")
                         Text("AuraDesk injects your custom 4K video directly into macOS's native `idleassetsd` Aerial pipeline and updates `com.apple.wallpaper/Store/Index.plist`. Every override automatically backs up Apple's original `.mov` file first.")
                             .font(.system(size: 13))
-                            .foregroundStyle(.white.opacity(0.75))
+                            .foregroundStyle(.white.opacity(0.80))
                             .lineSpacing(3)
                     }
                 }
                 .padding(24)
                 .figmaGlassCard(cornerRadius: 42)
 
-                // Target Aerial Slot Picker Card
                 VStack(alignment: .leading, spacing: 14) {
                     Text("Target macOS Aerial Slot (`4KSDR240FPS`)")
                         .font(.system(size: 17, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(AuraTheme.saffronGold)
 
                     HStack(spacing: 14) {
                         Picker("Aerial Slot to Override:", selection: $lockScreen.selectedTargetID) {
@@ -810,14 +848,14 @@ public struct ContentView: View {
                                 currentTarget.isDownloaded ? "Downloaded on Disk" : "Will Create Slot File",
                                 systemImage: currentTarget.isDownloaded ? "checkmark.circle.fill" : "arrow.down.circle"
                             )
-                            .foregroundStyle(currentTarget.isDownloaded ? AuraTheme.mintAccent : .orange)
-                            .font(.caption)
+                            .foregroundStyle(AuraTheme.saffronBright)
+                            .font(.caption.bold())
 
                             Label(
                                 currentTarget.hasBackup ? "Original Apple Video Backed Up" : "Original Not Yet Overridden",
                                 systemImage: currentTarget.hasBackup ? "externaldrive.badge.checkmark" : "shield"
                             )
-                            .foregroundStyle(.white.opacity(0.7))
+                            .foregroundStyle(.white.opacity(0.75))
                             .font(.caption)
 
                             Spacer()
@@ -837,15 +875,14 @@ public struct ContentView: View {
                 .padding(24)
                 .figmaGlassCard(cornerRadius: 36)
 
-                // Downloaded videos ready for Lock Screen
                 VStack(alignment: .leading, spacing: 14) {
                     Text("Apply a Downloaded Video to Lock Screen & Screen Saver")
                         .font(.system(size: 17, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(AuraTheme.saffronGold)
 
                     if store.items.isEmpty {
                         Text("Download a 4K video from the Home & 4K Catalog tab or import a local file first.")
-                            .foregroundStyle(.white.opacity(0.65))
+                            .foregroundStyle(.white.opacity(0.7))
                             .padding(.vertical, 8)
                     } else {
                         ForEach(store.items) { item in
@@ -857,14 +894,18 @@ public struct ContentView: View {
                                         .aspectRatio(16/9, contentMode: .fill)
                                         .frame(width: 96, height: 54)
                                         .clipShape(RoundedRectangle(cornerRadius: 10))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .strokeBorder(AuraTheme.saffronBright.opacity(0.6), lineWidth: 1)
+                                        )
                                 }
                                 VStack(alignment: .leading, spacing: 3) {
                                     Text(item.title)
-                                        .font(.system(size: 14, weight: .semibold))
+                                        .font(.system(size: 14, weight: .bold))
                                         .foregroundStyle(.white)
                                     Text("\(item.category) • \(item.resolution) • \(item.formattedDuration) • \(String(format: "%.1f MB", item.fileSizeMB))")
                                         .font(.caption)
-                                        .foregroundStyle(.white.opacity(0.65))
+                                        .foregroundStyle(.white.opacity(0.7))
                                 }
                                 Spacer()
                                 if store.activeLockScreenID == item.id {
@@ -872,8 +913,8 @@ public struct ContentView: View {
                                         .font(.caption.bold())
                                         .padding(.horizontal, 10)
                                         .padding(.vertical, 4)
-                                        .background(AuraTheme.mintAccent.opacity(0.2), in: Capsule())
-                                        .foregroundStyle(AuraTheme.mintAccent)
+                                        .background(AuraTheme.saffronNeon.opacity(0.25), in: Capsule())
+                                        .foregroundStyle(AuraTheme.saffronGold)
                                 }
                                 Button("Set Lock & Saver") {
                                     Task {
@@ -892,7 +933,11 @@ public struct ContentView: View {
                                 .disabled(lockScreen.isBusy)
                             }
                             .padding(12)
-                            .background(Color.white.opacity(0.04), in: RoundedRectangle(cornerRadius: 18))
+                            .background(Color.black.opacity(0.45), in: RoundedRectangle(cornerRadius: 18))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 18)
+                                    .strokeBorder(AuraTheme.saffronBright.opacity(0.35), lineWidth: 1)
+                            )
                         }
                     }
                 }
@@ -903,7 +948,7 @@ public struct ContentView: View {
         }
     }
 
-    // MARK: - Screen Saver Engine View (Figma Styled)
+    // MARK: - Screen Saver Engine View
 
     private var screenSaverDetailView: some View {
         ScrollView {
@@ -920,7 +965,7 @@ public struct ContentView: View {
                         FigmaBracketTitle(title: "4K Screen Saver Engine")
                         Text("Supports both macOS's native Aerial Screen Saver and an instant built-in 4K Screen Saver overlay with a Sonoma-style date & time clock.")
                             .font(.system(size: 13))
-                            .foregroundStyle(.white.opacity(0.75))
+                            .foregroundStyle(.white.opacity(0.80))
                             .lineSpacing(3)
                     }
                 }
@@ -938,7 +983,7 @@ public struct ContentView: View {
                             .frame(maxWidth: 260)
                         Text(screenSaver.idleTimeoutMinutes == 0 ? "Disabled (Use macOS Native)" : "\(Int(screenSaver.idleTimeoutMinutes)) min")
                             .monospacedDigit()
-                            .foregroundStyle(AuraTheme.mintAccent)
+                            .foregroundStyle(AuraTheme.saffronBright)
                     }
 
                     if let item = store.items.first(where: { $0.id == (store.activeScreenSaverID ?? store.activeDesktopID) }) ?? store.items.first {
@@ -963,7 +1008,7 @@ public struct ContentView: View {
         }
     }
 
-    // MARK: - Playback & Energy Settings View (Figma Styled)
+    // MARK: - Playback & Energy Settings View
 
     private var playbackSettingsView: some View {
         ScrollView {
@@ -980,7 +1025,7 @@ public struct ContentView: View {
                         FigmaBracketTitle(title: "Playback & Energy Shield")
                         Text("Hardware-accelerated Apple Silicon HEVC/H.264 decoding with zero-drain sleep and lock detection.")
                             .font(.system(size: 13))
-                            .foregroundStyle(.white.opacity(0.75))
+                            .foregroundStyle(.white.opacity(0.80))
                     }
                 }
                 .padding(24)
@@ -1000,7 +1045,7 @@ public struct ContentView: View {
                                 .frame(maxWidth: 260)
                             Text("\(Int(store.volume * 100))%")
                                 .monospacedDigit()
-                                .foregroundStyle(AuraTheme.mintAccent)
+                                .foregroundStyle(AuraTheme.saffronBright)
                         }
                     }
 
@@ -1018,10 +1063,10 @@ public struct ContentView: View {
                             .frame(maxWidth: 260)
                         Text(String(format: "%.2fx", store.playbackSpeed))
                             .monospacedDigit()
-                            .foregroundStyle(AuraTheme.mintAccent)
+                            .foregroundStyle(AuraTheme.saffronBright)
                     }
 
-                    Divider().overlay(Color.white.opacity(0.15))
+                    Divider().overlay(AuraTheme.saffronBright.opacity(0.3))
 
                     Toggle("Smart Energy Shield: Pause Desktop Video When Display Sleeps or Locks", isOn: $store.pauseOnScreenSleep)
                         .foregroundStyle(.white)
@@ -1069,7 +1114,7 @@ public struct ContentView: View {
     }
 }
 
-// MARK: - Figma 3D Pop-Out Remote Catalog Card
+// MARK: - Neon Saffron Pop-Out Remote Catalog Card
 
 struct RemoteWallpaperCardView: View {
     let remote: RemoteWallpaperItem
@@ -1086,7 +1131,6 @@ struct RemoteWallpaperCardView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            // Pop-Out Floating Thumbnail Frame (Rises -18pt above the glass card top, just like the Figma 3D cards!)
             ZStack(alignment: .topTrailing) {
                 AsyncImage(url: URL(string: remote.thumbURL)) { phase in
                     switch phase {
@@ -1100,7 +1144,7 @@ struct RemoteWallpaperCardView: View {
                         Rectangle()
                             .fill(
                                 LinearGradient(
-                                    colors: [AuraTheme.forestDeep, AuraTheme.emeraldGlow.opacity(0.45)],
+                                    colors: [AuraTheme.pureBlack, AuraTheme.saffronNeon.opacity(0.45)],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 )
@@ -1109,30 +1153,31 @@ struct RemoteWallpaperCardView: View {
                             .overlay {
                                 Image(systemName: "sparkles.tv")
                                     .font(.system(size: 30))
-                                    .foregroundStyle(AuraTheme.mintAccent.opacity(0.8))
+                                    .foregroundStyle(AuraTheme.saffronGold)
                             }
                     }
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
                 .overlay(
                     RoundedRectangle(cornerRadius: 24, style: .continuous)
-                        .strokeBorder(Color.white.opacity(0.28), lineWidth: 1.2)
+                        .strokeBorder(AuraTheme.saffronBright.opacity(0.85), lineWidth: 1.6)
                 )
-                .shadow(color: .black.opacity(0.75), radius: 16, y: 10)
+                .shadow(color: .black.opacity(0.85), radius: 16, y: 10)
 
                 HStack(spacing: 4) {
                     Text(remote.category)
                         .font(.system(size: 10, weight: .bold))
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
-                        .background(AuraTheme.forestDeep.opacity(0.85), in: Capsule())
-                        .foregroundStyle(AuraTheme.mintAccent)
+                        .background(Color.black.opacity(0.85), in: Capsule())
+                        .overlay(Capsule().strokeBorder(AuraTheme.saffronBright, lineWidth: 1))
+                        .foregroundStyle(AuraTheme.saffronGold)
 
                     Text(remote.resolution)
                         .font(.system(size: 10, weight: .bold, design: .monospaced))
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
-                        .background(Color.black.opacity(0.75), in: Capsule())
+                        .background(Color.black.opacity(0.85), in: Capsule())
                         .foregroundStyle(.white)
                 }
                 .padding(10)
@@ -1148,7 +1193,7 @@ struct RemoteWallpaperCardView: View {
 
                 Text(String(format: "%@ • %@ • %.1f MB", remote.source, remote.formattedDuration, remote.fileSizeMB))
                     .font(.system(size: 11.5))
-                    .foregroundStyle(.white.opacity(0.65))
+                    .foregroundStyle(AuraTheme.saffronGold.opacity(0.85))
             }
 
             if let existing = localDownloadedItem {
@@ -1168,8 +1213,8 @@ struct RemoteWallpaperCardView: View {
                 HStack(spacing: 8) {
                     ProgressView().controlSize(.small)
                     Text(catalog.downloadStatusText[remote.id] ?? "Downloading 4K...")
-                        .font(.system(size: 11.5, weight: .medium))
-                        .foregroundStyle(AuraTheme.mintAccent)
+                        .font(.system(size: 11.5, weight: .bold))
+                        .foregroundStyle(AuraTheme.saffronBright)
                     Spacer()
                 }
                 .padding(.vertical, 6)
@@ -1209,7 +1254,7 @@ struct RemoteWallpaperCardView: View {
     }
 }
 
-// MARK: - Figma 3D Pop-Out Local Library Card
+// MARK: - Neon Saffron Pop-Out Local Library Card
 
 struct WallpaperCardView: View {
     let item: WallpaperItem
@@ -1234,7 +1279,7 @@ struct WallpaperCardView: View {
                     Rectangle()
                         .fill(
                             LinearGradient(
-                                colors: [AuraTheme.forestDeep, AuraTheme.emeraldGlow.opacity(0.5)],
+                                colors: [AuraTheme.pureBlack, AuraTheme.saffronNeon.opacity(0.5)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -1243,7 +1288,7 @@ struct WallpaperCardView: View {
                         .overlay {
                             Image(systemName: "play.rectangle.fill")
                                 .font(.system(size: 34))
-                                .foregroundStyle(AuraTheme.mintAccent)
+                                .foregroundStyle(AuraTheme.saffronGold)
                         }
                 }
 
@@ -1252,14 +1297,15 @@ struct WallpaperCardView: View {
                         .font(.system(size: 10, weight: .bold, design: .monospaced))
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
-                        .background(Color.black.opacity(0.75), in: Capsule())
-                        .foregroundStyle(AuraTheme.mintAccent)
+                        .background(Color.black.opacity(0.85), in: Capsule())
+                        .overlay(Capsule().strokeBorder(AuraTheme.saffronBright, lineWidth: 1))
+                        .foregroundStyle(AuraTheme.saffronGold)
 
                     Text(item.formattedDuration)
                         .font(.system(size: 10, weight: .bold, design: .monospaced))
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
-                        .background(Color.black.opacity(0.75), in: Capsule())
+                        .background(Color.black.opacity(0.85), in: Capsule())
                         .foregroundStyle(.white)
                 }
                 .padding(10)
@@ -1267,9 +1313,9 @@ struct WallpaperCardView: View {
             .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 24, style: .continuous)
-                    .strokeBorder(Color.white.opacity(0.28), lineWidth: 1.2)
+                    .strokeBorder(AuraTheme.saffronBright.opacity(0.85), lineWidth: 1.6)
             )
-            .shadow(color: .black.opacity(0.75), radius: 16, y: 10)
+            .shadow(color: .black.opacity(0.85), radius: 16, y: 10)
             .offset(y: -22)
             .padding(.bottom, -14)
 
@@ -1281,23 +1327,23 @@ struct WallpaperCardView: View {
                         .lineLimit(1)
                     Text(String(format: "%@ • %.1f MB • %@", item.category, item.fileSizeMB, item.fileURL.pathExtension.uppercased()))
                         .font(.system(size: 11.5))
-                        .foregroundStyle(.white.opacity(0.65))
+                        .foregroundStyle(AuraTheme.saffronGold.opacity(0.85))
                 }
                 Spacer()
                 Button(role: .destructive) {
                     store.deleteItem(item)
                 } label: {
                     Image(systemName: "trash")
-                        .foregroundStyle(.white.opacity(0.55))
+                        .foregroundStyle(.white.opacity(0.6))
                 }
                 .buttonStyle(.plain)
                 .help("Remove from Library")
             }
 
             HStack(spacing: 6) {
-                StatusBadge(title: "Desktop", active: isDesktopActive, color: AuraTheme.mintAccent)
-                StatusBadge(title: "Saver", active: isSaverActive, color: AuraTheme.mintAccent)
-                StatusBadge(title: "Lock Screen", active: isLockActive, color: AuraTheme.mintAccent)
+                StatusBadge(title: "Desktop", active: isDesktopActive, color: AuraTheme.saffronNeon)
+                StatusBadge(title: "Saver", active: isSaverActive, color: AuraTheme.saffronBright)
+                StatusBadge(title: "Lock Screen", active: isLockActive, color: AuraTheme.saffronGold)
             }
 
             HStack(spacing: 8) {
@@ -1348,7 +1394,8 @@ struct StatusBadge: View {
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 3)
-        .background(active ? color.opacity(0.18) : Color.white.opacity(0.06), in: Capsule())
-        .foregroundStyle(active ? color : .white.opacity(0.55))
+        .background(active ? color.opacity(0.22) : Color.white.opacity(0.06), in: Capsule())
+        .overlay(Capsule().strokeBorder(active ? color : Color.clear, lineWidth: 1))
+        .foregroundStyle(active ? AuraTheme.saffronGold : .white.opacity(0.55))
     }
 }
