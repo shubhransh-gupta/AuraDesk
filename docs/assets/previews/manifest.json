@@ -1,0 +1,134 @@
+[
+  {
+    "slug": "wp_1",
+    "id": "cosmic-singularity",
+    "name": "Cosmic Singularity",
+    "category": "Space",
+    "resolution": "3840\u00d72160",
+    "sizeMB": 11,
+    "duration": 3.1,
+    "thumb": "assets/previews/wp_1.jpg",
+    "videoURL": "https://cdn.macwall.app/videos/cosmic-singularity.mp4"
+  },
+  {
+    "slug": "wp_2",
+    "id": "black-hole-eclipse",
+    "name": "Black Hole Eclipse",
+    "category": "Space",
+    "resolution": "3840\u00d72160",
+    "sizeMB": 44,
+    "duration": 28.3,
+    "thumb": "assets/previews/wp_2.jpg",
+    "videoURL": "https://cdn.macwall.app/videos/black-hole-eclipse.mp4"
+  },
+  {
+    "slug": "wp_3",
+    "id": "the-hidden-ivy-cafe-moewalls-com",
+    "name": "The Hidden Ivy Cafe",
+    "category": "Dark",
+    "resolution": "1920\u00d71080",
+    "sizeMB": 13,
+    "duration": 10.7,
+    "thumb": "assets/previews/wp_3.jpg",
+    "videoURL": "https://cdn.macwall.app/videos/the-hidden-ivy-cafe-moewalls-com.mp4"
+  },
+  {
+    "slug": "wp_4",
+    "id": "c8308488-aeb4-4c1e-b5b9-7b545777c24f",
+    "name": "Hogwarts Moonlit Castle",
+    "category": "Dark",
+    "resolution": "3840\u00d72160",
+    "sizeMB": 44,
+    "duration": 40.6,
+    "thumb": "assets/previews/wp_4.jpg",
+    "videoURL": "https://cdn.macwall.app/videos/c8308488-aeb4-4c1e-b5b9-7b545777c24f.mp4"
+  },
+  {
+    "slug": "wp_5",
+    "id": "wallpaper-black-liquid-texture",
+    "name": "Black Liquid Texture",
+    "category": "Abstract",
+    "resolution": "3840\u00d72160",
+    "sizeMB": 148,
+    "duration": 30.8,
+    "thumb": "assets/previews/wp_5.jpg",
+    "videoURL": "https://cdn.macwall.app/videos/wallpaper-black-liquid-texture.mp4"
+  },
+  {
+    "slug": "wp_6",
+    "id": "cyberpunk-city-skyline",
+    "name": "Cyberpunk City Skyline",
+    "category": "Abstract",
+    "resolution": "3840\u00d72160",
+    "sizeMB": 56,
+    "duration": 23.2,
+    "thumb": "assets/previews/wp_6.jpg",
+    "videoURL": "https://cdn.macwall.app/videos/cyberpunk-city-skyline.mp4"
+  },
+  {
+    "slug": "wp_7",
+    "id": "wallpaper-autumn-car-1080p-1",
+    "name": "Autumn Supercar Drift",
+    "category": "Cars",
+    "resolution": "3840\u00d72160",
+    "sizeMB": 34,
+    "duration": 16.1,
+    "thumb": "assets/previews/wp_7.jpg",
+    "videoURL": "https://cdn.macwall.app/videos/wallpaper-autumn-car-1080p-1.mp4"
+  },
+  {
+    "slug": "wp_8",
+    "id": "c505a2f2-7f9e-4119-ba1d-7b62c54039d4",
+    "name": "Mercedes F1 Pit Spotlight",
+    "category": "Cars",
+    "resolution": "3840\u00d72160",
+    "sizeMB": 289,
+    "duration": 35.8,
+    "thumb": "assets/previews/wp_8.jpg",
+    "videoURL": "https://cdn.macwall.app/videos/c505a2f2-7f9e-4119-ba1d-7b62c54039d4.mov"
+  },
+  {
+    "slug": "wp_9",
+    "id": "stormy-horizon-vista",
+    "name": "Stormy Horizon Vista",
+    "category": "Nature",
+    "resolution": "3840\u00d72160",
+    "sizeMB": 24,
+    "duration": 4.7,
+    "thumb": "assets/previews/wp_9.jpg",
+    "videoURL": "https://cdn.macwall.app/videos/stormy-horizon-vista.mp4"
+  },
+  {
+    "slug": "wp_10",
+    "id": "snowfall-in-forest",
+    "name": "Snowy Pine Forest",
+    "category": "Nature",
+    "resolution": "3840\u00d72160",
+    "sizeMB": 38,
+    "duration": 30.0,
+    "thumb": "assets/previews/wp_10.jpg",
+    "videoURL": "https://cdn.macwall.app/videos/snowfall-in-forest.mp4"
+  },
+  {
+    "slug": "wp_11",
+    "id": "wallpaper-asuka-crimson-horizon-neon-genesis-evangelion",
+    "name": "Asuka Crimson Horizon",
+    "category": "Anime",
+    "resolution": "3840\u00d72160",
+    "sizeMB": 100,
+    "duration": 20.7,
+    "thumb": "assets/previews/wp_11.jpg",
+    "videoURL": "https://cdn.macwall.app/videos/wallpaper-asuka-crimson-horizon-neon-genesis-evangelion.mp4"
+  },
+  {
+    "slug": "wp_12",
+    "id": "mob-psycho-shadow",
+    "name": "Mob Psycho Shadow",
+    "category": "Anime",
+    "resolution": "3840\u00d72160",
+    "sizeMB": 107,
+    "duration": 30.0,
+    "thumb": "assets/previews/wp_12.jpg",
+    "videoURL": "https://cdn.macwall.app/videos/mob-psycho-shadow.mp4"
+  }
+]

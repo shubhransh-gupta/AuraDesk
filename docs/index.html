@@ -52,7 +52,7 @@
     /* Radiant Diamond Silver & Chrome Card */
     .silver-sharp-card {
       position: relative;
-      background: linear-gradient(165deg, rgba(38, 40, 52, 0.72) 0%, rgba(10, 11, 16, 0.86) 100%);
+      background: linear-gradient(165deg, rgba(38, 40, 52, 0.72) 0%, rgba(10, 11, 16, 0.88) 100%);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.28);
@@ -81,6 +81,7 @@
       transform: skewX(-24deg);
       transition: left 0.65s ease;
       pointer-events: none;
+      z-index: 20;
     }
     .silver-sharp-card:hover::before {
       left: 140%;
@@ -178,7 +179,7 @@
 </head>
 <body class="antialiased selection:bg-white selection:text-black">
 
-  <!-- FULLSCREEN STARGAZING + GLOWING MOON + SHOOTING METEORS + GLITTER CANVAS -->
+  <!-- FULLSCREEN STARGAZING + GLOWING MOON + SHOOTING METEORS CANVAS -->
   <canvas id="stargazing-bg"></canvas>
 
   <!-- TOP NAVIGATION BAR -->
@@ -240,22 +241,22 @@
             <span>Download AuraDesk.app (Free)</span>
           </a>
           <a href="#top-4k-wallpapers" class="btn-silver-secondary px-5 py-3.5 text-xs font-mono uppercase tracking-wider">
-            ✦ Explore Live 4K Previews
+            ✦ Explore Real 4K Previews
           </a>
         </div>
       </div>
     </section>
 
-    <!-- 2. OUR TOP 4K WALLPAPERS — LIVE PLAYING 60FPS VIDEO PREVIEWS RIGHT AT THE TOP -->
+    <!-- 2. OUR TOP 4K WALLPAPERS — ACTUAL VIDEO & THUMBNAIL PREVIEWS RIGHT AT THE TOP -->
     <section id="top-4k-wallpapers" class="py-6">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div class="flex items-center gap-3">
           <div class="w-1.5 h-6 bg-white shadow-[0_0_14px_#FFFFFF]"></div>
           <div>
             <h2 class="text-lg font-extrabold tracking-wider uppercase font-mono text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.45)]">
-              ✦ OUR TOP 4K WALLPAPERS • LIVE VIDEO PREVIEWS
+              ✦ OUR TOP 4K WALLPAPERS • REAL VIDEO PREVIEWS
             </h2>
-            <p class="text-xs text-zinc-200">Every wallpaper below is pre-indexed inside AuraDesk Pro for instant 1-click apply to Desktop, Screen Saver & Lock Screen</p>
+            <p class="text-xs text-zinc-200">Actual 4K wallpapers bundled inside AuraDesk Pro for instant 1-click apply to Desktop, Screen Saver & Lock Screen</p>
           </div>
         </div>
 
@@ -271,13 +272,13 @@
         </div>
       </div>
 
-      <!-- Top 4K Wallpaper Grid (With Live Animated 60fps Video Canvases) -->
+      <!-- Top 4K Wallpaper Grid (With Real Playing MP4 Video Previews + Real JPG Posters) -->
       <div id="top-wallpapers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Populated by script below with real-time 60fps animated video shaders -->
+        <!-- Populated by script below with real 4K wallpaper videos & posters -->
       </div>
     </section>
 
-    <!-- 3. NATIVE MACOS PRO APP PREVIEW (WITH LIVE VIDEO CANVASES) -->
+    <!-- 3. NATIVE MACOS PRO APP PREVIEW (WITH REAL 4K WALLPAPER PREVIEWS) -->
     <section id="app-workspace" class="py-16">
       <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-3">
@@ -348,9 +349,9 @@
                 <span>ACTIVE TARGETS</span>
                 <span class="text-white">✦ LIVE 4K</span>
               </div>
-              <div class="flex justify-between"><span class="text-zinc-400">DESKTOP</span><span class="text-white" id="mock-active-desk">Gargantua Black Hole 4K</span></div>
-              <div class="flex justify-between"><span class="text-zinc-400">SAVER</span><span class="text-white" id="mock-active-saver">Gargantua Black Hole 4K</span></div>
-              <div class="flex justify-between"><span class="text-zinc-400">LOCK</span><span class="text-white" id="mock-active-lock">Synced (240fps)</span></div>
+              <div class="flex justify-between"><span class="text-zinc-400">DESKTOP</span><span class="text-white">Cosmic Singularity 4K</span></div>
+              <div class="flex justify-between"><span class="text-zinc-400">SAVER</span><span class="text-white">Cosmic Singularity 4K</span></div>
+              <div class="flex justify-between"><span class="text-zinc-400">LOCK</span><span class="text-white">Synced (240fps)</span></div>
             </div>
           </div>
 
@@ -369,14 +370,14 @@
 
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="silver-sharp-card p-3">
-                  <div class="h-32 rounded-[6px] border border-white/30 mb-3 relative overflow-hidden">
-                    <canvas class="live-wallpaper-canvas absolute inset-0 w-full h-full" data-shader="blackhole"></canvas>
-                    <div class="relative z-10 p-2.5 h-full flex flex-col justify-between bg-gradient-to-t from-black/80 via-transparent to-black/35">
+                  <div class="h-32 rounded-[6px] border border-white/30 mb-3 relative overflow-hidden bg-black">
+                    <video src="assets/previews/wp_1.mp4" poster="assets/previews/wp_1.jpg" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover"></video>
+                    <div class="relative z-10 p-2.5 h-full flex flex-col justify-between bg-gradient-to-t from-black/85 via-transparent to-black/35">
                       <div class="flex justify-between items-center">
                         <span class="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-white text-black">TOP 4K • SPACE</span>
                         <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/80 text-white border border-white/30">3840×2160</span>
                       </div>
-                      <div class="text-xs font-bold text-white drop-shadow">Gargantua Black Hole 4K</div>
+                      <div class="text-xs font-bold text-white drop-shadow">Cosmic Singularity</div>
                     </div>
                   </div>
                   <div class="flex gap-1.5">
@@ -387,14 +388,14 @@
                 </div>
 
                 <div class="silver-sharp-card p-3">
-                  <div class="h-32 rounded-[6px] border border-white/30 mb-3 relative overflow-hidden">
-                    <canvas class="live-wallpaper-canvas absolute inset-0 w-full h-full" data-shader="chrome"></canvas>
-                    <div class="relative z-10 p-2.5 h-full flex flex-col justify-between bg-gradient-to-t from-black/80 via-transparent to-black/35">
+                  <div class="h-32 rounded-[6px] border border-white/30 mb-3 relative overflow-hidden bg-black">
+                    <video src="assets/previews/wp_5.mp4" poster="assets/previews/wp_5.jpg" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover"></video>
+                    <div class="relative z-10 p-2.5 h-full flex flex-col justify-between bg-gradient-to-t from-black/85 via-transparent to-black/35">
                       <div class="flex justify-between items-center">
-                        <span class="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-white text-black">TOP 4K • DARK</span>
+                        <span class="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-white text-black">TOP 4K • ABSTRACT</span>
                         <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/80 text-white border border-white/30">3840×2160</span>
                       </div>
-                      <div class="text-xs font-bold text-white drop-shadow">Liquid Silver Chrome</div>
+                      <div class="text-xs font-bold text-white drop-shadow">Black Liquid Texture</div>
                     </div>
                   </div>
                   <div class="flex gap-1.5">
@@ -405,14 +406,14 @@
                 </div>
 
                 <div class="silver-sharp-card p-3">
-                  <div class="h-32 rounded-[6px] border border-white/30 mb-3 relative overflow-hidden">
-                    <canvas class="live-wallpaper-canvas absolute inset-0 w-full h-full" data-shader="aurora"></canvas>
-                    <div class="relative z-10 p-2.5 h-full flex flex-col justify-between bg-gradient-to-t from-black/80 via-transparent to-black/35">
+                  <div class="h-32 rounded-[6px] border border-white/30 mb-3 relative overflow-hidden bg-black">
+                    <video src="assets/previews/wp_8.mp4" poster="assets/previews/wp_8.jpg" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover"></video>
+                    <div class="relative z-10 p-2.5 h-full flex flex-col justify-between bg-gradient-to-t from-black/85 via-transparent to-black/35">
                       <div class="flex justify-between items-center">
-                        <span class="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-white text-black">AERIAL 240FPS</span>
+                        <span class="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-white text-black">TOP 4K • CARS</span>
                         <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/80 text-white border border-white/30">3840×2160</span>
                       </div>
-                      <div class="text-xs font-bold text-white drop-shadow">Norwegian Starlight Horizon</div>
+                      <div class="text-xs font-bold text-white drop-shadow">Mercedes F1 Pit Spotlight</div>
                     </div>
                   </div>
                   <div class="flex gap-1.5">
@@ -525,18 +526,22 @@
   </footer>
 
   <!-- ========================================================================= -->
-  <!-- 1. INTERACTIVE TOP 4K WALLPAPERS + LIVE 60FPS VIDEO CANVAS ENGINE         -->
+  <!-- 1. REAL 4K WALLPAPER VIDEO & PREVIEW CATALOG                              -->
   <!-- ========================================================================= -->
   <script>
     const TOP_4K_WALLPAPERS = [
-      { name: "Gargantua Black Hole 4K", category: "Space", res: "3840×2160", fps: "60 FPS", size: "98 MB", shader: "blackhole" },
-      { name: "Obsidian Liquid Chrome", category: "Dark", res: "3840×2160", fps: "60 FPS", size: "84 MB", shader: "chrome" },
-      { name: "Monolith Geometric Wave", category: "Abstract", res: "3840×2160", fps: "60 FPS", size: "92 MB", shader: "prism" },
-      { name: "Porsche 911 GT3 Midnight", category: "Cars", res: "3840×2160", fps: "60 FPS", size: "112 MB", shader: "speed" },
-      { name: "Patagonia Starlight Peak", category: "Nature", res: "3840×2160", fps: "240 FPS", size: "290 MB", shader: "aurora" },
-      { name: "Tokyo Cyber Rain Monotone", category: "Anime", res: "3840×2160", fps: "60 FPS", size: "104 MB", shader: "matrix" },
-      { name: "Orbital Night Horizon", category: "Space", res: "3840×2160", fps: "240 FPS", size: "310 MB", shader: "orbit" },
-      { name: "Brushed Titanium Flow", category: "Dark", res: "3840×2160", fps: "60 FPS", size: "76 MB", shader: "titanium" }
+      { name: "Cosmic Singularity", category: "Space", res: "3840×2160", fps: "60 FPS", size: "11 MB", thumb: "assets/previews/wp_1.jpg", video: "assets/previews/wp_1.mp4" },
+      { name: "Black Hole Eclipse", category: "Space", res: "3840×2160", fps: "60 FPS", size: "44 MB", thumb: "assets/previews/wp_2.jpg", video: "assets/previews/wp_2.mp4" },
+      { name: "The Hidden Ivy Cafe", category: "Dark", res: "3840×2160", fps: "60 FPS", size: "13 MB", thumb: "assets/previews/wp_3.jpg", video: "assets/previews/wp_3.mp4" },
+      { name: "Hogwarts Moonlit Castle", category: "Dark", res: "3840×2160", fps: "60 FPS", size: "44 MB", thumb: "assets/previews/wp_4.jpg", video: "assets/previews/wp_4.mp4" },
+      { name: "Black Liquid Texture", category: "Abstract", res: "3840×2160", fps: "60 FPS", size: "148 MB", thumb: "assets/previews/wp_5.jpg", video: "assets/previews/wp_5.mp4" },
+      { name: "Cyberpunk City Skyline", category: "Abstract", res: "3840×2160", fps: "60 FPS", size: "56 MB", thumb: "assets/previews/wp_6.jpg", video: "assets/previews/wp_6.mp4" },
+      { name: "Autumn Supercar Drift", category: "Cars", res: "3840×2160", fps: "60 FPS", size: "34 MB", thumb: "assets/previews/wp_7.jpg", video: "assets/previews/wp_7.mp4" },
+      { name: "Mercedes F1 Pit Spotlight", category: "Cars", res: "3840×2160", fps: "60 FPS", size: "289 MB", thumb: "assets/previews/wp_8.jpg", video: "assets/previews/wp_8.mp4" },
+      { name: "Stormy Horizon Vista", category: "Nature", res: "3840×2160", fps: "60 FPS", size: "24 MB", thumb: "assets/previews/wp_9.jpg", video: "assets/previews/wp_9.mp4" },
+      { name: "Snowy Pine Forest", category: "Nature", res: "3840×2160", fps: "60 FPS", size: "38 MB", thumb: "assets/previews/wp_10.jpg", video: "assets/previews/wp_10.mp4" },
+      { name: "Asuka Crimson Horizon", category: "Anime", res: "3840×2160", fps: "60 FPS", size: "100 MB", thumb: "assets/previews/wp_11.jpg", video: "assets/previews/wp_11.mp4" },
+      { name: "Mob Psycho Shadow", category: "Anime", res: "3840×2160", fps: "60 FPS", size: "107 MB", thumb: "assets/previews/wp_12.jpg", video: "assets/previews/wp_12.mp4" }
     ];
 
     function renderCatalog(category) {
@@ -548,20 +553,24 @@
       grid.innerHTML = items.map(item => `
         <div class="silver-sharp-card p-3.5 flex flex-col justify-between group">
           <div>
-            <div class="h-40 rounded-[6px] border border-white/35 mb-3 relative overflow-hidden bg-black">
-              <canvas class="live-wallpaper-canvas absolute inset-0 w-full h-full" data-shader="${item.shader}"></canvas>
-              <div class="relative z-10 p-3 h-full flex flex-col justify-between bg-gradient-to-t from-black/85 via-black/15 to-black/40">
+            <div class="h-44 rounded-[6px] border border-white/35 mb-3 relative overflow-hidden bg-black">
+              <video
+                src="${item.video}"
+                poster="${item.thumb}"
+                autoplay
+                loop
+                muted
+                playsinline
+                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-500"
+              ></video>
+              <div class="relative z-10 p-3 h-full flex flex-col justify-between bg-gradient-to-t from-black/85 via-black/10 to-black/35">
                 <div class="flex items-center justify-between">
                   <span class="text-[9px] font-mono font-extrabold uppercase px-2 py-0.5 rounded-[3px] bg-white text-black shadow-[0_0_10px_rgba(255,255,255,0.6)]">✦ ${item.category}</span>
                   <span class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-[3px] bg-black/80 text-white border border-white/35">${item.res} • ${item.fps}</span>
                 </div>
                 <div>
-                  <div class="flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
-                    <span class="text-[9px] font-mono uppercase tracking-wider text-zinc-200">LIVE 4K PREVIEW</span>
-                  </div>
                   <div class="text-sm font-extrabold text-white truncate drop-shadow">${item.name}</div>
-                  <div class="text-[10px] font-mono text-zinc-300">${item.size} • HEVC 4K</div>
+                  <div class="text-[10px] font-mono text-zinc-200">${item.size} • 4K UHD</div>
                 </div>
               </div>
             </div>
@@ -576,8 +585,6 @@
           </div>
         </div>
       `).join('');
-
-      initCardShaders();
     }
 
     function filterCatalog(cat) {
@@ -593,130 +600,10 @@
       renderCatalog(cat);
     }
 
-    // Real-time 60fps Live Video Canvas Renderer for Every Wallpaper Card
-    let cardCanvases = [];
-    function initCardShaders() {
-      cardCanvases = Array.from(document.querySelectorAll('.live-wallpaper-canvas')).map(canvas => {
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = Math.max(260, Math.floor(rect.width || 300));
-        canvas.height = Math.max(140, Math.floor(rect.height || 160));
-        return {
-          canvas,
-          ctx: canvas.getContext('2d'),
-          shader: canvas.dataset.shader || 'blackhole'
-        };
-      });
-    }
-
-    function drawCardShader(item, t) {
-      const { canvas, ctx, shader } = item;
-      const w = canvas.width;
-      const h = canvas.height;
-      ctx.clearRect(0, 0, w, h);
-
-      // Base obsidian backdrop
-      const baseGrad = ctx.createLinearGradient(0, 0, w, h);
-      baseGrad.addColorStop(0, '#090A10');
-      baseGrad.addColorStop(1, '#020205');
-      ctx.fillStyle = baseGrad;
-      ctx.fillRect(0, 0, w, h);
-
-      if (shader === 'blackhole' || shader === 'orbit') {
-        const cx = w * 0.5 + Math.sin(t * 0.8) * 10;
-        const cy = h * 0.5 + Math.cos(t * 0.6) * 6;
-        // Glowing accretion disk rings
-        for (let i = 4; i >= 1; i--) {
-          ctx.save();
-          ctx.translate(cx, cy);
-          ctx.rotate(t * 0.25 * (i % 2 === 0 ? 1 : -1));
-          ctx.scale(1.8, 0.52);
-          ctx.beginPath();
-          ctx.arc(0, 0, 18 + i * 11, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(255, 255, 255, ${0.18 + (5 - i) * 0.14})`;
-          ctx.lineWidth = 2.4;
-          ctx.shadowColor = '#FFFFFF';
-          ctx.shadowBlur = 14;
-          ctx.stroke();
-          ctx.restore();
-        }
-        // Event horizon core
-        ctx.beginPath();
-        ctx.arc(cx, cy, 15, 0, Math.PI * 2);
-        ctx.fillStyle = '#000000';
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.92)';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-      } else if (shader === 'chrome' || shader === 'titanium') {
-        for (let k = 0; k < 5; k++) {
-          ctx.beginPath();
-          for (let x = 0; x <= w; x += 8) {
-            const y = h * (0.25 + k * 0.13) + Math.sin(x * 0.028 + t * 2.1 + k) * 16 + Math.cos(x * 0.015 - t * 1.4) * 8;
-            if (x === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-          }
-          ctx.strokeStyle = `rgba(255, 255, 255, ${0.22 + k * 0.14})`;
-          ctx.lineWidth = 2.2;
-          ctx.shadowColor = '#FFFFFF';
-          ctx.shadowBlur = 10;
-          ctx.stroke();
-        }
-      } else if (shader === 'speed') {
-        // High-speed silver warp streaks
-        const cx = w * 0.5;
-        const cy = h * 0.52;
-        for (let i = 0; i < 26; i++) {
-          const angle = (i / 26) * Math.PI * 2 + 0.15;
-          const progress = ((t * 1.6 + i * 0.17) % 1);
-          const r1 = 8 + progress * (w * 0.45);
-          const r2 = r1 + 18 + progress * 25;
-          ctx.beginPath();
-          ctx.moveTo(cx + Math.cos(angle) * r1, cy + Math.sin(angle) * r1);
-          ctx.lineTo(cx + Math.cos(angle) * r2, cy + Math.sin(angle) * r2);
-          ctx.strokeStyle = `rgba(255, 255, 255, ${progress * 0.85})`;
-          ctx.lineWidth = 1.6;
-          ctx.stroke();
-        }
-      } else if (shader === 'matrix') {
-        // Cyberpunk silver rain columns
-        for (let i = 0; i < 22; i++) {
-          const x = (i / 22) * w + 6;
-          const y = ((t * (65 + (i % 5) * 22) + i * 37) % (h + 40)) - 20;
-          const grad = ctx.createLinearGradient(x, y - 32, x, y);
-          grad.addColorStop(0, 'rgba(255,255,255,0)');
-          grad.addColorStop(1, 'rgba(255,255,255,0.88)');
-          ctx.strokeStyle = grad;
-          ctx.lineWidth = 1.8;
-          ctx.beginPath();
-          ctx.moveTo(x, y - 32);
-          ctx.lineTo(x, y);
-          ctx.stroke();
-        }
-      } else {
-        // Aurora / Prism shimmering waves
-        for (let layer = 0; layer < 3; layer++) {
-          ctx.beginPath();
-          ctx.moveTo(0, h);
-          for (let x = 0; x <= w; x += 10) {
-            const y = h * (0.38 + layer * 0.12) + Math.sin(x * 0.02 + t * (1.5 + layer * 0.4)) * 20;
-            ctx.lineTo(x, y);
-          }
-          ctx.lineTo(w, h);
-          ctx.closePath();
-          const g = ctx.createLinearGradient(0, h * 0.2, 0, h);
-          g.addColorStop(0, `rgba(255, 255, 255, ${0.28 - layer * 0.06})`);
-          g.addColorStop(1, 'rgba(255, 255, 255, 0.01)');
-          ctx.fillStyle = g;
-          ctx.fill();
-        }
-      }
-      ctx.shadowBlur = 0;
-    }
-
     renderCatalog('All');
 
     // =========================================================================
-    // 2. FULLSCREEN STAR GAZING + RADIANT SILVER MOON + SHOOTING METEORS ENGINE
+    // 2. REFINED STAR GAZING (85 STARS) + RADIANT SILVER MOON + SHOOTING METEORS
     // =========================================================================
     const bgCanvas = document.getElementById('stargazing-bg');
     const bgCtx = bgCanvas.getContext('2d');
@@ -728,63 +615,59 @@
       bh = window.innerHeight;
       bgCanvas.width = bw;
       bgCanvas.height = bh;
-      initCardShaders();
     }
     window.addEventListener('resize', resizeBg);
     resizeBg();
 
-    // Create 320 glittering stars
-    const stars = Array.from({ length: 320 }, (_, i) => ({
+    // Clean, balanced 85 stars (not overcrowded)
+    const stars = Array.from({ length: 85 }, (_, i) => ({
       x: Math.random(),
       y: Math.random(),
-      r: 0.6 + Math.random() * 2.1,
-      speed: 1.2 + Math.random() * 3.5,
+      r: 0.7 + Math.random() * 1.6,
+      speed: 1.0 + Math.random() * 2.4,
       phase: Math.random() * Math.PI * 2,
-      isDiamond: i % 7 === 0
+      isDiamond: i % 8 === 0
     }));
 
-    // Create shooting meteors pool
     const meteors = [];
     function spawnMeteor() {
-      const startX = bw * (0.25 + Math.random() * 0.72);
-      const startY = bh * (Math.random() * 0.42);
-      const speed = 11 + Math.random() * 9;
-      const angle = Math.PI * (0.72 + Math.random() * 0.12); // Down-left diagonal
+      const startX = bw * (0.30 + Math.random() * 0.65);
+      const startY = bh * (Math.random() * 0.38);
+      const speed = 10 + Math.random() * 7;
+      const angle = Math.PI * (0.74 + Math.random() * 0.10);
       meteors.push({
         x: startX,
         y: startY,
         vx: Math.cos(angle) * speed,
         vy: -Math.sin(angle) * speed,
-        len: 110 + Math.random() * 110,
+        len: 105 + Math.random() * 90,
         life: 0,
-        maxLife: 45 + Math.random() * 35,
-        sparks: []
+        maxLife: 48 + Math.random() * 30
       });
     }
 
-    // Spawn initial meteor immediately
     spawnMeteor();
 
-    function drawMoon(ctx, time) {
-      const mx = bw * 0.84;
-      const my = bh * 0.17;
-      const mr = Math.min(bw, bh) * 0.068;
+    function drawMoon(ctx) {
+      const mx = bw * 0.85;
+      const my = bh * 0.16;
+      const mr = Math.min(bw, bh) * 0.062;
 
       // Outer shimmering lunar corona / halo
-      const halo = ctx.createRadialGradient(mx, my, mr * 0.6, mx, my, mr * 4.8);
-      halo.addColorStop(0, 'rgba(255, 255, 255, 0.36)');
-      halo.addColorStop(0.28, 'rgba(226, 232, 240, 0.14)');
-      halo.addColorStop(0.6, 'rgba(148, 163, 184, 0.04)');
+      const halo = ctx.createRadialGradient(mx, my, mr * 0.6, mx, my, mr * 4.4);
+      halo.addColorStop(0, 'rgba(255, 255, 255, 0.34)');
+      halo.addColorStop(0.3, 'rgba(226, 232, 240, 0.12)');
+      halo.addColorStop(0.65, 'rgba(148, 163, 184, 0.03)');
       halo.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = halo;
       ctx.beginPath();
-      ctx.arc(mx, my, mr * 4.8, 0, Math.PI * 2);
+      ctx.arc(mx, my, mr * 4.4, 0, Math.PI * 2);
       ctx.fill();
 
       // Luminous Full Silver Moon Disc
       ctx.save();
       ctx.shadowColor = 'rgba(255, 255, 255, 0.85)';
-      ctx.shadowBlur = 42;
+      ctx.shadowBlur = 38;
       const moonGrad = ctx.createRadialGradient(mx - mr * 0.28, my - mr * 0.28, mr * 0.1, mx, my, mr);
       moonGrad.addColorStop(0, '#FFFFFF');
       moonGrad.addColorStop(0.55, '#E2E8F0');
@@ -801,8 +684,7 @@
         { dx: -0.28, dy: -0.18, r: 0.22, a: 0.13 },
         { dx: 0.24, dy: -0.25, r: 0.16, a: 0.11 },
         { dx: 0.18, dy: 0.22, r: 0.26, a: 0.14 },
-        { dx: -0.32, dy: 0.28, r: 0.14, a: 0.10 },
-        { dx: 0.02, dy: 0.04, r: 0.19, a: 0.09 }
+        { dx: -0.32, dy: 0.28, r: 0.14, a: 0.10 }
       ];
       craters.forEach(c => {
         ctx.fillStyle = `rgba(71, 85, 105, ${c.a})`;
@@ -813,21 +695,18 @@
     }
 
     let lastMeteorSpawn = 0;
-    function animateAll(now) {
+    function animateSky(now) {
       const t = now * 0.001;
 
-      // 1. Deep Starry Night Sky Backdrop
-      const sky = bgCtx.createRadialGradient(bw * 0.82, bh * 0.16, 20, bw * 0.5, bh * 0.5, Math.max(bw, bh));
+      const sky = bgCtx.createRadialGradient(bw * 0.85, bh * 0.16, 20, bw * 0.5, bh * 0.5, Math.max(bw, bh));
       sky.addColorStop(0, '#111522');
       sky.addColorStop(0.45, '#060810');
       sky.addColorStop(1, '#020205');
       bgCtx.fillStyle = sky;
       bgCtx.fillRect(0, 0, bw, bh);
 
-      // 2. Draw Radiant Silver Moon
-      drawMoon(bgCtx, t);
+      drawMoon(bgCtx);
 
-      // 3. Draw Twinkling & Glittering Diamond Stars
       for (let i = 0; i < stars.length; i++) {
         const s = stars[i];
         const sx = s.x * bw;
@@ -836,14 +715,13 @@
 
         bgCtx.fillStyle = `rgba(255, 255, 255, ${twinkle})`;
         bgCtx.beginPath();
-        bgCtx.arc(sx, sy, s.r * (0.75 + 0.35 * twinkle), 0, Math.PI * 2);
+        bgCtx.arc(sx, sy, s.r * (0.75 + 0.3 * twinkle), 0, Math.PI * 2);
         bgCtx.fill();
 
-        // 4-point diamond glitter spikes on bright stars
-        if (s.isDiamond && twinkle > 0.65) {
-          const spike = s.r * 4.5 * twinkle;
-          bgCtx.strokeStyle = `rgba(255, 255, 255, ${twinkle * 0.65})`;
-          bgCtx.lineWidth = 0.8;
+        if (s.isDiamond && twinkle > 0.72) {
+          const spike = s.r * 3.8 * twinkle;
+          bgCtx.strokeStyle = `rgba(255, 255, 255, ${twinkle * 0.55})`;
+          bgCtx.lineWidth = 0.75;
           bgCtx.beginPath();
           bgCtx.moveTo(sx - spike, sy);
           bgCtx.lineTo(sx + spike, sy);
@@ -853,10 +731,8 @@
         }
       }
 
-      // 4. Spawn & Render Shooting Meteors
-      if (now - lastMeteorSpawn > 1300) {
+      if (now - lastMeteorSpawn > 2800) {
         spawnMeteor();
-        if (Math.random() > 0.55) spawnMeteor();
         lastMeteorSpawn = now;
       }
 
@@ -879,18 +755,17 @@
 
         bgCtx.save();
         bgCtx.strokeStyle = tailGrad;
-        bgCtx.lineWidth = 2.2;
+        bgCtx.lineWidth = 2.0;
         bgCtx.shadowColor = '#FFFFFF';
-        bgCtx.shadowBlur = 12;
+        bgCtx.shadowBlur = 10;
         bgCtx.beginPath();
         bgCtx.moveTo(m.x, m.y);
         bgCtx.lineTo(tailX, tailY);
         bgCtx.stroke();
 
-        // Glowing meteor head spark
         bgCtx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
         bgCtx.beginPath();
-        bgCtx.arc(m.x, m.y, 2.4, 0, Math.PI * 2);
+        bgCtx.arc(m.x, m.y, 2.2, 0, Math.PI * 2);
         bgCtx.fill();
         bgCtx.restore();
 
@@ -899,15 +774,10 @@
         }
       }
 
-      // 5. Animate all Live 4K Wallpaper Card Previews
-      for (let i = 0; i < cardCanvases.length; i++) {
-        drawCardShader(cardCanvases[i], t);
-      }
-
-      requestAnimationFrame(animateAll);
+      requestAnimationFrame(animateSky);
     }
 
-    requestAnimationFrame(animateAll);
+    requestAnimationFrame(animateSky);
   </script>
 </body>
 </html>
