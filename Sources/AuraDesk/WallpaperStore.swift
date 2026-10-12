@@ -88,7 +88,65 @@ public final class WallpaperStore: ObservableObject {
 
     private init() {
         loadState()
+        seedBuiltIn4KIfNeeded()
         restoreActivePlaybackOnLaunch()
+    }
+
+    private func seedBuiltIn4KIfNeeded() {
+        let customerDir = URL(fileURLWithPath: "/Library/Application Support/com.apple.idleassetsd/Customer/4KSDR240FPS")
+        let snapDir = URL(fileURLWithPath: "/Library/Application Support/com.apple.idleassetsd/snapshots")
+        let localizedStrings = LockScreenManager.shared.loadLocalizedStrings()
+
+        // Map asset IDs to human names from entries.json
+        var idToName: [String: String] = [:]
+        let entriesPath = "/Library/Application Support/com.apple.idleassetsd/Customer/entries.json"
+        if let data = try? Data(contentsOf: URL(fileURLWithPath: entriesPath)),
+           let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+           let assets = json["assets"] as? [[String: Any]] {
+            for asset in assets {
+                if let id = asset["id"] as? String {
+                    let locKey = asset["localizedNameKey"] as? String ?? ""
+                    let label = asset["accessibilityLabel"] as? String ?? "4K Aerial"
+                    idToName[id] = localizedStrings[locKey] ?? label
+                }
+            }
+        }
+
+        if let files = try? FileManager.default.contentsOfDirectory(at: customerDir, includingPropertiesForKeys: [.fileSizeKey]) {
+            var changed = false
+            for fileURL in files where fileURL.pathExtension.lowercased() == "mov" {
+                let assetID = fileURL.deletingPathExtension().lastPathComponent
+                let remoteID = "aerial-\(assetID)"
+                if items.contains(where: { $0.remoteID == remoteID || $0.filePath == fileURL.path }) {
+                    continue
+                }
+                let attrs = try? FileManager.default.attributesOfItem(atPath: fileURL.path)
+                let sizeBytes = (attrs?[.size] as? UInt64) ?? 0
+                guard sizeBytes > 5_000_000 else { continue }
+                let sizeMB = Double(sizeBytes) / (1024.0 * 1024.0)
+
+                let snapFile = snapDir.appendingPathComponent("asset-preview-\(assetID).jpg")
+                let thumbPath = FileManager.default.fileExists(atPath: snapFile.path) ? snapFile.path : nil
+                let title = (idToName[assetID] ?? "Apple 4K Aerial") + " (240fps 4K)"
+
+                let seeded = WallpaperItem(
+                    id: UUID(),
+                    remoteID: remoteID,
+                    title: title,
+                    category: "Aerial 4K",
+                    filePath: fileURL.path,
+                    thumbnailPath: thumbPath,
+                    durationSeconds: 180.0,
+                    resolution: "4K UHD",
+                    fileSizeMB: sizeMB
+                )
+                items.append(seeded)
+                changed = true
+            }
+            if changed {
+                saveState()
+            }
+        }
     }
 
     private func loadState() {
@@ -315,7 +373,7 @@ public final class WallpaperStore: ObservableObject {
             let meta = await extractMetadataAndThumbnail(for: outputURL, id: id)
             let sampleItem = WallpaperItem(
                 id: id,
-                title: "AuraDesk Neon Saffron Horizon (4K)",
+                title: "AuraDesk Obsidian Silver Chrome (4K)",
                 category: "Synthesized 4K",
                 filePath: outputURL.path,
                 thumbnailPath: meta.thumbnailPath,
@@ -397,29 +455,18 @@ public final class WallpaperStore: ObservableObject {
                     let progress = Double(frameIdx) / Double(totalFrames)
                     let angle = progress * 2.0 * .pi
 
-                    let c1 = CGColor(
-                        red: 0.02,
-                        green: 0.01,
-                        blue: 0.005,
-                        alpha: 1.0
-                    )
-                    let c2 = CGColor(
-                        red: 0.22 + 0.08 * cos(angle),
-                        green: 0.08 + 0.04 * sin(angle),
-                        blue: 0.01,
-                        alpha: 1.0
-                    )
-                    let c3 = CGColor(
-                        red: 0.75 + 0.20 * sin(angle + 0.8),
-                        green: 0.30 + 0.12 * cos(angle + 0.6),
-                        blue: 0.02,
-                        alpha: 1.0
-                    )
+                    let s1 = 0.02 + 0.015 * sin(angle)
+                    let s2 = 0.14 + 0.06 * cos(angle)
+                    let s3 = 0.42 + 0.18 * sin(angle + 0.9)
+
+                    let c1 = CGColor(red: s1, green: s1, blue: s1, alpha: 1.0)
+                    let c2 = CGColor(red: s2, green: s2, blue: s2, alpha: 1.0)
+                    let c3 = CGColor(red: s3, green: s3, blue: s3, alpha: 1.0)
 
                     if let grad = CGGradient(
                         colorsSpace: colorSpace,
                         colors: [c1, c2, c3] as CFArray,
-                        locations: [0.0, 0.60, 1.0]
+                        locations: [0.0, 0.62, 1.0]
                     ) {
                         let startPt = CGPoint(
                             x: Double(width) * (0.25 + 0.2 * cos(angle)),
@@ -442,8 +489,8 @@ public final class WallpaperStore: ObservableObject {
                         y: Double(height) * (0.5 + 0.22 * cos(angle))
                     )
                     let orbColors = [
-                        CGColor(red: 1.0, green: 0.45, blue: 0.0, alpha: 0.55),
-                        CGColor(red: 1.0, green: 0.60, blue: 0.15, alpha: 0.0)
+                        CGColor(red: 0.92, green: 0.92, blue: 0.94, alpha: 0.42),
+                        CGColor(red: 0.65, green: 0.65, blue: 0.68, alpha: 0.0)
                     ] as CFArray
                     if let radial = CGGradient(colorsSpace: colorSpace, colors: orbColors, locations: [0.0, 1.0]) {
                         ctx.drawRadialGradient(

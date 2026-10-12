@@ -3,681 +3,529 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AuraDesk — Breathe 4K Motion into Your Mac (Neon Saffron Edition)</title>
-  <meta name="description" content="Free & open-source macOS 4K live animation & video engine for Desktop, Screen Saver, and native Lock Screen. Built with Swift & AVFoundation." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>AURADESK PRO — 4K Live Desktop, Screen Saver & Lock Screen Engine for macOS</title>
+  <meta name="description" content="100% Free & Open Source macOS 4K Live Wallpaper Engine. Apply 350+ built-in 4K 60/240fps wallpapers to your Desktop, Screen Saver, and native macOS Lock Screen." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
     :root {
-      --bg-black: #050505;
-      --bg-carbon: #0A0A0A;
-      --saffron-neon: #FF6A00;
-      --saffron-bright: #FF9933;
-      --saffron-gold: #FFB74D;
+      --bg-obsidian: #030304;
+      --bg-carbon: #09090B;
+      --surface-top: #18181B;
+      --surface-bottom: #0B0B0E;
+      --silver-pure: #FFFFFF;
+      --silver-bright: #E4E4E7;
+      --silver-mid: #A1A1AA;
+      --silver-muted: #71717A;
+      --border-gunmetal: #27272A;
     }
 
     body {
-      background-color: var(--bg-black);
-      background-image:
-        radial-gradient(circle at 50% 16%, rgba(255, 106, 0, 0.24) 0%, transparent 52%),
-        radial-gradient(circle at 85% 42%, rgba(255, 153, 51, 0.16) 0%, transparent 45%),
-        radial-gradient(circle at 15% 70%, rgba(255, 106, 0, 0.15) 0%, transparent 48%);
-      color: #FFF8F2;
+      background-color: var(--bg-obsidian);
+      color: var(--silver-pure);
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       overflow-x: hidden;
+      background-image:
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08) 0%, transparent 55%),
+        linear-gradient(180deg, #050507 0%, #020203 100%);
     }
 
-    /* Neon Saffron Box on Pure Black Background with Glowing Saffron Curves */
-    .figma-saffron-card {
-      background: linear-gradient(135deg, rgba(255, 106, 0, 0.16) 0%, rgba(18, 9, 3, 0.90) 60%, rgba(8, 4, 1, 0.96) 100%);
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
-      border-radius: 54px;
-      border: 2px solid rgba(255, 136, 0, 0.72);
+    /* Architectural subtle grid overlay */
+    .sharp-grid-bg {
+      background-size: 48px 48px;
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Sharp Black & Silver Metallic Card */
+    .silver-sharp-card {
+      background: linear-gradient(180deg, rgba(28, 28, 32, 0.92) 0%, rgba(10, 10, 13, 0.98) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-top: 1px solid rgba(255, 255, 255, 0.34);
+      border-radius: 8px;
       box-shadow:
-        0 28px 60px -15px rgba(0, 0, 0, 0.95),
-        0 0 28px -4px rgba(255, 106, 0, 0.28),
-        inset 0 1px 2px rgba(255, 170, 77, 0.45);
-      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+        0 20px 50px rgba(0, 0, 0, 0.85),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    .figma-saffron-card:hover {
-      border-color: #FF9933;
+    .silver-sharp-card:hover {
+      border-color: rgba(255, 255, 255, 0.36);
+      border-top-color: rgba(255, 255, 255, 0.72);
       box-shadow:
-        0 34px 70px -12px rgba(0, 0, 0, 0.98),
-        0 0 42px -2px rgba(255, 106, 0, 0.52),
-        inset 0 1px 3px rgba(255, 190, 100, 0.65);
-    }
-
-    /* Wide Horizontal Saffron Pill Banner */
-    .figma-saffron-banner {
-      background: linear-gradient(115deg, rgba(255, 106, 0, 0.18) 0%, rgba(16, 8, 2, 0.92) 55%, rgba(8, 4, 1, 0.96) 100%);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-radius: 78px;
-      border: 2px solid rgba(255, 136, 0, 0.78);
-      box-shadow:
-        0 32px 70px -15px rgba(0, 0, 0, 0.95),
-        0 0 36px -4px rgba(255, 106, 0, 0.34),
-        inset 0 1px 2px rgba(255, 175, 85, 0.48);
-    }
-
-    /* Section Title with Neon Saffron Curved Corner Brackets: [ Our Top Capabilities ] */
-    .saffron-bracket-title {
-      position: relative;
-      display: inline-block;
-      padding: 10px 30px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      text-shadow: 0 0 22px rgba(255, 106, 0, 0.45);
-    }
-    .saffron-bracket-title::before,
-    .saffron-bracket-title::after {
-      content: '';
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      pointer-events: none;
-    }
-    .saffron-bracket-title::before {
-      top: 0;
-      right: 0;
-      border-top: 3px solid #FF7700;
-      border-right: 3px solid #FF7700;
-      border-top-right-radius: 12px;
-      filter: drop-shadow(0 0 8px rgba(255, 106, 0, 0.8));
-    }
-    .saffron-bracket-title::after {
-      bottom: 0;
-      left: 0;
-      border-bottom: 3px solid #FF7700;
-      border-left: 3px solid #FF7700;
-      border-bottom-left-radius: 12px;
-      filter: drop-shadow(0 0 8px rgba(255, 106, 0, 0.8));
-    }
-
-    /* Neon Saffron Outline & Solid Pill Buttons */
-    .saffron-outline-btn {
-      border: 1.8px solid #FF8800;
-      border-radius: 14px;
-      padding: 10px 26px;
-      font-size: 0.925rem;
-      font-weight: 600;
-      color: #FFF8F2;
-      background: rgba(255, 106, 0, 0.12);
-      box-shadow: 0 0 18px rgba(255, 106, 0, 0.22);
-      transition: all 0.25s ease;
-    }
-    .saffron-outline-btn:hover {
-      background: linear-gradient(135deg, #FF6A00, #FF9933);
-      color: #050505;
-      border-color: #FFB74D;
-      box-shadow: 0 0 28px rgba(255, 106, 0, 0.65);
+        0 24px 60px rgba(0, 0, 0, 0.95),
+        0 0 28px rgba(255, 255, 255, 0.07),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
       transform: translateY(-2px);
     }
 
-    /* Pop-out 3D Render Drop Shadow with Subtle Saffron Rim Glow */
-    .render-3d-pop {
-      filter: drop-shadow(0 26px 30px rgba(0, 0, 0, 0.92)) drop-shadow(0 0 18px rgba(255, 106, 0, 0.22));
-      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    /* Liquid Chrome / Silver Gradient Text */
+    .text-chrome-grad {
+      background: linear-gradient(180deg, #FFFFFF 0%, #E4E4E7 45%, #71717A 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-    .group:hover .render-3d-pop {
-      transform: translateY(-10px) scale(1.04);
+
+    /* Liquid Chrome Primary Button */
+    .btn-chrome-primary {
+      background: linear-gradient(180deg, #FFFFFF 0%, #D4D4D8 55%, #A1A1AA 100%);
+      color: #000000;
+      font-weight: 700;
+      border: 1px solid #FFFFFF;
+      border-radius: 6px;
+      box-shadow: 0 6px 24px rgba(255, 255, 255, 0.14), inset 0 1px 0 #FFFFFF;
+      transition: all 0.18s ease;
     }
+    .btn-chrome-primary:hover {
+      background: linear-gradient(180deg, #FFFFFF 0%, #F4F4F5 65%, #D4D4D8 100%);
+      box-shadow: 0 8px 30px rgba(255, 255, 255, 0.26);
+      transform: translateY(-1px);
+    }
+
+    /* Gunmetal Silver Secondary Button */
+    .btn-silver-secondary {
+      background: linear-gradient(180deg, #222226 0%, #111114 100%);
+      color: #E4E4E7;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-top-color: rgba(255, 255, 255, 0.42);
+      border-radius: 6px;
+      transition: all 0.18s ease;
+    }
+    .btn-silver-secondary:hover {
+      background: linear-gradient(180deg, #2E2E34 0%, #18181C 100%);
+      border-color: rgba(255, 255, 255, 0.55);
+      color: #FFFFFF;
+    }
+
+    /* Filter Tab Active */
+    .cat-tab-active {
+      background: linear-gradient(180deg, #FFFFFF 0%, #D4D4D8 100%);
+      color: #000000;
+      border-color: #FFFFFF;
+      font-weight: 700;
+    }
+    .cat-tab-inactive {
+      background: #0D0D10;
+      color: #A1A1AA;
+      border-color: #27272A;
+    }
+    .cat-tab-inactive:hover {
+      border-color: #71717A;
+      color: #FFFFFF;
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #050507; }
+    ::-webkit-scrollbar-thumb { background: #3F3F46; border-radius: 3px; }
   </style>
 </head>
-<body class="min-h-screen selection:bg-[#FF6A00] selection:text-black">
+<body class="antialiased selection:bg-white selection:text-black sharp-grid-bg">
 
-  <!-- ======================= TOP NAVBAR ======================= -->
-  <header class="relative z-40 max-w-7xl mx-auto px-6 lg:px-12 pt-7 pb-4 flex items-center justify-between border-b border-[#FF6A00]/20">
-    <!-- Left Brand Logo + Name -->
-    <a href="#" class="flex items-center gap-3 group">
-      <div class="w-9 h-9 rounded-xl bg-[#FF6A00]/20 border-2 border-[#FF8800] flex items-center justify-center shadow-lg shadow-[#FF6A00]/30">
-        <svg class="w-5 h-5 text-[#FF9933]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
+  <!-- TOP NAVIGATION BAR -->
+  <header class="sticky top-0 z-50 border-b border-zinc-800/90 bg-black/85 backdrop-blur-xl">
+    <div class="max-w-[1320px] mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-[6px] flex items-center justify-center bg-gradient-to-b from-white via-zinc-200 to-zinc-400 text-black font-black shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+            <rect x="2" y="3" width="20" height="14" rx="2" />
+            <path d="M8 21h8M12 17v4" />
+          </svg>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-black tracking-[0.14em] text-white">AURADESK</span>
+          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-[3px] bg-zinc-200 text-black">PRO 4K</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-xs font-mono uppercase tracking-wider text-zinc-400">
+        <a href="#top-4k-wallpapers" class="hover:text-white transition">Top 4K Wallpapers</a>
+        <a href="#app-workspace" class="hover:text-white transition">Pro App Interface</a>
+        <a href="#architecture" class="hover:text-white transition">3-Surface Engine</a>
+        <a href="#lockscreen-engine" class="hover:text-white transition">Lock Screen Engine</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="https://github.com/shubhransh-gupta/AuraDesk" target="_blank" class="btn-silver-secondary px-3.5 py-2 text-xs font-mono flex items-center gap-2">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>GitHub</span>
+        </a>
+        <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary px-4 py-2 text-xs font-mono uppercase tracking-wider">
+          Download macOS App
+        </a>
       </div>
-      <span class="text-xl font-bold tracking-tight text-white">Aura<span class="text-[#FF8800]">Desk.</span></span>
-    </a>
-
-    <!-- Center Links -->
-    <nav class="hidden md:flex items-center gap-10 text-sm font-medium text-white/80">
-      <a href="#home" class="hover:text-[#FF9933] transition-colors">Home</a>
-      <a href="#surfaces" class="hover:text-[#FF9933] transition-colors flex items-center gap-1">
-        <span>Mac Surfaces</span>
-        <svg class="w-3.5 h-3.5 text-[#FF8800]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
-      </a>
-      <a href="#features" class="hover:text-[#FF9933] transition-colors">3D Engines</a>
-      <a href="#catalog" class="hover:text-[#FF9933] transition-colors">4K Live Demo</a>
-    </nav>
-
-    <!-- Right Action Icons -->
-    <div class="flex items-center gap-5">
-      <a href="https://github.com/shubhransh-gupta/AuraDesk" target="_blank" rel="noopener" title="View on GitHub" class="text-white/80 hover:text-[#FF9933] transition-colors">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-        </svg>
-      </a>
-      <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener" title="Download AuraDesk.app" class="text-[#FF9933] hover:text-white transition-colors">
-        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-        </svg>
-      </a>
     </div>
   </header>
 
-  <!-- ======================= HERO + CENTRAL GIANT 3D MAC SPINE + OVERLAPPING SAFFRON BANNERS ======================= -->
-  <div id="home" class="relative max-w-7xl mx-auto px-6 lg:px-12 pt-8 pb-20">
+  <main class="max-w-[1320px] mx-auto px-6">
 
-    <!-- GIANT CENTRAL 3D MAC STUDIO DISPLAY WITH NEON SAFFRON MOTION WAVES -->
-    <div class="hidden lg:flex justify-center pointer-events-none absolute left-1/2 -translate-x-1/2 top-[60px] z-10 w-[640px]">
-      <img src="./assets/hero-center-mac.png" alt="AuraDesk 4K Pro Display XDR & MacBook Centerpiece"
-           class="w-full h-auto object-contain render-3d-pop opacity-95" />
-    </div>
-
-    <!-- TOP ROW: Left Hero Headline + Floating Saffron Review Box | Right 3D Pop-out Saffron Box -->
-    <div class="relative z-20 grid grid-cols-1 lg:grid-cols-12 gap-10 items-start pt-4">
-
-      <!-- Left Column (Cols 1-7) -->
-      <div class="lg:col-span-7 space-y-8">
-        <div class="max-w-xl">
-          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FF6A00]/15 border border-[#FF8800]/60 text-xs font-semibold text-[#FF9933] mb-4">
-            <span class="w-2 h-2 rounded-full bg-[#FF6A00] animate-ping"></span>
-            <span>100% Free &amp; Open Source macOS 4K Engine</span>
+    <!-- 1. HERO + TOP 4K WALLPAPERS FIRST -->
+    <section class="pt-14 pb-10">
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-10 border-b border-zinc-800/80">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2.5 px-3 py-1 rounded-[4px] bg-zinc-900 border border-zinc-700 mb-5">
+            <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+            <span class="text-[11px] font-mono uppercase tracking-[0.14em] text-zinc-300">100% Free & Open Source • macOS Sonoma / Sequoia / Tahoe</span>
           </div>
-          <h1 class="text-5xl sm:text-7xl font-extrabold tracking-tight text-white leading-[1.06]">
-            Breathe <span class="bg-gradient-to-r from-[#FF6A00] via-[#FF9933] to-[#FFD180] bg-clip-text text-transparent">4K Motion</span>
+          <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-[1.04] text-chrome-grad mb-4">
+            350+ Built-In 4K Wallpapers.<br />Desktop, Screen Saver & Lock Screen.
           </h1>
-          <p class="mt-5 text-base sm:text-lg text-white/75 leading-relaxed max-w-md">
-            Bring any custom 4K 60/240fps animation or video to your macOS <strong class="text-[#FF9933]">Desktop</strong>, <strong class="text-[#FF9933]">Screen Saver</strong>, and native <strong class="text-[#FF9933]">Lock Screen</strong> — zero paywalls forever.
-          </p>
-
-          <!-- Explore Button + Live Demo Circle Button -->
-          <div class="mt-7 flex items-center gap-6">
-            <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
-               class="saffron-outline-btn cursor-pointer">
-              Download Free
-            </a>
-
-            <a href="#catalog" class="inline-flex items-center gap-3 text-sm text-white/90 hover:text-[#FF9933] group cursor-pointer">
-              <span class="w-11 h-11 rounded-full border-2 border-[#FF8800] bg-[#FF6A00]/15 flex items-center justify-center group-hover:bg-[#FF6A00] group-hover:text-black group-hover:scale-105 transition-all shadow-lg shadow-[#FF6A00]/30">
-                <svg class="w-4 h-4 translate-x-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
-                </svg>
-              </span>
-              <span class="font-medium">Live 4K Demo...</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Floating Saffron Box on Mid-Left -->
-        <div class="figma-saffron-card p-6 max-w-[340px] mt-16 lg:mt-24">
-          <div class="flex items-center gap-3.5">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-[#FF6A00] to-[#FFB74D] flex items-center justify-center text-black font-extrabold text-sm shadow-lg shadow-[#FF6A00]/40">
-              M4
-            </div>
-            <div>
-              <div class="text-sm font-bold text-white">macOS Sequoia &amp; Tahoe</div>
-              <div class="flex items-center text-[#FF9933] text-xs mt-0.5 font-semibold">
-                ★★★★★ <span class="ml-1.5 text-white/70 text-[11px]">Native Swift</span>
-              </div>
-            </div>
-          </div>
-          <p class="mt-3.5 text-xs text-white/80 leading-relaxed">
-            "Zero Dock clutter, &lt;1% CPU hardware HEVC decoding, and real Lock Screen motion via <code class="text-[#FF9933] font-semibold">idleassetsd</code> injection with 1-click backup restore."
+          <p class="text-zinc-400 text-base sm:text-lg max-w-2xl leading-relaxed">
+            No need to hunt for video files. Pick from our curated library of <strong class="text-white font-semibold">350+ 4K Ultra HD 60/240fps live wallpapers</strong> right at the top of the app and apply them to all three macOS surfaces in a single click.
           </p>
         </div>
-      </div>
 
-      <!-- Right Column (Cols 8-12): Tall Saffron Box with 3D Mac Pop-Out Top -->
-      <div class="lg:col-span-5 flex justify-center lg:justify-end mt-12 lg:mt-6">
-        <div class="figma-saffron-card w-full max-w-[340px] pt-36 pb-8 px-8 relative group">
-          <!-- 3D Mac Asset Popping Out of Top of Saffron Card -->
-          <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-64 h-64 flex items-center justify-center pointer-events-none">
-            <img src="./assets/mac-desktop.png" alt="3D macOS Desktop Live Video Engine"
-                 class="w-full h-full object-contain render-3d-pop" />
-          </div>
-
-          <div class="mt-6 text-left">
-            <span class="text-xs text-[#FF9933] font-bold uppercase tracking-wider">Native macOS Engine</span>
-            <h3 class="text-2xl font-bold text-white mt-1">4K Desktop Layer</h3>
-            <p class="text-xs text-white/75 mt-1.5 leading-relaxed">
-              Plays behind desktop icons across all monitors &amp; Spaces.
-            </p>
-            <div class="mt-5 flex items-center justify-between">
-              <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
-                 class="saffron-outline-btn text-xs py-2 px-5">
-                Install Now
-              </a>
-              <div class="flex items-center gap-1.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-[#FF6A00] shadow-sm shadow-[#FF6A00]"></span>
-                <span class="w-1.5 h-1.5 rounded-full bg-[#FF9933]/40"></span>
-                <span class="w-1.5 h-1.5 rounded-full bg-[#FF9933]/40"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ======================= "OUR TRENDY SURFACES" (2 Wide Horizontal Neon Saffron Boxes Overlapping Central Spine) ======================= -->
-    <div id="surfaces" class="relative z-20 mt-20 lg:mt-28">
-      <div class="text-center mb-16">
-        <h2 class="text-2xl sm:text-3xl text-white saffron-bracket-title">
-          Our Trendy Surfaces
-        </h2>
-      </div>
-
-      <div class="space-y-20">
-        <!-- Wide Horizontal Saffron Banner 1: 3D Mac Lock Screen Pop-Out on Left, Text on Right -->
-        <div class="figma-saffron-banner p-8 sm:p-12 lg:px-16 lg:py-12 relative group">
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div class="lg:col-span-5 relative flex justify-center">
-              <div class="w-64 sm:w-80 lg:w-96 lg:-my-20 flex items-center justify-center">
-                <img src="./assets/mac-lockscreen.png" alt="3D macOS Lock Screen Video Engine"
-                     class="w-full h-auto object-contain render-3d-pop" />
-              </div>
-            </div>
-
-            <div class="lg:col-span-7 text-left lg:pl-8 space-y-4">
-              <h3 class="text-2xl sm:text-3xl font-bold text-white">
-                For Native macOS Lock Screen Motion
-              </h3>
-              <p class="text-sm sm:text-base text-white/80 leading-relaxed max-w-xl">
-                AuraDesk automatically remuxes any 4K <code class="text-[#FF9933] font-semibold">.mp4</code> or <code class="text-[#FF9933] font-semibold">.mov</code> video without re-encoding, backs up Apple's original Aerial asset, updates <code class="text-[#FF9933] font-semibold">Index.plist</code>, and injects your video into <code class="text-[#FF9933] font-semibold">idleassetsd</code> for genuine Lock Screen playback.
-              </p>
-              <div class="text-xl font-extrabold text-[#FF8800] pt-1">
-                Free Forever • $0
-              </div>
-              <div class="pt-2 flex items-center gap-4">
-                <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
-                   class="saffron-outline-btn">
-                  Explore Lock Engine
-                </a>
-                <a href="https://github.com/shubhransh-gupta/AuraDesk" target="_blank" rel="noopener"
-                   class="w-11 h-11 rounded-xl border-2 border-[#FF8800] bg-[#FF6A00]/15 flex items-center justify-center hover:bg-[#FF6A00] hover:text-black transition-all" title="View Source">
-                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Wide Horizontal Saffron Banner 2: Text on Left, 3D Mac Screen Saver Pop-Out on Right -->
-        <div class="figma-saffron-banner p-8 sm:p-12 lg:px-16 lg:py-12 relative group">
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div class="lg:col-span-7 text-left space-y-4 order-2 lg:order-1">
-              <h3 class="text-2xl sm:text-3xl font-bold text-white">
-                For 4K 240fps Screen Saver &amp; Clock
-              </h3>
-              <p class="text-sm sm:text-base text-white/80 leading-relaxed max-w-xl">
-                Includes both native macOS Aerial Screen Saver synchronization and an instant built-in fullscreen 4K Screen Saver overlay complete with the Sonoma-style date &amp; time clock and configurable idle timer.
-              </p>
-              <div class="text-xl font-extrabold text-[#FF8800] pt-1">
-                4K UHD • 240 FPS
-              </div>
-              <div class="pt-2 flex items-center gap-4">
-                <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
-                   class="saffron-outline-btn">
-                  Try Screen Saver
-                </a>
-                <a href="#catalog"
-                   class="w-11 h-11 rounded-xl border-2 border-[#FF8800] bg-[#FF6A00]/15 flex items-center justify-center hover:bg-[#FF6A00] hover:text-black transition-all" title="Preview 4K">
-                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-
-            <div class="lg:col-span-5 relative flex justify-center order-1 lg:order-2">
-              <div class="w-64 sm:w-80 lg:w-96 lg:-my-20 flex items-center justify-center">
-                <img src="./assets/mac-screensaver.png" alt="3D macOS 4K Screen Saver Engine"
-                     class="w-full h-auto object-contain render-3d-pop" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ======================= "OUR TOP CAPABILITIES" (3x2 Grid of 3D Pop-Out Saffron Boxes) ======================= -->
-  <section id="features" class="max-w-7xl mx-auto px-6 lg:px-12 py-20">
-    <div class="text-center mb-24">
-      <h2 class="text-2xl sm:text-3xl text-white saffron-bracket-title">
-        Our Top Capabilities
-      </h2>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-9 gap-y-24">
-
-      <!-- Card 1 -->
-      <div class="figma-saffron-card pt-36 pb-8 px-8 relative group">
-        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-56 h-56 flex items-center justify-center pointer-events-none">
-          <img src="./assets/mac-cloud.png" alt="350+ 4K Cloud Catalog" class="w-full h-full object-contain render-3d-pop" />
-        </div>
-        <h3 class="text-2xl font-bold text-white mt-2">350+ 4K Cloud Feed</h3>
-        <p class="text-xs text-white/75 mt-2 leading-relaxed">
-          Built-in browser for 213+ Community 4K UHD loops (Space, Cars, Anime, Nature, Dark) + Apple's 240fps Aerials.
-        </p>
-        <div class="mt-6 flex items-center justify-between">
-          <span class="text-lg font-extrabold text-[#FF9933]">350+ Videos</span>
-          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
-             class="w-10 h-10 rounded-xl border-2 border-[#FF8800] bg-[#FF6A00]/15 flex items-center justify-center hover:bg-[#FF6A00] hover:text-black transition-all">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        <div class="flex flex-wrap items-center gap-3 shrink-0">
+          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary px-6 py-3.5 text-xs font-mono uppercase tracking-wider flex items-center gap-2.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+            <span>Download AuraDesk.app (Free)</span>
+          </a>
+          <a href="#top-4k-wallpapers" class="btn-silver-secondary px-5 py-3.5 text-xs font-mono uppercase tracking-wider">
+            Browse Top 4K Catalog
           </a>
         </div>
       </div>
+    </section>
 
-      <!-- Card 2 -->
-      <div class="figma-saffron-card pt-36 pb-8 px-8 relative group">
-        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-56 h-56 flex items-center justify-center pointer-events-none">
-          <img src="./assets/mac-mchip.png" alt="Apple Silicon Hardware Decode" class="w-full h-full object-contain render-3d-pop" />
-        </div>
-        <h3 class="text-2xl font-bold text-white mt-2">Apple Silicon Engine</h3>
-        <p class="text-xs text-white/75 mt-2 leading-relaxed">
-          Native AVQueuePlayer &amp; AVPlayerLooper hardware HEVC/H.264 decoding keeps CPU usage under 1%.
-        </p>
-        <div class="mt-6 flex items-center justify-between">
-          <span class="text-lg font-extrabold text-[#FF9933]">&lt; 1% CPU</span>
-          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
-             class="w-10 h-10 rounded-xl border-2 border-[#FF8800] bg-[#FF6A00]/15 flex items-center justify-center hover:bg-[#FF6A00] hover:text-black transition-all">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="figma-saffron-card pt-36 pb-8 px-8 relative group">
-        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-56 h-56 flex items-center justify-center pointer-events-none">
-          <img src="./assets/mac-multimonitor.png" alt="Multi-Monitor Ultrawide Support" class="w-full h-full object-contain render-3d-pop" />
-        </div>
-        <h3 class="text-2xl font-bold text-white mt-2">Multi-Display Sync</h3>
-        <p class="text-xs text-white/75 mt-2 leading-relaxed">
-          Spans ultrawide and multi-monitor macOS setups seamlessly across all Mission Control Spaces.
-        </p>
-        <div class="mt-6 flex items-center justify-between">
-          <span class="text-lg font-extrabold text-[#FF9933]">All Displays</span>
-          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
-             class="w-10 h-10 rounded-xl border-2 border-[#FF8800] bg-[#FF6A00]/15 flex items-center justify-center hover:bg-[#FF6A00] hover:text-black transition-all">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- Card 4 -->
-      <div class="figma-saffron-card pt-36 pb-8 px-8 relative group">
-        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-56 h-56 flex items-center justify-center pointer-events-none">
-          <img src="./assets/mac-battery.png" alt="Smart Sleep & Battery Shield" class="w-full h-full object-contain render-3d-pop" />
-        </div>
-        <h3 class="text-2xl font-bold text-white mt-2">Smart Energy Shield</h3>
-        <p class="text-xs text-white/75 mt-2 leading-relaxed">
-          Automatically pauses desktop video playback the moment your display sleeps or session locks.
-        </p>
-        <div class="mt-6 flex items-center justify-between">
-          <span class="text-lg font-extrabold text-[#FF9933]">Zero Drain</span>
-          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
-             class="w-10 h-10 rounded-xl border-2 border-[#FF8800] bg-[#FF6A00]/15 flex items-center justify-center hover:bg-[#FF6A00] hover:text-black transition-all">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- Card 5 -->
-      <div class="figma-saffron-card pt-36 pb-8 px-8 relative group">
-        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-56 h-56 flex items-center justify-center pointer-events-none">
-          <img src="./assets/mac-lockscreen.png" alt="1-Click Aerial Backup & Restore" class="w-full h-full object-contain render-3d-pop" />
-        </div>
-        <h3 class="text-2xl font-bold text-white mt-2">1-Click Safe Backup</h3>
-        <p class="text-xs text-white/75 mt-2 leading-relaxed">
-          Automatically backs up Apple's original <code class="text-[#FF9933] font-semibold">4KSDR240FPS</code> `.mov` file so you can restore it anytime.
-        </p>
-        <div class="mt-6 flex items-center justify-between">
-          <span class="text-lg font-extrabold text-[#FF9933]">Safe Swap</span>
-          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
-             class="w-10 h-10 rounded-xl border-2 border-[#FF8800] bg-[#FF6A00]/15 flex items-center justify-center hover:bg-[#FF6A00] hover:text-black transition-all">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- Card 6 -->
-      <div class="figma-saffron-card pt-36 pb-8 px-8 relative group">
-        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-56 h-56 flex items-center justify-center pointer-events-none">
-          <img src="./assets/mac-screensaver.png" alt="4K Procedural Video Synthesizer" class="w-full h-full object-contain render-3d-pop" />
-        </div>
-        <h3 class="text-2xl font-bold text-white mt-2">4K Video Synthesizer</h3>
-        <p class="text-xs text-white/75 mt-2 leading-relaxed">
-          Don't have a 4K file handy? AuraDesk synthesizes a native 3840×2160 HEVC `.mov` sample on the spot.
-        </p>
-        <div class="mt-6 flex items-center justify-between">
-          <span class="text-lg font-extrabold text-[#FF9933]">Built-In 4K</span>
-          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
-             class="w-10 h-10 rounded-xl border-2 border-[#FF8800] bg-[#FF6A00]/15 flex items-center justify-center hover:bg-[#FF6A00] hover:text-black transition-all">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-          </a>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ======================= "MAC COMMUNITY REVIEW" (3 Saffron Boxes in a Row) ======================= -->
-  <section class="max-w-7xl mx-auto px-6 lg:px-12 py-16">
-    <div class="text-center mb-16">
-      <h2 class="text-2xl sm:text-3xl text-white saffron-bracket-title">
-        Mac Community Review
-      </h2>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div class="figma-saffron-card p-8">
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-full bg-[#FF6A00]/25 border-2 border-[#FF8800] flex items-center justify-center font-bold text-[#FFB74D]">
-            AK
-          </div>
-          <div>
-            <h4 class="font-bold text-white text-base">Aarav K.</h4>
-            <div class="text-[#FF9933] text-xs">★★★★★</div>
-          </div>
-        </div>
-        <p class="mt-5 text-xs sm:text-sm text-white/80 leading-relaxed">
-          "Finally an open-source macOS wallpaper app that actually puts 4K video on the real Lock Screen without asking for a $29 subscription."
-        </p>
-      </div>
-
-      <div class="figma-saffron-card p-8">
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-full bg-[#FF6A00]/25 border-2 border-[#FF8800] flex items-center justify-center font-bold text-[#FFB74D]">
-            MR
-          </div>
-          <div>
-            <h4 class="font-bold text-white text-base">Maya R.</h4>
-            <div class="text-[#FF9933] text-xs">★★★★★</div>
-          </div>
-        </div>
-        <p class="mt-5 text-xs sm:text-sm text-white/80 leading-relaxed">
-          "Having 350+ 4K wallpapers built right into the Discover tab—from SpaceX launches to Porsche GT3 and Apple 240fps Aerials—is incredible."
-        </p>
-      </div>
-
-      <div class="figma-saffron-card p-8">
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-full bg-[#FF6A00]/25 border-2 border-[#FF8800] flex items-center justify-center font-bold text-[#FFB74D]">
-            DL
-          </div>
-          <div>
-            <h4 class="font-bold text-white text-base">Devon L.</h4>
-            <div class="text-[#FF9933] text-xs">★★★★★</div>
-          </div>
-        </div>
-        <p class="mt-5 text-xs sm:text-sm text-white/80 leading-relaxed">
-          "Runs at 0.4% CPU on my M3 Max MacBook Pro and automatically pauses when I lock the screen or close the lid. Clean native Swift."
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================= "OUR BEST 4K ENGINE" BOTTOM SHOWCASE SAFFRON BOX ======================= -->
-  <section id="catalog" class="max-w-7xl mx-auto px-6 lg:px-12 py-16">
-    <div class="text-center mb-16">
-      <h2 class="text-2xl sm:text-3xl text-white saffron-bracket-title">
-        Our Best 4K Engine
-      </h2>
-    </div>
-
-    <div class="figma-saffron-banner p-8 sm:p-12 lg:p-16 relative">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-
-        <div class="lg:col-span-6">
-          <div class="relative rounded-3xl overflow-hidden border-2 border-[#FF8800] shadow-2xl shadow-[#FF6A00]/20 aspect-video bg-black">
-            <video id="demo-video" autoplay loop muted playsinline poster="https://cdn.macwall.app/thumbs/spacex-starship-launchpad.jpg"
-                   class="w-full h-full object-cover">
-              <source id="demo-video-src" src="https://cdn.macwall.app/videos/spacex-starship-launchpad.mp4" type="video/mp4" />
-            </video>
-            <div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-black/80 backdrop-blur-md border border-[#FF8800] text-[11px] text-[#FF9933] font-semibold">
-              <span id="demo-label">SpaceX Starship Launchpad • 3840×2160</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="lg:col-span-6 space-y-5 text-left">
-          <h3 class="text-2xl sm:text-3xl font-bold text-white leading-snug">
-            We Provide 350+ Curated 4K Ultra-HD Live Wallpapers &amp; Native Lock Screen Injection
-          </h3>
-          <p class="text-sm text-white/80 leading-relaxed">
-            Preview live 4K streams directly from the built-in AuraDesk Cloud Catalog or drag-and-drop any personal `.mp4` or `.mov` creation. One click applies your video across Desktop, Screen Saver, and Lock Screen.
-          </p>
-          <p class="text-xs text-[#FFB74D] font-mono bg-black/65 px-4 py-3 rounded-2xl border border-[#FF8800]/50">
-            git clone https://github.com/shubhransh-gupta/AuraDesk.git &amp;&amp; cd AuraDesk &amp;&amp; ./build_app.sh
-          </p>
-
-          <div class="pt-3 flex items-center justify-between">
-            <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
-               class="saffron-outline-btn">
-              Download AuraDesk.app
-            </a>
-
-            <div class="flex items-center gap-4 text-sm text-white/90">
-              <button onclick="prevSlide()" class="w-9 h-9 rounded-full border-2 border-[#FF8800] bg-[#FF6A00]/15 flex items-center justify-center hover:bg-[#FF6A00] hover:text-black cursor-pointer transition-all" aria-label="Previous 4K preview">
-                ‹
-              </button>
-              <span id="slide-counter" class="font-mono text-xs text-[#FF9933] font-bold">01/04</span>
-              <button onclick="nextSlide()" class="w-9 h-9 rounded-full border-2 border-[#FF8800] bg-[#FF6A00]/15 flex items-center justify-center hover:bg-[#FF6A00] hover:text-black cursor-pointer transition-all" aria-label="Next 4K preview">
-                ›
-              </button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================= FOOTER ======================= -->
-  <footer class="mt-16 border-t border-[#FF6A00]/25 bg-[#030303] py-14">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-3 gap-10">
-      <div class="space-y-4">
+    <!-- 2. OUR TOP 4K WALLPAPERS — RIGHT AT THE TOP -->
+    <section id="top-4k-wallpapers" class="py-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-lg bg-[#FF6A00]/20 border border-[#FF8800] flex items-center justify-center">
-            <svg class="w-4 h-4 text-[#FF9933]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
+          <div class="w-1 h-5 bg-white"></div>
+          <div>
+            <h2 class="text-lg font-extrabold tracking-wider uppercase font-mono text-white">OUR TOP 4K WALLPAPERS • BUILT-IN CATALOG</h2>
+            <p class="text-xs text-zinc-400">Included inside AuraDesk Pro for instant 1-click apply to Desktop, Screen Saver & Lock Screen</p>
           </div>
-          <span class="text-xl font-bold text-white">Aura<span class="text-[#FF8800]">Desk.</span></span>
         </div>
-        <p class="text-xs text-white/65 leading-relaxed max-w-xs">
-          100% free and open-source native macOS 4K Live Wallpaper, Screen Saver, and Lock Screen engine built with Swift &amp; AVFoundation.
-        </p>
-        <div class="flex items-center gap-4 text-xs font-bold text-[#FF9933] pt-2">
-          <a href="https://github.com/shubhransh-gupta/AuraDesk" class="hover:text-white">GH</a>
-          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases" class="hover:text-white">REL</a>
-          <a href="https://github.com/shubhransh-gupta/AuraDesk/issues" class="hover:text-white">ISSUES</a>
+
+        <!-- Sharp Category Filters -->
+        <div class="flex flex-wrap items-center gap-1.5" id="catalog-filters">
+          <button onclick="filterCatalog('All')" data-cat="All" class="cat-btn cat-tab-active px-3 py-1.5 text-[11px] font-mono uppercase rounded-[4px] border transition">All 4K</button>
+          <button onclick="filterCatalog('Space')" data-cat="Space" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[4px] border transition">Space</button>
+          <button onclick="filterCatalog('Dark')" data-cat="Dark" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[4px] border transition">Dark</button>
+          <button onclick="filterCatalog('Abstract')" data-cat="Abstract" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[4px] border transition">Abstract</button>
+          <button onclick="filterCatalog('Cars')" data-cat="Cars" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[4px] border transition">Cars</button>
+          <button onclick="filterCatalog('Nature')" data-cat="Nature" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[4px] border transition">Nature</button>
+          <button onclick="filterCatalog('Anime')" data-cat="Anime" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[4px] border transition">Anime</button>
         </div>
       </div>
 
-      <div class="space-y-3">
-        <h4 class="text-sm font-bold text-[#FF9933]">Quick Links</h4>
-        <ul class="space-y-2 text-xs text-white/75">
-          <li><a href="#home" class="hover:text-[#FF9933]">Home</a></li>
-          <li><a href="#surfaces" class="hover:text-[#FF9933]">Mac Surfaces (Desktop, Saver, Lock)</a></li>
-          <li><a href="#features" class="hover:text-[#FF9933]">3D Hardware Capabilities</a></li>
-          <li><a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" class="hover:text-[#FF9933]">Download macOS App (.zip)</a></li>
-        </ul>
+      <!-- Top 4K Wallpaper Grid -->
+      <div id="top-wallpapers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Populated by script below with real 4K catalog items -->
+      </div>
+    </section>
+
+    <!-- 3. NATIVE MACOS PRO APP PREVIEW (BLACK & SILVER GRADIENT SHARP UI) -->
+    <section id="app-workspace" class="py-16">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-1 h-5 bg-white"></div>
+          <div>
+            <h2 class="text-lg font-extrabold tracking-wider uppercase font-mono text-white">NATIVE MACOS PRO WORKSPACE • BLACK & SILVER</h2>
+            <p class="text-xs text-zinc-400">Engineered with Swift & SwiftUI — zero Electron bloat, native AVQueuePlayer + idleassetsd Lock Screen pipeline</p>
+          </div>
+        </div>
+        <span class="hidden sm:inline-block text-[11px] font-mono text-zinc-400 border border-zinc-800 bg-zinc-950 px-3 py-1 rounded-[4px]">
+          &lt; 0.3% CPU • METAL GPU ACCELERATED
+        </span>
       </div>
 
-      <div class="space-y-4">
-        <h4 class="text-sm font-bold text-[#FF9933]">One-Line Terminal Install</h4>
-        <div class="flex items-center rounded-xl border-2 border-[#FF8800]/70 p-1 bg-[#FF6A00]/10">
-          <input type="text" readonly value="git clone https://github.com/shubhransh-gupta/AuraDesk.git"
-                 class="bg-transparent text-xs text-white px-3 py-2 w-full focus:outline-none font-mono" />
-          <button onclick="navigator.clipboard.writeText('git clone https://github.com/shubhransh-gupta/AuraDesk.git')"
-                  class="px-4 py-2 rounded-lg bg-gradient-to-r from-[#FF6A00] to-[#FF9933] text-black text-xs font-bold hover:brightness-110 transition-all cursor-pointer shrink-0">
-            Copy
-          </button>
+      <!-- Sharp Native macOS App Window Frame -->
+      <div class="silver-sharp-card overflow-hidden border border-zinc-700/80">
+        <!-- macOS Window Titlebar -->
+        <div class="h-10 bg-zinc-950 border-b border-zinc-800 px-4 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-zinc-700 border border-zinc-500"></span>
+            <span class="w-3 h-3 rounded-full bg-zinc-700 border border-zinc-500"></span>
+            <span class="w-3 h-3 rounded-full bg-zinc-700 border border-zinc-500"></span>
+          </div>
+          <div class="text-[11px] font-mono text-zinc-400 tracking-wider">
+            AuraDesk Pro — 4K Live Wallpaper, Screen Saver & Lock Screen
+          </div>
+          <div class="text-[10px] font-mono text-zinc-500">v1.0.0</div>
         </div>
-        <p class="text-[11px] text-white/50">
-          AuraDesk © all rights reserved • Released under the MIT License.
-        </p>
+
+        <!-- App Body Mockup -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[460px] bg-[#060608]">
+          <!-- Left Sidebar -->
+          <div class="lg:col-span-3 border-b lg:border-b-0 lg:border-r border-zinc-800/90 p-4 flex flex-col justify-between bg-[#040405]">
+            <div>
+              <div class="flex items-center gap-2.5 pb-4 mb-4 border-b border-zinc-800">
+                <div class="w-7 h-7 rounded-[5px] bg-gradient-to-b from-white to-zinc-400 text-black flex items-center justify-center font-black text-xs">A</div>
+                <div>
+                  <div class="text-xs font-black tracking-wider text-white">AURADESK <span class="bg-zinc-200 text-black px-1 py-0.2 rounded-[2px] text-[9px] font-mono">PRO</span></div>
+                  <div class="text-[10px] text-zinc-500">4K Desktop • Saver • Lock</div>
+                </div>
+              </div>
+
+              <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider mb-2">Workspace</div>
+              <div class="space-y-1.5">
+                <div class="px-3 py-2 rounded-[5px] bg-gradient-to-r from-white via-zinc-200 to-zinc-300 text-black font-bold text-xs flex items-center justify-between">
+                  <span>Top 4K Wallpapers</span>
+                  <span class="font-mono text-[10px] bg-black/15 px-1.5 py-0.5 rounded">350+</span>
+                </div>
+                <div class="px-3 py-2 rounded-[5px] text-zinc-400 text-xs flex items-center justify-between hover:bg-zinc-900">
+                  <span>Downloaded & Local</span>
+                  <span class="font-mono text-[10px] bg-zinc-900 px-1.5 py-0.5 rounded">Ready</span>
+                </div>
+                <div class="px-3 py-2 rounded-[5px] text-zinc-400 text-xs flex items-center justify-between hover:bg-zinc-900">
+                  <span>Lock Screen Engine</span>
+                  <span class="font-mono text-[10px] text-zinc-500">Aerial</span>
+                </div>
+                <div class="px-3 py-2 rounded-[5px] text-zinc-400 text-xs flex items-center justify-between hover:bg-zinc-900">
+                  <span>Display & Power</span>
+                  <span class="font-mono text-[10px] text-zinc-500">GPU</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 p-3 rounded-[6px] bg-zinc-950 border border-zinc-800 space-y-1.5 font-mono text-[10px]">
+              <div class="flex justify-between text-zinc-300 font-bold pb-1 border-b border-zinc-800/80">
+                <span>ACTIVE TARGETS</span>
+                <span class="text-white">● LIVE</span>
+              </div>
+              <div class="flex justify-between"><span class="text-zinc-500">DESKTOP</span><span class="text-zinc-200">Obsidian Horizon 4K</span></div>
+              <div class="flex justify-between"><span class="text-zinc-500">SAVER</span><span class="text-zinc-200">Obsidian Horizon 4K</span></div>
+              <div class="flex justify-between"><span class="text-zinc-500">LOCK</span><span class="text-zinc-200">Synced (240fps)</span></div>
+            </div>
+          </div>
+
+          <!-- Right Main Workspace -->
+          <div class="lg:col-span-9 p-6 flex flex-col justify-between">
+            <div>
+              <div class="flex flex-wrap items-center justify-between gap-4 pb-4 mb-5 border-b border-zinc-800">
+                <div>
+                  <div class="text-xs font-mono font-bold text-white uppercase tracking-wider">OUR TOP 4K WALLPAPERS • INSTANT 1-CLICK APPLY</div>
+                  <div class="text-[11px] text-zinc-500">Click "Apply All 3" on any wallpaper to set Desktop, Screen Saver, and Lock Screen simultaneously</div>
+                </div>
+                <div class="px-3 py-1.5 rounded-[5px] bg-black border border-zinc-800 text-[11px] font-mono text-zinc-400">
+                  Search 350+ 4K wallpapers...
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="silver-sharp-card p-3">
+                  <div class="h-28 rounded-[5px] bg-gradient-to-br from-zinc-700 via-zinc-900 to-black border border-zinc-700/60 p-2.5 flex flex-col justify-between mb-3">
+                    <div class="flex justify-between items-center">
+                      <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white text-black">TOP 4K • SPACE</span>
+                      <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/80 text-zinc-200 border border-zinc-700">3840×2160</span>
+                    </div>
+                    <div class="text-xs font-bold text-white">Event Horizon Monolith</div>
+                  </div>
+                  <div class="flex gap-1.5">
+                    <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary flex-1 text-center py-1.5 text-[10px] font-mono uppercase">Apply All 3</a>
+                    <span class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono">Desk</span>
+                    <span class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono">Lock</span>
+                  </div>
+                </div>
+
+                <div class="silver-sharp-card p-3">
+                  <div class="h-28 rounded-[5px] bg-gradient-to-br from-zinc-600 via-zinc-900 to-black border border-zinc-700/60 p-2.5 flex flex-col justify-between mb-3">
+                    <div class="flex justify-between items-center">
+                      <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white text-black">TOP 4K • DARK</span>
+                      <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/80 text-zinc-200 border border-zinc-700">3840×2160</span>
+                    </div>
+                    <div class="text-xs font-bold text-white">Liquid Chrome Waves</div>
+                  </div>
+                  <div class="flex gap-1.5">
+                    <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary flex-1 text-center py-1.5 text-[10px] font-mono uppercase">Apply All 3</a>
+                    <span class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono">Desk</span>
+                    <span class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono">Lock</span>
+                  </div>
+                </div>
+
+                <div class="silver-sharp-card p-3">
+                  <div class="h-28 rounded-[5px] bg-gradient-to-br from-zinc-500 via-zinc-900 to-black border border-zinc-700/60 p-2.5 flex flex-col justify-between mb-3">
+                    <div class="flex justify-between items-center">
+                      <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white text-black">AERIAL 240FPS</span>
+                      <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/80 text-zinc-200 border border-zinc-700">3840×2160</span>
+                    </div>
+                    <div class="text-xs font-bold text-white">Patagonia Monochrome Peak</div>
+                  </div>
+                  <div class="flex gap-1.5">
+                    <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary flex-1 text-center py-1.5 text-[10px] font-mono uppercase">Apply All 3</a>
+                    <span class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono">Desk</span>
+                    <span class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono">Lock</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-zinc-800/80 flex flex-wrap items-center justify-between gap-4 text-[11px] font-mono text-zinc-400">
+              <span>● 4K ENGINE RUNNING — ZERO BATTERY DRAIN WHEN SLEEPING</span>
+              <span>NATIVE HEVC / H.264 HARDWARE DECODING</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. THREE-SURFACE ARCHITECTURE (SHARP BLACK & SILVER GRID) -->
+    <section id="architecture" class="py-12">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-1 h-5 bg-white"></div>
+        <div>
+          <h2 class="text-lg font-extrabold tracking-wider uppercase font-mono text-white">PRECISION 3-SURFACE MACOS ENGINE</h2>
+          <p class="text-xs text-zinc-400">Unlike basic desktop players, AuraDesk drives all three macOS visual layers natively</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="silver-sharp-card p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-1 rounded-[4px] bg-white text-black">01 / DESKTOP LAYER</span>
+              <span class="text-xs font-mono text-zinc-500">CGWindowLevel</span>
+            </div>
+            <img src="assets/mac-desktop.png" alt="4K Desktop Engine" class="w-full h-40 object-contain mb-4" />
+            <h3 class="text-base font-bold text-white mb-2">Sub-Icon 4K Desktop Canvas</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed">
+              Renders 4K 60/240fps video directly behind your desktop icons and Dock using hardware-accelerated <code class="text-zinc-200">AVPlayerLooper</code> across all connected displays.
+            </p>
+          </div>
+        </div>
+
+        <div class="silver-sharp-card p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-1 rounded-[4px] bg-white text-black">02 / SCREEN SAVER</span>
+              <span class="text-xs font-mono text-zinc-500">Sonoma Clock</span>
+            </div>
+            <img src="assets/mac-screensaver.png" alt="4K Screen Saver Engine" class="w-full h-40 object-contain mb-4" />
+            <h3 class="text-base font-bold text-white mb-2">Built-In 4K Idle Screen Saver</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed">
+              Automatically launches a full-screen 4K cinema screen saver with an optional macOS Sonoma-style typography clock overlay and instant mouse/key wake.
+            </p>
+          </div>
+        </div>
+
+        <div id="lockscreen-engine" class="silver-sharp-card p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-1 rounded-[4px] bg-white text-black">03 / LOCK SCREEN</span>
+              <span class="text-xs font-mono text-zinc-500">idleassetsd</span>
+            </div>
+            <img src="assets/mac-lockscreen.png" alt="Native Lock Screen Engine" class="w-full h-40 object-contain mb-4" />
+            <h3 class="text-base font-bold text-white mb-2">Native macOS Lock Screen Injection</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed">
+              Seamless zero-reencode <code class="text-zinc-200">.mov</code> remuxing into <code class="text-zinc-200">com.apple.idleassetsd</code> with automatic backup and 1-click default Apple Aerial restoration.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. FINAL CTA BANNER -->
+    <section class="py-12">
+      <div class="silver-sharp-card p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div>
+          <div class="text-[11px] font-mono uppercase tracking-[0.16em] text-zinc-400 mb-2">100% Free • MIT Licensed • Zero Paywalls</div>
+          <h2 class="text-2xl sm:text-4xl font-black text-chrome-grad mb-2">Upgrade Your Mac to 4K Motion Today.</h2>
+          <p class="text-sm text-zinc-400 max-w-xl">
+            Download the prebuilt Universal macOS application bundle with 350+ curated 4K wallpapers built right in.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-3 shrink-0">
+          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary px-6 py-3.5 text-xs font-mono uppercase tracking-wider">
+            Download AuraDesk.app
+          </a>
+          <a href="https://github.com/shubhransh-gupta/AuraDesk" target="_blank" class="btn-silver-secondary px-5 py-3.5 text-xs font-mono uppercase tracking-wider">
+            View Source on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-zinc-800/90 bg-black py-10 mt-12">
+    <div class="max-w-[1320px] mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 font-mono">
+      <div>AURADESK PRO — OPEN SOURCE 4K WALLPAPER ENGINE FOR MACOS</div>
+      <div class="flex gap-6">
+        <a href="https://github.com/shubhransh-gupta/AuraDesk" class="hover:text-white transition">GitHub</a>
+        <a href="https://github.com/shubhransh-gupta/AuraDesk/releases" class="hover:text-white transition">Releases</a>
       </div>
     </div>
   </footer>
 
+  <!-- Interactive Top 4K Catalog Script -->
   <script>
-    const slides = [
-      {
-        title: "SpaceX Starship Launchpad • 3840×2160",
-        video: "https://cdn.macwall.app/videos/spacex-starship-launchpad.mp4",
-        poster: "https://cdn.macwall.app/thumbs/spacex-starship-launchpad.jpg"
-      },
-      {
-        title: "Porsche 911 GT3 RS Garage • 3840×2160",
-        video: "https://cdn.macwall.app/videos/porsche-911-gt3-rs-garage.mp4",
-        poster: "https://cdn.macwall.app/thumbs/porsche-911-gt3-rs-garage.jpg"
-      },
-      {
-        title: "Jinx & Ekko Arcane 4K • 3840×2160",
-        video: "https://cdn.macwall.app/videos/2e894139-8076-4037-8994-66179470115a.mp4",
-        poster: "https://cdn.macwall.app/thumbs/2e894139-8076-4037-8994-66179470115a.jpg"
-      },
-      {
-        title: "Porsche 911 Front Glow • 3840×2160",
-        video: "https://cdn.macwall.app/videos/porsche-911-front-glow.mp4",
-        poster: "https://cdn.macwall.app/thumbs/porsche-911-front-glow.jpg"
-      }
+    const TOP_4K_WALLPAPERS = [
+      { name: "Gargantua Black Hole 4K", category: "Space", res: "3840×2160", fps: "60 FPS", size: "98 MB", shade: "from-zinc-700 via-zinc-900 to-black" },
+      { name: "Obsidian Liquid Chrome", category: "Dark", res: "3840×2160", fps: "60 FPS", size: "84 MB", shade: "from-zinc-600 via-zinc-900 to-black" },
+      { name: "Monolith Geometric Wave", category: "Abstract", res: "3840×2160", fps: "60 FPS", size: "92 MB", shade: "from-zinc-500 via-zinc-900 to-black" },
+      { name: "Porsche 911 GT3 Midnight", category: "Cars", res: "3840×2160", fps: "60 FPS", size: "112 MB", shade: "from-zinc-700 via-zinc-950 to-black" },
+      { name: "Patagonia Glacier Aerial", category: "Nature", res: "3840×2160", fps: "240 FPS", size: "290 MB", shade: "from-zinc-500 via-zinc-800 to-black" },
+      { name: "Tokyo Cyber Rain Monotone", category: "Anime", res: "3840×2160", fps: "60 FPS", size: "104 MB", shade: "from-zinc-600 via-zinc-900 to-black" },
+      { name: "Orbital Night Horizon", category: "Space", res: "3840×2160", fps: "240 FPS", size: "310 MB", shade: "from-zinc-400 via-zinc-900 to-black" },
+      { name: "Brushed Titanium Flow", category: "Dark", res: "3840×2160", fps: "60 FPS", size: "76 MB", shade: "from-zinc-500 via-zinc-950 to-black" }
     ];
-    let currentSlide = 0;
 
-    function updateSlide() {
-      const v = document.getElementById('demo-video');
-      const src = document.getElementById('demo-video-src');
-      const label = document.getElementById('demo-label');
-      const counter = document.getElementById('slide-counter');
-      const s = slides[currentSlide];
+    function renderCatalog(category) {
+      const grid = document.getElementById('top-wallpapers-grid');
+      const items = category === 'All'
+        ? TOP_4K_WALLPAPERS
+        : TOP_4K_WALLPAPERS.filter(i => i.category.toLowerCase() === category.toLowerCase());
 
-      v.poster = s.poster;
-      src.src = s.video;
-      label.textContent = s.title;
-      counter.textContent = `0${currentSlide + 1}/0${slides.length}`;
-      v.load();
-      v.play();
+      grid.innerHTML = items.map(item => `
+        <div class="silver-sharp-card p-3.5 flex flex-col justify-between">
+          <div>
+            <div class="h-36 rounded-[5px] bg-gradient-to-br ${item.shade} border border-zinc-700/70 p-3 flex flex-col justify-between mb-3 relative overflow-hidden">
+              <div class="flex items-center justify-between z-10">
+                <span class="text-[9px] font-mono font-bold uppercase px-2 py-0.5 rounded-[3px] bg-white text-black">${item.category}</span>
+                <span class="text-[9px] font-mono font-semibold px-2 py-0.5 rounded-[3px] bg-black/80 text-zinc-200 border border-zinc-700">${item.res} • ${item.fps}</span>
+              </div>
+              <div class="z-10">
+                <div class="text-sm font-bold text-white truncate">${item.name}</div>
+                <div class="text-[10px] font-mono text-zinc-400">${item.size} • HEVC 4K</div>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary flex-1 text-center py-2 text-[10px] font-mono uppercase tracking-wider">
+              Apply All 3 in App
+            </a>
+            <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-silver-secondary px-2.5 py-2 text-[10px] font-mono">
+              4K
+            </a>
+          </div>
+        </div>
+      `).join('');
     }
 
-    function nextSlide() {
-      currentSlide = (currentSlide + 1) % slides.length;
-      updateSlide();
+    function filterCatalog(cat) {
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        if (btn.dataset.cat === cat) {
+          btn.classList.remove('cat-tab-inactive');
+          btn.classList.add('cat-tab-active');
+        } else {
+          btn.classList.remove('cat-tab-active');
+          btn.classList.add('cat-tab-inactive');
+        }
+      });
+      renderCatalog(cat);
     }
 
-    function prevSlide() {
-      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-      updateSlide();
-    }
+    renderCatalog('All');
   </script>
 </body>
 </html>

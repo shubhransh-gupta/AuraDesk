@@ -9,10 +9,11 @@ struct AuraDeskApp: App {
     @ObservedObject var screenSaver = ScreenSaverController.shared
 
     var body: some Scene {
-        Window("AuraDesk — 4K Live Wallpaper, Screen Saver & Lock Screen", id: "main-window") {
+        Window("AuraDesk Pro — 4K Live Wallpaper, Screen Saver & Lock Screen", id: "main-window") {
             ContentView()
+                .frame(minWidth: 960, minHeight: 620)
         }
-        .defaultSize(width: 1060, height: 700)
+        .defaultSize(width: 1160, height: 760)
 
         MenuBarExtra("AuraDesk", systemImage: "sparkles.tv.fill") {
             MenuBarQuickMenu()
