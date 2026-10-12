@@ -2,19 +2,25 @@ import SwiftUI
 import AppKit
 import UniformTypeIdentifiers
 
-// MARK: - Monochrome Black & Silver Sharp Pro Theme
+// MARK: - Sparkling Silver & Aurora Night Theme
 public enum AuraTheme {
-    public static let obsidianBlack = Color(red: 0.02, green: 0.02, blue: 0.025)
-    public static let carbonBg = Color(red: 0.045, green: 0.045, blue: 0.052)
-    public static let panelTop = Color(red: 0.11, green: 0.11, blue: 0.125)
-    public static let panelBottom = Color(red: 0.055, green: 0.055, blue: 0.065)
+    public static let obsidianBlack = Color(red: 0.02, green: 0.02, blue: 0.035)
+    public static let carbonBg = Color(red: 0.035, green: 0.04, blue: 0.065)
+    public static let panelTop = Color(red: 0.11, green: 0.12, blue: 0.16).opacity(0.82)
+    public static let panelBottom = Color(red: 0.04, green: 0.045, blue: 0.07).opacity(0.90)
 
-    public static let chromeWhite = Color(red: 0.98, green: 0.98, blue: 0.99)
-    public static let silverBright = Color(red: 0.88, green: 0.88, blue: 0.90)
-    public static let silverMid = Color(red: 0.64, green: 0.64, blue: 0.68)
-    public static let silverMuted = Color(red: 0.45, green: 0.45, blue: 0.49)
-    public static let gunmetalBorder = Color(red: 0.20, green: 0.20, blue: 0.23)
-    public static let silverEdge = Color(red: 0.52, green: 0.52, blue: 0.56)
+    public static let chromeWhite = Color(red: 0.99, green: 0.99, blue: 1.0)
+    public static let silverBright = Color(red: 0.91, green: 0.93, blue: 0.96)
+    public static let silverMid = Color(red: 0.68, green: 0.71, blue: 0.77)
+    public static let silverMuted = Color(red: 0.48, green: 0.51, blue: 0.58)
+    public static let gunmetalBorder = Color.white.opacity(0.16)
+    public static let silverEdge = Color.white.opacity(0.55)
+
+    // Subtle Aurora / Norwegian Lights accents
+    public static let auroraCyan = Color(red: 0.15, green: 0.95, blue: 0.82)
+    public static let auroraEmerald = Color(red: 0.10, green: 0.88, blue: 0.55)
+    public static let auroraViolet = Color(red: 0.62, green: 0.32, blue: 0.98)
+    public static let auroraBlue = Color(red: 0.22, green: 0.62, blue: 1.0)
 
     public static var cardGradient: LinearGradient {
         LinearGradient(
@@ -27,9 +33,9 @@ public enum AuraTheme {
     public static var chromeButtonGradient: LinearGradient {
         LinearGradient(
             colors: [
-                Color(red: 0.99, green: 0.99, blue: 1.0),
-                Color(red: 0.82, green: 0.82, blue: 0.85),
-                Color(red: 0.68, green: 0.68, blue: 0.72)
+                Color(red: 1.0, green: 1.0, blue: 1.0),
+                Color(red: 0.88, green: 0.90, blue: 0.95),
+                Color(red: 0.74, green: 0.77, blue: 0.84)
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
@@ -39,8 +45,8 @@ public enum AuraTheme {
     public static var darkMetalGradient: LinearGradient {
         LinearGradient(
             colors: [
-                Color(red: 0.16, green: 0.16, blue: 0.18),
-                Color(red: 0.08, green: 0.08, blue: 0.095)
+                Color(red: 0.17, green: 0.18, blue: 0.23).opacity(0.92),
+                Color(red: 0.08, green: 0.09, blue: 0.12).opacity(0.95)
             ],
             startPoint: .top,
             endPoint: .bottom
@@ -50,9 +56,9 @@ public enum AuraTheme {
     public static var sharpBorderGradient: LinearGradient {
         LinearGradient(
             colors: [
-                Color.white.opacity(0.32),
-                Color.white.opacity(0.10),
-                Color.white.opacity(0.18)
+                Color.white.opacity(0.48),
+                Color.white.opacity(0.14),
+                AuraTheme.auroraCyan.opacity(0.28)
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
@@ -60,35 +66,230 @@ public enum AuraTheme {
     }
 }
 
+// MARK: - Animated Star Gazing + Norwegian Lights (Aurora Borealis) Background (No Moon)
+struct AppAuroraStargazingBackground: View {
+    struct StarPoint {
+        let x: Double
+        let y: Double
+        let size: Double
+        let speed: Double
+        let phase: Double
+        let isSparkle: Bool
+    }
+
+    private static let stars: [StarPoint] = {
+        var list: [StarPoint] = []
+        for i in 0..<190 {
+            let seed = Double(i * 997 + 137)
+            let x = fmod(abs(sin(seed * 1.13) * 10000.0), 1.0)
+            let y = fmod(abs(cos(seed * 2.47) * 10000.0), 1.0)
+            let size = 1.0 + fmod(abs(sin(seed * 3.71) * 100.0), 2.4)
+            let speed = 1.2 + fmod(abs(cos(seed * 5.19) * 100.0), 2.8)
+            let phase = fmod(abs(sin(seed * 7.31) * 100.0), 6.28)
+            let isSparkle = (i % 9 == 0)
+            list.append(StarPoint(x: x, y: y, size: size, speed: speed, phase: phase, isSparkle: isSparkle))
+        }
+        return list
+    }()
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: 1.0 / 30.0)) { timeline in
+            let t = timeline.date.timeIntervalSinceReferenceDate
+            Canvas { context, size in
+                let w = size.width
+                let h = size.height
+
+                // 1. Deep Arctic Night Sky Base
+                let skyRect = CGRect(origin: .zero, size: size)
+                context.fill(
+                    Path(skyRect),
+                    with: .linearGradient(
+                        Gradient(colors: [
+                            Color(red: 0.015, green: 0.02, blue: 0.045),
+                            Color(red: 0.025, green: 0.035, blue: 0.075),
+                            Color(red: 0.01, green: 0.015, blue: 0.03)
+                        ]),
+                        startPoint: CGPoint(x: w * 0.5, y: 0),
+                        endPoint: CGPoint(x: w * 0.5, y: h)
+                    )
+                )
+
+                // 2. Norwegian Lights (Aurora Borealis) & Neon Ribbons
+                drawAuroraRibbon(
+                    context: &context,
+                    size: size,
+                    time: t * 0.55,
+                    yBase: h * 0.22,
+                    amplitude: 48,
+                    thickness: h * 0.34,
+                    colors: [
+                        Color.clear,
+                        Color(red: 0.08, green: 0.96, blue: 0.68).opacity(0.22),
+                        Color(red: 0.12, green: 0.85, blue: 0.98).opacity(0.16),
+                        Color.clear
+                    ]
+                )
+
+                drawAuroraRibbon(
+                    context: &context,
+                    size: size,
+                    time: t * 0.42 + 2.1,
+                    yBase: h * 0.40,
+                    amplitude: 62,
+                    thickness: h * 0.38,
+                    colors: [
+                        Color.clear,
+                        Color(red: 0.58, green: 0.22, blue: 0.98).opacity(0.18),
+                        Color(red: 0.95, green: 0.20, blue: 0.75).opacity(0.12),
+                        Color.clear
+                    ]
+                )
+
+                drawAuroraRibbon(
+                    context: &context,
+                    size: size,
+                    time: t * 0.68 + 4.3,
+                    yBase: h * 0.68,
+                    amplitude: 40,
+                    thickness: h * 0.30,
+                    colors: [
+                        Color.clear,
+                        Color(red: 0.10, green: 0.92, blue: 0.78).opacity(0.16),
+                        Color(red: 0.25, green: 0.55, blue: 1.0).opacity(0.14),
+                        Color.clear
+                    ]
+                )
+
+                // 3. Twinkling Star Gazing Field
+                for star in Self.stars {
+                    let sx = star.x * w
+                    let sy = star.y * h
+                    let twinkle = 0.35 + 0.65 * (0.5 + 0.5 * sin(t * star.speed + star.phase))
+                    let r = star.size * (0.8 + 0.3 * twinkle)
+                    let starRect = CGRect(x: sx - r * 0.5, y: sy - r * 0.5, width: r, height: r)
+
+                    context.fill(
+                        Path(ellipseIn: starRect),
+                        with: .color(Color.white.opacity(twinkle))
+                    )
+
+                    if star.isSparkle && twinkle > 0.72 {
+                        let spikeLen = r * 3.2
+                        var hLine = Path()
+                        hLine.move(to: CGPoint(x: sx - spikeLen, y: sy))
+                        hLine.addLine(to: CGPoint(x: sx + spikeLen, y: sy))
+                        hLine.move(to: CGPoint(x: sx, y: sy - spikeLen))
+                        hLine.addLine(to: CGPoint(x: sx, y: sy + spikeLen))
+                        context.stroke(hLine, with: .color(Color.white.opacity(twinkle * 0.55)), lineWidth: 0.75)
+                    }
+                }
+
+                // 4. Periodic Shooting Star Streak (No Moon)
+                let cycle = fmod(t, 6.5)
+                if cycle < 1.35 {
+                    let p = cycle / 1.35
+                    let startX = w * 0.78 - p * (w * 0.48)
+                    let startY = h * 0.12 + p * (h * 0.34)
+                    let tailX = startX + 110
+                    let tailY = startY - 75
+
+                    var meteorPath = Path()
+                    meteorPath.move(to: CGPoint(x: startX, y: startY))
+                    meteorPath.addLine(to: CGPoint(x: tailX, y: tailY))
+
+                    context.stroke(
+                        meteorPath,
+                        with: .linearGradient(
+                            Gradient(colors: [
+                                Color.white.opacity(0.95 * (1.0 - p * 0.5)),
+                                AuraTheme.auroraCyan.opacity(0.55 * (1.0 - p)),
+                                Color.clear
+                            ]),
+                            startPoint: CGPoint(x: startX, y: startY),
+                            endPoint: CGPoint(x: tailX, y: tailY)
+                        ),
+                        lineWidth: 1.8
+                    )
+                }
+            }
+        }
+        .ignoresSafeArea()
+        .allowsHitTesting(false)
+    }
+
+    private func drawAuroraRibbon(
+        context: inout GraphicsContext,
+        size: CGSize,
+        time: Double,
+        yBase: Double,
+        amplitude: Double,
+        thickness: Double,
+        colors: [Color]
+    ) {
+        let w = size.width
+        let steps = 28
+        var path = Path()
+
+        for i in 0...steps {
+            let frac = Double(i) / Double(steps)
+            let x = frac * w
+            let wave = sin(frac * 4.2 + time) * amplitude + cos(frac * 7.5 - time * 1.3) * (amplitude * 0.45)
+            let y = yBase + wave
+            if i == 0 {
+                path.move(to: CGPoint(x: x, y: y))
+            } else {
+                path.addLine(to: CGPoint(x: x, y: y))
+            }
+        }
+
+        for i in (0...steps).reversed() {
+            let frac = Double(i) / Double(steps)
+            let x = frac * w
+            let wave = sin(frac * 4.2 + time) * amplitude + cos(frac * 7.5 - time * 1.3) * (amplitude * 0.45)
+            let y = yBase + wave + thickness
+            path.addLine(to: CGPoint(x: x, y: y))
+        }
+        path.closeSubpath()
+
+        context.fill(
+            path,
+            with: .linearGradient(
+                Gradient(colors: colors),
+                startPoint: CGPoint(x: w * 0.5, y: yBase - amplitude),
+                endPoint: CGPoint(x: w * 0.5, y: yBase + thickness + amplitude)
+            )
+        )
+    }
+}
+
+// MARK: - Strictly Clipped Sharp Silver Card Modifier
 struct SharpSilverCardModifier: ViewModifier {
-    var cornerRadius: CGFloat = 8
+    var cornerRadius: CGFloat = 10
     var isHighlighted: Bool = false
 
     func body(content: Content) -> some View {
+        let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
         content
-            .background(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .fill(AuraTheme.cardGradient)
-            )
+            .background(shape.fill(AuraTheme.cardGradient))
+            .clipShape(shape)
             .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .strokeBorder(
-                        isHighlighted
-                            ? LinearGradient(
-                                colors: [AuraTheme.chromeWhite, AuraTheme.silverMid],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                            : AuraTheme.sharpBorderGradient,
-                        lineWidth: isHighlighted ? 1.5 : 1.0
-                    )
+                shape.strokeBorder(
+                    isHighlighted
+                        ? LinearGradient(
+                            colors: [AuraTheme.chromeWhite, AuraTheme.auroraCyan, AuraTheme.silverMid],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                        : AuraTheme.sharpBorderGradient,
+                    lineWidth: isHighlighted ? 1.6 : 1.0
+                )
             )
-            .shadow(color: .black.opacity(0.65), radius: 12, x: 0, y: 6)
+            .shadow(color: .black.opacity(0.65), radius: 14, x: 0, y: 7)
     }
 }
 
 extension View {
-    func sharpSilverCard(cornerRadius: CGFloat = 8, isHighlighted: Bool = false) -> some View {
+    func sharpSilverCard(cornerRadius: CGFloat = 10, isHighlighted: Bool = false) -> some View {
         modifier(SharpSilverCardModifier(cornerRadius: cornerRadius, isHighlighted: isHighlighted))
     }
 }
@@ -99,8 +300,8 @@ struct SharpSilverButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.system(size: compact ? 11 : 12, weight: .semibold))
-            .foregroundStyle(prominent ? Color.black : AuraTheme.silverBright)
+            .font(.system(size: compact ? 11 : 12, weight: .bold))
+            .foregroundStyle(prominent ? Color.black : AuraTheme.chromeWhite)
             .padding(.horizontal, compact ? 10 : 14)
             .padding(.vertical, compact ? 6 : 8)
             .background(
@@ -111,8 +312,8 @@ struct SharpSilverButtonStyle: ButtonStyle {
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
                     .strokeBorder(
                         prominent
-                            ? Color.white.opacity(0.9)
-                            : Color.white.opacity(0.22),
+                            ? Color.white
+                            : Color.white.opacity(0.28),
                         lineWidth: 1
                     )
             )
@@ -121,70 +322,102 @@ struct SharpSilverButtonStyle: ButtonStyle {
     }
 }
 
-// MARK: - Remote Authenticated Thumbnail View
+// MARK: - Strictly Bounded Remote Authenticated Thumbnail View (Never Overflows Box!)
 struct Remote4KThumbnailView: View {
     let item: RemoteWallpaperItem
     @ObservedObject var catalog = CloudCatalogService.shared
 
     var body: some View {
-        ZStack {
-            // Precision dark metallic fallback backdrop
-            LinearGradient(
-                colors: [
-                    Color(red: 0.13, green: 0.13, blue: 0.15),
-                    Color(red: 0.05, green: 0.05, blue: 0.06)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
+        GeometryReader { geo in
+            ZStack {
+                // Deep metallic night fallback backdrop
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.12, green: 0.14, blue: 0.20),
+                        Color(red: 0.04, green: 0.05, blue: 0.08)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
 
-            // Subtle architectural grid lines
-            GeometryReader { geo in
-                Path { path in
-                    let step: CGFloat = 28
-                    var x: CGFloat = 0
-                    while x < geo.size.width {
-                        path.move(to: CGPoint(x: x, y: 0))
-                        path.addLine(to: CGPoint(x: x, y: geo.size.height))
-                        x += step
-                    }
-                    var y: CGFloat = 0
-                    while y < geo.size.height {
-                        path.move(to: CGPoint(x: 0, y: y))
-                        path.addLine(to: CGPoint(x: geo.size.width, y: y))
-                        y += step
+                if let nsImg = catalog.loadedThumbnails[item.id] {
+                    Image(nsImage: nsImg)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geo.size.width, height: geo.size.height)
+                        .clipped()
+                } else {
+                    VStack(spacing: 6) {
+                        Image(systemName: "sparkles.tv.fill")
+                            .font(.system(size: 24, weight: .light))
+                            .foregroundStyle(AuraTheme.silverBright)
+                        Text(item.resolution)
+                            .font(.system(size: 9, weight: .bold, design: .monospaced))
+                            .foregroundStyle(AuraTheme.silverMid)
                     }
                 }
-                .stroke(Color.white.opacity(0.035), lineWidth: 0.5)
-            }
 
-            if let nsImg = catalog.loadedThumbnails[item.id] {
-                Image(nsImage: nsImg)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .transition(.opacity)
-            } else {
-                VStack(spacing: 6) {
-                    Image(systemName: "play.rectangle.fill")
-                        .font(.system(size: 24, weight: .light))
-                        .foregroundStyle(AuraTheme.silverMid)
-                    Text(item.resolution)
-                        .font(.system(size: 9, weight: .bold, design: .monospaced))
-                        .foregroundStyle(AuraTheme.silverMuted)
-                }
+                // Bottom dark gradient vignette for badge legibility
+                LinearGradient(
+                    colors: [.clear, .black.opacity(0.72)],
+                    startPoint: .center,
+                    endPoint: .bottom
+                )
             }
-
-            // Bottom dark gradient vignette for badge legibility
-            LinearGradient(
-                colors: [.clear, .black.opacity(0.75)],
-                startPoint: .center,
-                endPoint: .bottom
-            )
+            .frame(width: geo.size.width, height: geo.size.height)
+            .clipped()
         }
         .clipped()
         .onAppear {
             catalog.requestThumbnailIfNeeded(for: item)
         }
+    }
+}
+
+// MARK: - Strictly Bounded Local Thumbnail View
+struct Local4KThumbnailView: View {
+    let item: WallpaperItem
+
+    var body: some View {
+        GeometryReader { geo in
+            ZStack {
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.14, green: 0.15, blue: 0.22),
+                        Color(red: 0.04, green: 0.05, blue: 0.08)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+
+                if let thumbURL = item.thumbnailURL,
+                   let nsImg = NSImage(contentsOf: thumbURL) {
+                    Image(nsImage: nsImg)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geo.size.width, height: geo.size.height)
+                        .clipped()
+                } else {
+                    VStack(spacing: 5) {
+                        Image(systemName: "film.fill")
+                            .font(.system(size: 24))
+                            .foregroundStyle(AuraTheme.silverBright)
+                        Text(item.resolution)
+                            .font(.system(size: 9, weight: .bold, design: .monospaced))
+                            .foregroundStyle(AuraTheme.silverMid)
+                    }
+                }
+
+                LinearGradient(
+                    colors: [.clear, .black.opacity(0.72)],
+                    startPoint: .center,
+                    endPoint: .bottom
+                )
+            }
+            .frame(width: geo.size.width, height: geo.size.height)
+            .clipped()
+        }
+        .clipped()
     }
 }
 
@@ -226,47 +459,51 @@ public struct ContentView: View {
     public init() {}
 
     public var body: some View {
-        HStack(spacing: 0) {
-            // LEFT SIDEBAR (Pro macOS App Sidebar)
-            sidebarView
-                .frame(width: 236)
-                .background(AuraTheme.obsidianBlack)
+        ZStack {
+            // Animated Star Gazing + Norwegian Lights (Aurora Borealis) Background (No Moon)
+            AppAuroraStargazingBackground()
 
-            Rectangle()
-                .fill(AuraTheme.gunmetalBorder)
-                .frame(width: 1)
-
-            // MAIN WORKSPACE
-            VStack(spacing: 0) {
-                topWorkspaceToolbar
+            HStack(spacing: 0) {
+                // LEFT SIDEBAR
+                sidebarView
+                    .frame(width: 238)
+                    .background(Color.black.opacity(0.55))
 
                 Rectangle()
                     .fill(AuraTheme.gunmetalBorder)
-                    .frame(height: 1)
+                    .frame(width: 1)
 
-                ScrollView(.vertical, showsIndicators: true) {
-                    VStack(alignment: .leading, spacing: 24) {
-                        switch store.selectedSection {
-                        case .discover4K:
-                            top4KWallpapersWorkspace
-                        case .myLibrary:
-                            downloadedAndLocalWorkspace
-                        case .lockScreenEngine:
-                            lockScreenEngineWorkspace
-                        case .settings:
-                            settingsWorkspace
+                // MAIN WORKSPACE
+                VStack(spacing: 0) {
+                    topWorkspaceToolbar
+
+                    Rectangle()
+                        .fill(AuraTheme.gunmetalBorder)
+                        .frame(height: 1)
+
+                    ScrollView(.vertical, showsIndicators: true) {
+                        VStack(alignment: .leading, spacing: 24) {
+                            switch store.selectedSection {
+                            case .discover4K:
+                                top4KWallpapersWorkspace
+                            case .myLibrary:
+                                downloadedAndLocalWorkspace
+                            case .lockScreenEngine:
+                                lockScreenEngineWorkspace
+                            case .settings:
+                                settingsWorkspace
+                            }
                         }
+                        .padding(24)
                     }
-                    .padding(24)
+
+                    Rectangle()
+                        .fill(AuraTheme.gunmetalBorder)
+                        .frame(height: 1)
+
+                    bottomStatusFooterBar
                 }
-
-                Rectangle()
-                    .fill(AuraTheme.gunmetalBorder)
-                    .frame(height: 1)
-
-                bottomStatusFooterBar
             }
-            .background(AuraTheme.carbonBg)
         }
         .preferredColorScheme(.dark)
         .onDrop(of: [.fileURL], isTargeted: $store.isDropTargeted) { providers in
@@ -291,7 +528,7 @@ public struct ContentView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 6) {
                         Text("AURADESK")
-                            .font(.system(size: 14, weight: .heavy, design: .default))
+                            .font(.system(size: 14, weight: .heavy))
                             .tracking(1.2)
                             .foregroundStyle(AuraTheme.chromeWhite)
 
@@ -304,7 +541,7 @@ public struct ContentView: View {
                     }
                     Text("4K Desktop • Saver • Lock")
                         .font(.system(size: 10, weight: .medium))
-                        .foregroundStyle(AuraTheme.silverMuted)
+                        .foregroundStyle(AuraTheme.silverMid)
                 }
             }
             .padding(.horizontal, 16)
@@ -319,7 +556,7 @@ public struct ContentView: View {
                 Text("WORKSPACE")
                     .font(.system(size: 10, weight: .bold, design: .monospaced))
                     .tracking(1.2)
-                    .foregroundStyle(AuraTheme.silverMuted)
+                    .foregroundStyle(AuraTheme.silverMid)
                     .padding(.horizontal, 12)
                     .padding(.bottom, 4)
 
@@ -331,7 +568,7 @@ public struct ContentView: View {
                         HStack(spacing: 10) {
                             Image(systemName: section.icon)
                                 .font(.system(size: 13, weight: .semibold))
-                                .foregroundStyle(isSelected ? .black : AuraTheme.silverMid)
+                                .foregroundStyle(isSelected ? .black : AuraTheme.silverBright)
                                 .frame(width: 22)
 
                             VStack(alignment: .leading, spacing: 1) {
@@ -340,29 +577,29 @@ public struct ContentView: View {
                                     .foregroundStyle(isSelected ? .black : AuraTheme.chromeWhite)
                                 Text(section.subtitle)
                                     .font(.system(size: 10))
-                                    .foregroundStyle(isSelected ? .black.opacity(0.65) : AuraTheme.silverMuted)
+                                    .foregroundStyle(isSelected ? .black.opacity(0.68) : AuraTheme.silverMid)
                             }
                             Spacer()
 
                             if section == .discover4K {
                                 Text("\(catalogService.allRemoteItems.count)")
                                     .font(.system(size: 10, weight: .bold, design: .monospaced))
-                                    .foregroundStyle(isSelected ? .black : AuraTheme.silverBright)
+                                    .foregroundStyle(isSelected ? .black : AuraTheme.chromeWhite)
                                     .padding(.horizontal, 6)
                                     .padding(.vertical, 2)
                                     .background(
                                         RoundedRectangle(cornerRadius: 4)
-                                            .fill(isSelected ? Color.black.opacity(0.15) : Color.white.opacity(0.08))
+                                            .fill(isSelected ? Color.black.opacity(0.16) : Color.white.opacity(0.12))
                                     )
                             } else if section == .myLibrary {
                                 Text("\(store.items.count)")
                                     .font(.system(size: 10, weight: .bold, design: .monospaced))
-                                    .foregroundStyle(isSelected ? .black : AuraTheme.silverBright)
+                                    .foregroundStyle(isSelected ? .black : AuraTheme.chromeWhite)
                                     .padding(.horizontal, 6)
                                     .padding(.vertical, 2)
                                     .background(
                                         RoundedRectangle(cornerRadius: 4)
-                                            .fill(isSelected ? Color.black.opacity(0.15) : Color.white.opacity(0.08))
+                                            .fill(isSelected ? Color.black.opacity(0.16) : Color.white.opacity(0.12))
                                     )
                             }
                         }
@@ -390,10 +627,10 @@ public struct ContentView: View {
                     Text("ACTIVE TARGETS")
                         .font(.system(size: 10, weight: .bold, design: .monospaced))
                         .tracking(1.1)
-                        .foregroundStyle(AuraTheme.silverMid)
+                        .foregroundStyle(AuraTheme.silverBright)
                     Spacer()
                     Circle()
-                        .fill(desktopController.isPlaying ? AuraTheme.chromeWhite : AuraTheme.silverMuted)
+                        .fill(desktopController.isPlaying ? AuraTheme.auroraCyan : AuraTheme.silverMuted)
                         .frame(width: 6, height: 6)
                 }
 
@@ -482,11 +719,11 @@ public struct ContentView: View {
         HStack(spacing: 6) {
             Text(label)
                 .font(.system(size: 9, weight: .bold, design: .monospaced))
-                .foregroundStyle(AuraTheme.silverMuted)
+                .foregroundStyle(AuraTheme.silverMid)
                 .frame(width: 52, alignment: .leading)
             Text(value)
                 .font(.system(size: 11, weight: .medium))
-                .foregroundStyle(AuraTheme.silverBright)
+                .foregroundStyle(AuraTheme.chromeWhite)
                 .lineLimit(1)
             Spacer(minLength: 0)
         }
@@ -502,7 +739,7 @@ public struct ContentView: View {
                     .foregroundStyle(AuraTheme.chromeWhite)
                 Text("Select any 4K wallpaper below to apply directly to Desktop, Screen Saver, or Lock Screen")
                     .font(.system(size: 11))
-                    .foregroundStyle(AuraTheme.silverMuted)
+                    .foregroundStyle(AuraTheme.silverMid)
             }
 
             Spacer()
@@ -511,19 +748,24 @@ public struct ContentView: View {
             HStack(spacing: 8) {
                 Image(systemName: "magnifyingglass")
                     .font(.system(size: 12))
-                    .foregroundStyle(AuraTheme.silverMid)
+                    .foregroundStyle(AuraTheme.silverBright)
                 TextField("Search 350+ 4K wallpapers...", text: $catalogService.searchQuery)
                     .textFieldStyle(.plain)
                     .font(.system(size: 12))
                     .foregroundStyle(AuraTheme.chromeWhite)
-                    .frame(width: 200)
+                    .frame(width: 210)
+                    .onChange(of: catalogService.searchQuery) { _, newValue in
+                        if !newValue.isEmpty && store.selectedSection != .discover4K {
+                            store.selectedSection = .discover4K
+                        }
+                    }
                 if !catalogService.searchQuery.isEmpty {
                     Button {
                         catalogService.searchQuery = ""
                     } label: {
                         Image(systemName: "xmark.circle.fill")
                             .font(.system(size: 11))
-                            .foregroundStyle(AuraTheme.silverMuted)
+                            .foregroundStyle(AuraTheme.silverMid)
                     }
                     .buttonStyle(.plain)
                 }
@@ -532,11 +774,11 @@ public struct ContentView: View {
             .padding(.vertical, 6)
             .background(
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .fill(AuraTheme.obsidianBlack)
+                    .fill(Color.black.opacity(0.65))
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .strokeBorder(AuraTheme.gunmetalBorder, lineWidth: 1)
+                    .strokeBorder(Color.white.opacity(0.28), lineWidth: 1)
             )
 
             // Mute Toggle
@@ -552,7 +794,7 @@ public struct ContentView: View {
         }
         .padding(.horizontal, 24)
         .padding(.vertical, 12)
-        .background(AuraTheme.obsidianBlack.opacity(0.85))
+        .background(Color.black.opacity(0.55))
     }
 
     // MARK: - 1. TOP 4K WALLPAPERS WORKSPACE (Default View)
@@ -574,7 +816,7 @@ public struct ContentView: View {
                         Spacer()
                         Text("\(store.items.count) READY ON MAC")
                             .font(.system(size: 10, weight: .bold, design: .monospaced))
-                            .foregroundStyle(AuraTheme.silverMid)
+                            .foregroundStyle(AuraTheme.silverBright)
                     }
 
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -604,7 +846,7 @@ public struct ContentView: View {
                         Spacer()
                         Text("1-CLICK DOWNLOAD & APPLY TO ALL 3")
                             .font(.system(size: 10, weight: .bold, design: .monospaced))
-                            .foregroundStyle(AuraTheme.silverMid)
+                            .foregroundStyle(AuraTheme.silverBright)
                     }
 
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -642,12 +884,12 @@ public struct ContentView: View {
                             } label: {
                                 Text(src.uppercased())
                                     .font(.system(size: 10, weight: .bold, design: .monospaced))
-                                    .foregroundStyle(active ? .black : AuraTheme.silverMid)
+                                    .foregroundStyle(active ? .black : AuraTheme.silverBright)
                                     .padding(.horizontal, 9)
                                     .padding(.vertical, 5)
                                     .background(
                                         RoundedRectangle(cornerRadius: 4, style: .continuous)
-                                            .fill(active ? AnyShapeStyle(AuraTheme.chromeButtonGradient) : AnyShapeStyle(AuraTheme.obsidianBlack))
+                                            .fill(active ? AnyShapeStyle(AuraTheme.chromeButtonGradient) : AnyShapeStyle(Color.black.opacity(0.65)))
                                     )
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 4, style: .continuous)
@@ -669,7 +911,7 @@ public struct ContentView: View {
                             } label: {
                                 Text(cat.uppercased())
                                     .font(.system(size: 10.5, weight: selected ? .heavy : .semibold, design: .monospaced))
-                                    .foregroundStyle(selected ? .black : AuraTheme.silverBright)
+                                    .foregroundStyle(selected ? .black : AuraTheme.chromeWhite)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 6)
                                     .background(
@@ -699,7 +941,7 @@ public struct ContentView: View {
         }
     }
 
-    // MARK: - Featured Top 4K Card (Hero Row at Top)
+    // MARK: - Featured Top 4K Card (Hero Row at Top — Strictly Clipped)
     private func featuredTop4KCard(_ item: RemoteWallpaperItem) -> some View {
         let isDownloading = catalogService.downloadingIDs.contains(item.id)
         let localMatch = store.items.first(where: { $0.remoteID == item.id })
@@ -708,7 +950,8 @@ public struct ContentView: View {
         return VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .topLeading) {
                 Remote4KThumbnailView(item: item)
-                    .frame(height: 176)
+                    .frame(height: 172)
+                    .clipped()
 
                 HStack {
                     Text("TOP 4K • \(item.category.uppercased())")
@@ -733,20 +976,22 @@ public struct ContentView: View {
                             .foregroundStyle(AuraTheme.chromeWhite)
                             .padding(.horizontal, 7)
                             .padding(.vertical, 3.5)
-                            .background(Color.black.opacity(0.8), in: RoundedRectangle(cornerRadius: 4))
-                            .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(Color.white.opacity(0.35), lineWidth: 1))
+                            .background(Color.black.opacity(0.82), in: RoundedRectangle(cornerRadius: 4))
+                            .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(Color.white.opacity(0.45), lineWidth: 1))
                     } else {
                         Text("4K UHD")
                             .font(.system(size: 9.5, weight: .bold, design: .monospaced))
-                            .foregroundStyle(AuraTheme.silverBright)
+                            .foregroundStyle(AuraTheme.chromeWhite)
                             .padding(.horizontal, 7)
                             .padding(.vertical, 3.5)
-                            .background(Color.black.opacity(0.78), in: RoundedRectangle(cornerRadius: 4))
-                            .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(Color.white.opacity(0.25), lineWidth: 1))
+                            .background(Color.black.opacity(0.80), in: RoundedRectangle(cornerRadius: 4))
+                            .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(Color.white.opacity(0.32), lineWidth: 1))
                     }
                 }
                 .padding(10)
             }
+            .frame(height: 172)
+            .clipped()
 
             VStack(alignment: .leading, spacing: 10) {
                 VStack(alignment: .leading, spacing: 3) {
@@ -763,7 +1008,7 @@ public struct ContentView: View {
                         Text(item.source)
                     }
                     .font(.system(size: 10.5, weight: .medium, design: .monospaced))
-                    .foregroundStyle(AuraTheme.silverMuted)
+                    .foregroundStyle(AuraTheme.silverMid)
                     .lineLimit(1)
                 }
 
@@ -818,10 +1063,10 @@ public struct ContentView: View {
             }
             .padding(12)
         }
-        .sharpSilverCard(cornerRadius: 8, isHighlighted: isDesktopActive)
+        .sharpSilverCard(cornerRadius: 10, isHighlighted: isDesktopActive)
     }
 
-    // MARK: - Standard 4K Catalog Grid Card
+    // MARK: - Standard 4K Catalog Grid Card (Strictly Clipped)
     private func remote4KCatalogCard(_ item: RemoteWallpaperItem) -> some View {
         let isDownloading = catalogService.downloadingIDs.contains(item.id)
         let localMatch = store.items.first(where: { $0.remoteID == item.id })
@@ -831,6 +1076,7 @@ public struct ContentView: View {
             ZStack(alignment: .topLeading) {
                 Remote4KThumbnailView(item: item)
                     .frame(height: 152)
+                    .clipped()
 
                 HStack {
                     Text(item.category.uppercased())
@@ -839,7 +1085,7 @@ public struct ContentView: View {
                         .padding(.horizontal, 7)
                         .padding(.vertical, 3)
                         .background(Color.black.opacity(0.82), in: RoundedRectangle(cornerRadius: 4))
-                        .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(Color.white.opacity(0.22), lineWidth: 1))
+                        .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(Color.white.opacity(0.28), lineWidth: 1))
 
                     Spacer()
 
@@ -849,18 +1095,20 @@ public struct ContentView: View {
                             .foregroundStyle(.black)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 3)
-                            .background(AuraTheme.silverBright, in: RoundedRectangle(cornerRadius: 4))
+                            .background(AuraTheme.chromeWhite, in: RoundedRectangle(cornerRadius: 4))
                     } else {
                         Text("4K")
                             .font(.system(size: 9, weight: .bold, design: .monospaced))
-                            .foregroundStyle(AuraTheme.silverBright)
+                            .foregroundStyle(AuraTheme.chromeWhite)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 3)
-                            .background(Color.black.opacity(0.75), in: RoundedRectangle(cornerRadius: 4))
+                            .background(Color.black.opacity(0.78), in: RoundedRectangle(cornerRadius: 4))
                     }
                 }
                 .padding(8)
             }
+            .frame(height: 152)
+            .clipped()
 
             VStack(alignment: .leading, spacing: 9) {
                 VStack(alignment: .leading, spacing: 2) {
@@ -871,7 +1119,7 @@ public struct ContentView: View {
 
                     Text("\(item.resolution) • \(String(format: "%.0f MB", item.fileSizeMB)) • \(Int(item.durationSeconds))s")
                         .font(.system(size: 10, weight: .medium, design: .monospaced))
-                        .foregroundStyle(AuraTheme.silverMuted)
+                        .foregroundStyle(AuraTheme.silverMid)
                         .lineLimit(1)
                 }
 
@@ -932,10 +1180,10 @@ public struct ContentView: View {
             }
             .padding(11)
         }
-        .sharpSilverCard(cornerRadius: 8, isHighlighted: isDesktopActive)
+        .sharpSilverCard(cornerRadius: 10, isHighlighted: isDesktopActive)
     }
 
-    // MARK: - Instant Local Wallpaper Card
+    // MARK: - Instant Local Wallpaper Card (Strictly Clipped)
     private func instantLocalWallpaperCard(_ item: WallpaperItem) -> some View {
         let isDesktop = store.activeDesktopID == item.id
         let isSaver = store.activeScreenSaverID == item.id
@@ -943,22 +1191,9 @@ public struct ContentView: View {
 
         return VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .topLeading) {
-                ZStack {
-                    AuraTheme.obsidianBlack
-                    if let thumbURL = item.thumbnailURL,
-                       let nsImg = NSImage(contentsOf: thumbURL) {
-                        Image(nsImage: nsImg)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    } else {
-                        Image(systemName: "film.fill")
-                            .font(.system(size: 26))
-                            .foregroundStyle(AuraTheme.silverMid)
-                    }
-                    LinearGradient(colors: [.clear, .black.opacity(0.75)], startPoint: .center, endPoint: .bottom)
-                }
-                .frame(height: 145)
-                .clipped()
+                Local4KThumbnailView(item: item)
+                    .frame(height: 145)
+                    .clipped()
 
                 HStack(spacing: 4) {
                     Text(item.resolution)
@@ -982,6 +1217,8 @@ public struct ContentView: View {
                 }
                 .padding(8)
             }
+            .frame(height: 145)
+            .clipped()
 
             VStack(alignment: .leading, spacing: 9) {
                 HStack {
@@ -992,7 +1229,7 @@ public struct ContentView: View {
                             .lineLimit(1)
                         Text("\(String(format: "%.1f MB", item.fileSizeMB)) • \(item.category)")
                             .font(.system(size: 10, weight: .medium, design: .monospaced))
-                            .foregroundStyle(AuraTheme.silverMuted)
+                            .foregroundStyle(AuraTheme.silverMid)
                     }
                     Spacer()
                     Button {
@@ -1000,7 +1237,7 @@ public struct ContentView: View {
                     } label: {
                         Image(systemName: "trash")
                             .font(.system(size: 11))
-                            .foregroundStyle(AuraTheme.silverMuted)
+                            .foregroundStyle(AuraTheme.silverMid)
                     }
                     .buttonStyle(.plain)
                     .help("Remove from library")
@@ -1039,7 +1276,7 @@ public struct ContentView: View {
             }
             .padding(11)
         }
-        .sharpSilverCard(cornerRadius: 8, isHighlighted: isDesktop || isLock)
+        .sharpSilverCard(cornerRadius: 10, isHighlighted: isDesktop || isLock)
     }
 
     private func statusChip(_ text: String) -> some View {
@@ -1085,7 +1322,7 @@ public struct ContentView: View {
                 .buttonStyle(SharpSilverButtonStyle(prominent: false))
             }
             .padding(16)
-            .sharpSilverCard(cornerRadius: 8)
+            .sharpSilverCard(cornerRadius: 10)
 
             if store.items.isEmpty {
                 VStack(spacing: 12) {
@@ -1105,7 +1342,7 @@ public struct ContentView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(40)
-                .sharpSilverCard(cornerRadius: 8)
+                .sharpSilverCard(cornerRadius: 10)
             } else {
                 LazyVGrid(
                     columns: [GridItem(.adaptive(minimum: 280, maximum: 360), spacing: 16)],
@@ -1144,7 +1381,7 @@ public struct ContentView: View {
                     HStack(spacing: 10) {
                         Text("Status:")
                             .font(.system(size: 11, weight: .bold, design: .monospaced))
-                            .foregroundStyle(AuraTheme.silverMuted)
+                            .foregroundStyle(AuraTheme.silverMid)
                         Text(lockScreenManager.statusMessage ?? "Native Lock Screen Engine Ready")
                             .font(.system(size: 11, weight: .semibold, design: .monospaced))
                             .foregroundStyle(AuraTheme.chromeWhite)
@@ -1178,7 +1415,7 @@ public struct ContentView: View {
                 }
             }
             .padding(18)
-            .sharpSilverCard(cornerRadius: 8)
+            .sharpSilverCard(cornerRadius: 10)
 
             // Quick Apply from Ready 4K Videos
             VStack(alignment: .leading, spacing: 12) {
@@ -1250,7 +1487,7 @@ public struct ContentView: View {
                 }
                 .padding(18)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .sharpSilverCard(cornerRadius: 8)
+                .sharpSilverCard(cornerRadius: 10)
 
                 // Power & Screen Saver Card
                 VStack(alignment: .leading, spacing: 14) {
@@ -1277,7 +1514,7 @@ public struct ContentView: View {
                 }
                 .padding(18)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .sharpSilverCard(cornerRadius: 8)
+                .sharpSilverCard(cornerRadius: 10)
             }
         }
     }
@@ -1287,37 +1524,37 @@ public struct ContentView: View {
         HStack(spacing: 16) {
             HStack(spacing: 6) {
                 Circle()
-                    .fill(desktopController.isPlaying ? AuraTheme.chromeWhite : AuraTheme.silverMuted)
+                    .fill(desktopController.isPlaying ? AuraTheme.auroraCyan : AuraTheme.silverMuted)
                     .frame(width: 7, height: 7)
                 Text(desktopController.isPlaying ? "4K ENGINE RUNNING" : "ENGINE STANDBY")
                     .font(.system(size: 10, weight: .bold, design: .monospaced))
-                    .foregroundStyle(AuraTheme.silverBright)
+                    .foregroundStyle(AuraTheme.chromeWhite)
             }
 
             Text("•")
-                .foregroundStyle(AuraTheme.silverMuted)
+                .foregroundStyle(AuraTheme.silverMid)
 
             Text("Catalog: \(catalogService.allRemoteItems.count) 4K Videos")
                 .font(.system(size: 10.5, weight: .medium, design: .monospaced))
-                .foregroundStyle(AuraTheme.silverMid)
+                .foregroundStyle(AuraTheme.silverBright)
 
             Text("•")
-                .foregroundStyle(AuraTheme.silverMuted)
+                .foregroundStyle(AuraTheme.silverMid)
 
             Text("Local Ready: \(store.items.count)")
                 .font(.system(size: 10.5, weight: .medium, design: .monospaced))
-                .foregroundStyle(AuraTheme.silverMid)
+                .foregroundStyle(AuraTheme.silverBright)
 
             Spacer()
 
             Text(lockScreenManager.statusMessage ?? "4K Engine Ready")
                 .font(.system(size: 10.5, weight: .medium, design: .monospaced))
-                .foregroundStyle(AuraTheme.silverMuted)
+                .foregroundStyle(AuraTheme.silverMid)
                 .lineLimit(1)
         }
         .padding(.horizontal, 24)
         .padding(.vertical, 8)
-        .background(AuraTheme.obsidianBlack)
+        .background(Color.black.opacity(0.68))
     }
 
     // MARK: - Helpers

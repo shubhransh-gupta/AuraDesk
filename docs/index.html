@@ -26,15 +26,10 @@
 
   <style>
     :root {
-      --bg-obsidian: #030304;
-      --bg-carbon: #09090B;
-      --surface-top: #18181B;
-      --surface-bottom: #0B0B0E;
+      --bg-obsidian: #020205;
       --silver-pure: #FFFFFF;
-      --silver-bright: #E4E4E7;
-      --silver-mid: #A1A1AA;
-      --silver-muted: #71717A;
-      --border-gunmetal: #27272A;
+      --silver-bright: #F4F4F6;
+      --silver-mid: #D4D4D8;
     }
 
     body {
@@ -42,124 +37,171 @@
       color: var(--silver-pure);
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       overflow-x: hidden;
-      background-image:
-        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08) 0%, transparent 55%),
-        linear-gradient(180deg, #050507 0%, #020203 100%);
     }
 
-    /* Architectural subtle grid overlay */
-    .sharp-grid-bg {
-      background-size: 48px 48px;
-      background-image:
-        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    /* Fullscreen Star Gazing + Moon + Meteors Background Canvas */
+    #stargazing-bg {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
     }
 
-    /* Sharp Black & Silver Metallic Card */
+    /* Radiant Diamond Silver & Chrome Card */
     .silver-sharp-card {
-      background: linear-gradient(180deg, rgba(28, 28, 32, 0.92) 0%, rgba(10, 10, 13, 0.98) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-top: 1px solid rgba(255, 255, 255, 0.34);
-      border-radius: 8px;
+      position: relative;
+      background: linear-gradient(165deg, rgba(38, 40, 52, 0.72) 0%, rgba(10, 11, 16, 0.86) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-top: 1px solid rgba(255, 255, 255, 0.78);
+      border-radius: 10px;
       box-shadow:
         0 20px 50px rgba(0, 0, 0, 0.85),
-        inset 0 1px 0 rgba(255, 255, 255, 0.12);
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        0 0 28px rgba(255, 255, 255, 0.08),
+        inset 0 1px 1px rgba(255, 255, 255, 0.42);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .silver-sharp-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 65%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.14),
+        transparent
+      );
+      transform: skewX(-24deg);
+      transition: left 0.65s ease;
+      pointer-events: none;
+    }
+    .silver-sharp-card:hover::before {
+      left: 140%;
     }
     .silver-sharp-card:hover {
-      border-color: rgba(255, 255, 255, 0.36);
-      border-top-color: rgba(255, 255, 255, 0.72);
+      border-color: rgba(255, 255, 255, 0.65);
+      border-top-color: #FFFFFF;
       box-shadow:
-        0 24px 60px rgba(0, 0, 0, 0.95),
-        0 0 28px rgba(255, 255, 255, 0.07),
-        inset 0 1px 0 rgba(255, 255, 255, 0.25);
-      transform: translateY(-2px);
+        0 26px 65px rgba(0, 0, 0, 0.92),
+        0 0 42px rgba(255, 255, 255, 0.22),
+        inset 0 1px 2px rgba(255, 255, 255, 0.65);
+      transform: translateY(-3px);
     }
 
-    /* Liquid Chrome / Silver Gradient Text */
+    /* Sparkling Liquid Chrome Gradient Text */
     .text-chrome-grad {
-      background: linear-gradient(180deg, #FFFFFF 0%, #E4E4E7 45%, #71717A 100%);
+      background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 45%, #CBD5E1 78%, #94A3B8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 28px rgba(255, 255, 255, 0.28));
     }
 
-    /* Liquid Chrome Primary Button */
+    /* Glittering Liquid Chrome Primary Button */
     .btn-chrome-primary {
-      background: linear-gradient(180deg, #FFFFFF 0%, #D4D4D8 55%, #A1A1AA 100%);
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 55%, #CBD5E1 100%);
       color: #000000;
-      font-weight: 700;
+      font-weight: 800;
       border: 1px solid #FFFFFF;
       border-radius: 6px;
-      box-shadow: 0 6px 24px rgba(255, 255, 255, 0.14), inset 0 1px 0 #FFFFFF;
-      transition: all 0.18s ease;
+      box-shadow:
+        0 0 26px rgba(255, 255, 255, 0.38),
+        0 8px 20px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 #FFFFFF;
+      transition: all 0.2s ease;
     }
     .btn-chrome-primary:hover {
-      background: linear-gradient(180deg, #FFFFFF 0%, #F4F4F5 65%, #D4D4D8 100%);
-      box-shadow: 0 8px 30px rgba(255, 255, 255, 0.26);
-      transform: translateY(-1px);
+      background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 70%, #E2E8F0 100%);
+      box-shadow:
+        0 0 38px rgba(255, 255, 255, 0.65),
+        0 10px 28px rgba(0, 0, 0, 0.75);
+      transform: translateY(-1px) scale(1.01);
     }
 
-    /* Gunmetal Silver Secondary Button */
+    /* Specular Silver Secondary Button */
     .btn-silver-secondary {
-      background: linear-gradient(180deg, #222226 0%, #111114 100%);
-      color: #E4E4E7;
+      background: linear-gradient(180deg, rgba(45, 48, 62, 0.88) 0%, rgba(18, 20, 28, 0.92) 100%);
+      color: #F8FAFC;
       font-weight: 600;
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      border-top-color: rgba(255, 255, 255, 0.42);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-top-color: rgba(255, 255, 255, 0.75);
       border-radius: 6px;
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.08);
       transition: all 0.18s ease;
     }
     .btn-silver-secondary:hover {
-      background: linear-gradient(180deg, #2E2E34 0%, #18181C 100%);
-      border-color: rgba(255, 255, 255, 0.55);
+      background: linear-gradient(180deg, rgba(68, 72, 90, 0.95) 0%, rgba(28, 30, 42, 0.98) 100%);
+      border-color: #FFFFFF;
+      box-shadow: 0 0 24px rgba(255, 255, 255, 0.28);
       color: #FFFFFF;
     }
 
     /* Filter Tab Active */
     .cat-tab-active {
-      background: linear-gradient(180deg, #FFFFFF 0%, #D4D4D8 100%);
+      background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 100%);
       color: #000000;
       border-color: #FFFFFF;
-      font-weight: 700;
+      font-weight: 800;
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.42);
     }
     .cat-tab-inactive {
-      background: #0D0D10;
-      color: #A1A1AA;
-      border-color: #27272A;
+      background: rgba(15, 17, 24, 0.82);
+      color: #E2E8F0;
+      border-color: rgba(255, 255, 255, 0.25);
     }
     .cat-tab-inactive:hover {
-      border-color: #71717A;
+      border-color: rgba(255, 255, 255, 0.75);
       color: #FFFFFF;
+      box-shadow: 0 0 14px rgba(255, 255, 255, 0.18);
+    }
+
+    @keyframes pulseSparkle {
+      0%, 100% { opacity: 0.55; transform: scale(0.92); }
+      50% { opacity: 1; transform: scale(1.18); }
+    }
+    .sparkle-badge {
+      animation: pulseSparkle 2.4s infinite ease-in-out;
     }
 
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #050507; }
-    ::-webkit-scrollbar-thumb { background: #3F3F46; border-radius: 3px; }
+    ::-webkit-scrollbar-track { background: #040407; }
+    ::-webkit-scrollbar-thumb { background: #64748B; border-radius: 3px; }
   </style>
 </head>
-<body class="antialiased selection:bg-white selection:text-black sharp-grid-bg">
+<body class="antialiased selection:bg-white selection:text-black">
+
+  <!-- FULLSCREEN STARGAZING + GLOWING MOON + SHOOTING METEORS + GLITTER CANVAS -->
+  <canvas id="stargazing-bg"></canvas>
 
   <!-- TOP NAVIGATION BAR -->
-  <header class="sticky top-0 z-50 border-b border-zinc-800/90 bg-black/85 backdrop-blur-xl">
+  <header class="sticky top-0 z-50 border-b border-white/20 bg-black/65 backdrop-blur-2xl">
     <div class="max-w-[1320px] mx-auto px-6 h-16 flex items-center justify-between">
       <a href="#" class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-[6px] flex items-center justify-center bg-gradient-to-b from-white via-zinc-200 to-zinc-400 text-black font-black shadow-sm">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+        <div class="w-8 h-8 rounded-[6px] flex items-center justify-center bg-gradient-to-b from-white via-zinc-100 to-zinc-300 text-black font-black shadow-[0_0_20px_rgba(255,255,255,0.55)]">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <rect x="2" y="3" width="20" height="14" rx="2" />
             <path d="M8 21h8M12 17v4" />
           </svg>
         </div>
         <div class="flex items-center gap-2">
-          <span class="text-sm font-black tracking-[0.14em] text-white">AURADESK</span>
-          <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-[3px] bg-zinc-200 text-black">PRO 4K</span>
+          <span class="text-sm font-black tracking-[0.16em] text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.5)]">AURADESK</span>
+          <span class="text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded-[3px] bg-white text-black shadow-[0_0_12px_rgba(255,255,255,0.6)]">PRO 4K</span>
         </div>
       </a>
 
-      <nav class="hidden md:flex items-center gap-8 text-xs font-mono uppercase tracking-wider text-zinc-400">
-        <a href="#top-4k-wallpapers" class="hover:text-white transition">Top 4K Wallpapers</a>
-        <a href="#app-workspace" class="hover:text-white transition">Pro App Interface</a>
-        <a href="#architecture" class="hover:text-white transition">3-Surface Engine</a>
-        <a href="#lockscreen-engine" class="hover:text-white transition">Lock Screen Engine</a>
+      <nav class="hidden md:flex items-center gap-8 text-xs font-mono uppercase tracking-wider text-zinc-200">
+        <a href="#top-4k-wallpapers" class="hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] transition">✦ Top 4K Wallpapers</a>
+        <a href="#app-workspace" class="hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] transition">Pro App Interface</a>
+        <a href="#architecture" class="hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] transition">3-Surface Engine</a>
+        <a href="#lockscreen-engine" class="hover:text-white hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] transition">Lock Screen Engine</a>
       </nav>
 
       <div class="flex items-center gap-3">
@@ -168,167 +210,174 @@
           <span>GitHub</span>
         </a>
         <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary px-4 py-2 text-xs font-mono uppercase tracking-wider">
-          Download macOS App
+          ✦ Download macOS App
         </a>
       </div>
     </div>
   </header>
 
-  <main class="max-w-[1320px] mx-auto px-6">
+  <main class="relative z-10 max-w-[1320px] mx-auto px-6">
 
     <!-- 1. HERO + TOP 4K WALLPAPERS FIRST -->
     <section class="pt-14 pb-10">
-      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-10 border-b border-zinc-800/80">
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-10 border-b border-white/20">
         <div class="max-w-3xl">
-          <div class="inline-flex items-center gap-2.5 px-3 py-1 rounded-[4px] bg-zinc-900 border border-zinc-700 mb-5">
-            <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
-            <span class="text-[11px] font-mono uppercase tracking-[0.14em] text-zinc-300">100% Free & Open Source • macOS Sonoma / Sequoia / Tahoe</span>
+          <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-[5px] bg-white/10 border border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.18)] mb-5">
+            <span class="text-white sparkle-badge">✦</span>
+            <span class="text-[11px] font-mono font-semibold uppercase tracking-[0.14em] text-white">100% Free & Open Source • macOS Sonoma / Sequoia / Tahoe</span>
           </div>
           <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-[1.04] text-chrome-grad mb-4">
             350+ Built-In 4K Wallpapers.<br />Desktop, Screen Saver & Lock Screen.
           </h1>
-          <p class="text-zinc-400 text-base sm:text-lg max-w-2xl leading-relaxed">
-            No need to hunt for video files. Pick from our curated library of <strong class="text-white font-semibold">350+ 4K Ultra HD 60/240fps live wallpapers</strong> right at the top of the app and apply them to all three macOS surfaces in a single click.
+          <p class="text-zinc-200 text-base sm:text-lg max-w-2xl leading-relaxed">
+            No need to search for video files. Pick from our curated collection of <strong class="text-white font-bold underline decoration-white/50 underline-offset-4">350+ 4K Ultra HD 60/240fps live wallpapers</strong> right at the top of the app and apply them to all three macOS surfaces in a single click.
           </p>
         </div>
 
         <div class="flex flex-wrap items-center gap-3 shrink-0">
           <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary px-6 py-3.5 text-xs font-mono uppercase tracking-wider flex items-center gap-2.5">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
             <span>Download AuraDesk.app (Free)</span>
           </a>
           <a href="#top-4k-wallpapers" class="btn-silver-secondary px-5 py-3.5 text-xs font-mono uppercase tracking-wider">
-            Browse Top 4K Catalog
+            ✦ Explore Live 4K Previews
           </a>
         </div>
       </div>
     </section>
 
-    <!-- 2. OUR TOP 4K WALLPAPERS — RIGHT AT THE TOP -->
+    <!-- 2. OUR TOP 4K WALLPAPERS — LIVE PLAYING 60FPS VIDEO PREVIEWS RIGHT AT THE TOP -->
     <section id="top-4k-wallpapers" class="py-6">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div class="flex items-center gap-3">
-          <div class="w-1 h-5 bg-white"></div>
+          <div class="w-1.5 h-6 bg-white shadow-[0_0_14px_#FFFFFF]"></div>
           <div>
-            <h2 class="text-lg font-extrabold tracking-wider uppercase font-mono text-white">OUR TOP 4K WALLPAPERS • BUILT-IN CATALOG</h2>
-            <p class="text-xs text-zinc-400">Included inside AuraDesk Pro for instant 1-click apply to Desktop, Screen Saver & Lock Screen</p>
+            <h2 class="text-lg font-extrabold tracking-wider uppercase font-mono text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.45)]">
+              ✦ OUR TOP 4K WALLPAPERS • LIVE VIDEO PREVIEWS
+            </h2>
+            <p class="text-xs text-zinc-200">Every wallpaper below is pre-indexed inside AuraDesk Pro for instant 1-click apply to Desktop, Screen Saver & Lock Screen</p>
           </div>
         </div>
 
         <!-- Sharp Category Filters -->
         <div class="flex flex-wrap items-center gap-1.5" id="catalog-filters">
-          <button onclick="filterCatalog('All')" data-cat="All" class="cat-btn cat-tab-active px-3 py-1.5 text-[11px] font-mono uppercase rounded-[4px] border transition">All 4K</button>
-          <button onclick="filterCatalog('Space')" data-cat="Space" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[4px] border transition">Space</button>
-          <button onclick="filterCatalog('Dark')" data-cat="Dark" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[4px] border transition">Dark</button>
-          <button onclick="filterCatalog('Abstract')" data-cat="Abstract" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[4px] border transition">Abstract</button>
-          <button onclick="filterCatalog('Cars')" data-cat="Cars" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[4px] border transition">Cars</button>
-          <button onclick="filterCatalog('Nature')" data-cat="Nature" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[4px] border transition">Nature</button>
-          <button onclick="filterCatalog('Anime')" data-cat="Anime" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[4px] border transition">Anime</button>
+          <button onclick="filterCatalog('All')" data-cat="All" class="cat-btn cat-tab-active px-3 py-1.5 text-[11px] font-mono uppercase rounded-[5px] border transition">All 4K</button>
+          <button onclick="filterCatalog('Space')" data-cat="Space" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[5px] border transition">Space</button>
+          <button onclick="filterCatalog('Dark')" data-cat="Dark" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[5px] border transition">Dark</button>
+          <button onclick="filterCatalog('Abstract')" data-cat="Abstract" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[5px] border transition">Abstract</button>
+          <button onclick="filterCatalog('Cars')" data-cat="Cars" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[5px] border transition">Cars</button>
+          <button onclick="filterCatalog('Nature')" data-cat="Nature" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[5px] border transition">Nature</button>
+          <button onclick="filterCatalog('Anime')" data-cat="Anime" class="cat-btn cat-tab-inactive px-3 py-1.5 text-[11px] font-mono uppercase rounded-[5px] border transition">Anime</button>
         </div>
       </div>
 
-      <!-- Top 4K Wallpaper Grid -->
+      <!-- Top 4K Wallpaper Grid (With Live Animated 60fps Video Canvases) -->
       <div id="top-wallpapers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Populated by script below with real 4K catalog items -->
+        <!-- Populated by script below with real-time 60fps animated video shaders -->
       </div>
     </section>
 
-    <!-- 3. NATIVE MACOS PRO APP PREVIEW (BLACK & SILVER GRADIENT SHARP UI) -->
+    <!-- 3. NATIVE MACOS PRO APP PREVIEW (WITH LIVE VIDEO CANVASES) -->
     <section id="app-workspace" class="py-16">
       <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-3">
-          <div class="w-1 h-5 bg-white"></div>
+          <div class="w-1.5 h-6 bg-white shadow-[0_0_14px_#FFFFFF]"></div>
           <div>
-            <h2 class="text-lg font-extrabold tracking-wider uppercase font-mono text-white">NATIVE MACOS PRO WORKSPACE • BLACK & SILVER</h2>
-            <p class="text-xs text-zinc-400">Engineered with Swift & SwiftUI — zero Electron bloat, native AVQueuePlayer + idleassetsd Lock Screen pipeline</p>
+            <h2 class="text-lg font-extrabold tracking-wider uppercase font-mono text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.45)]">
+              ✦ NATIVE MACOS PRO WORKSPACE • BLACK & SILVER CHROME
+            </h2>
+            <p class="text-xs text-zinc-200">Engineered with Swift & SwiftUI — zero Electron bloat, native AVQueuePlayer + idleassetsd Lock Screen pipeline</p>
           </div>
         </div>
-        <span class="hidden sm:inline-block text-[11px] font-mono text-zinc-400 border border-zinc-800 bg-zinc-950 px-3 py-1 rounded-[4px]">
-          &lt; 0.3% CPU • METAL GPU ACCELERATED
+        <span class="hidden sm:inline-block text-[11px] font-mono font-bold text-white border border-white/40 bg-white/10 shadow-[0_0_16px_rgba(255,255,255,0.2)] px-3 py-1 rounded-[5px]">
+          ✦ &lt; 0.3% CPU • METAL GPU ACCELERATED
         </span>
       </div>
 
       <!-- Sharp Native macOS App Window Frame -->
-      <div class="silver-sharp-card overflow-hidden border border-zinc-700/80">
+      <div class="silver-sharp-card overflow-hidden">
         <!-- macOS Window Titlebar -->
-        <div class="h-10 bg-zinc-950 border-b border-zinc-800 px-4 flex items-center justify-between">
+        <div class="h-10 bg-black/80 border-b border-white/20 px-4 flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-zinc-700 border border-zinc-500"></span>
-            <span class="w-3 h-3 rounded-full bg-zinc-700 border border-zinc-500"></span>
-            <span class="w-3 h-3 rounded-full bg-zinc-700 border border-zinc-500"></span>
+            <span class="w-3 h-3 rounded-full bg-zinc-400 border border-white/70"></span>
+            <span class="w-3 h-3 rounded-full bg-zinc-500 border border-white/70"></span>
+            <span class="w-3 h-3 rounded-full bg-zinc-300 border border-white/70"></span>
           </div>
-          <div class="text-[11px] font-mono text-zinc-400 tracking-wider">
-            AuraDesk Pro — 4K Live Wallpaper, Screen Saver & Lock Screen
+          <div class="text-[11px] font-mono font-semibold text-zinc-100 tracking-wider">
+            ✦ AuraDesk Pro — 4K Live Wallpaper, Screen Saver & Lock Screen
           </div>
-          <div class="text-[10px] font-mono text-zinc-500">v1.0.0</div>
+          <div class="text-[10px] font-mono text-zinc-300">v1.0.0</div>
         </div>
 
         <!-- App Body Mockup -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[460px] bg-[#060608]">
+        <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[460px] bg-black/70">
           <!-- Left Sidebar -->
-          <div class="lg:col-span-3 border-b lg:border-b-0 lg:border-r border-zinc-800/90 p-4 flex flex-col justify-between bg-[#040405]">
+          <div class="lg:col-span-3 border-b lg:border-b-0 lg:border-r border-white/20 p-4 flex flex-col justify-between bg-black/65">
             <div>
-              <div class="flex items-center gap-2.5 pb-4 mb-4 border-b border-zinc-800">
-                <div class="w-7 h-7 rounded-[5px] bg-gradient-to-b from-white to-zinc-400 text-black flex items-center justify-center font-black text-xs">A</div>
+              <div class="flex items-center gap-2.5 pb-4 mb-4 border-b border-white/20">
+                <div class="w-7 h-7 rounded-[5px] bg-gradient-to-b from-white to-zinc-300 text-black flex items-center justify-center font-black text-xs shadow-[0_0_14px_rgba(255,255,255,0.6)]">A</div>
                 <div>
-                  <div class="text-xs font-black tracking-wider text-white">AURADESK <span class="bg-zinc-200 text-black px-1 py-0.2 rounded-[2px] text-[9px] font-mono">PRO</span></div>
-                  <div class="text-[10px] text-zinc-500">4K Desktop • Saver • Lock</div>
+                  <div class="text-xs font-black tracking-wider text-white">AURADESK <span class="bg-white text-black px-1 py-0.2 rounded-[2px] text-[9px] font-mono">PRO</span></div>
+                  <div class="text-[10px] text-zinc-300">4K Desktop • Saver • Lock</div>
                 </div>
               </div>
 
-              <div class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider mb-2">Workspace</div>
+              <div class="text-[10px] font-mono text-zinc-300 uppercase tracking-wider mb-2">Workspace</div>
               <div class="space-y-1.5">
-                <div class="px-3 py-2 rounded-[5px] bg-gradient-to-r from-white via-zinc-200 to-zinc-300 text-black font-bold text-xs flex items-center justify-between">
+                <div class="px-3 py-2 rounded-[5px] bg-gradient-to-r from-white via-zinc-100 to-zinc-300 text-black font-extrabold text-xs flex items-center justify-between shadow-[0_0_16px_rgba(255,255,255,0.35)]">
                   <span>Top 4K Wallpapers</span>
-                  <span class="font-mono text-[10px] bg-black/15 px-1.5 py-0.5 rounded">350+</span>
+                  <span class="font-mono text-[10px] bg-black/20 px-1.5 py-0.5 rounded">350+</span>
                 </div>
-                <div class="px-3 py-2 rounded-[5px] text-zinc-400 text-xs flex items-center justify-between hover:bg-zinc-900">
+                <div class="px-3 py-2 rounded-[5px] text-zinc-200 text-xs flex items-center justify-between hover:bg-white/10">
                   <span>Downloaded & Local</span>
-                  <span class="font-mono text-[10px] bg-zinc-900 px-1.5 py-0.5 rounded">Ready</span>
+                  <span class="font-mono text-[10px] bg-white/15 px-1.5 py-0.5 rounded">Ready</span>
                 </div>
-                <div class="px-3 py-2 rounded-[5px] text-zinc-400 text-xs flex items-center justify-between hover:bg-zinc-900">
+                <div class="px-3 py-2 rounded-[5px] text-zinc-200 text-xs flex items-center justify-between hover:bg-white/10">
                   <span>Lock Screen Engine</span>
-                  <span class="font-mono text-[10px] text-zinc-500">Aerial</span>
+                  <span class="font-mono text-[10px] text-zinc-300">Aerial</span>
                 </div>
-                <div class="px-3 py-2 rounded-[5px] text-zinc-400 text-xs flex items-center justify-between hover:bg-zinc-900">
+                <div class="px-3 py-2 rounded-[5px] text-zinc-200 text-xs flex items-center justify-between hover:bg-white/10">
                   <span>Display & Power</span>
-                  <span class="font-mono text-[10px] text-zinc-500">GPU</span>
+                  <span class="font-mono text-[10px] text-zinc-300">GPU</span>
                 </div>
               </div>
             </div>
 
-            <div class="mt-6 p-3 rounded-[6px] bg-zinc-950 border border-zinc-800 space-y-1.5 font-mono text-[10px]">
-              <div class="flex justify-between text-zinc-300 font-bold pb-1 border-b border-zinc-800/80">
+            <div class="mt-6 p-3 rounded-[6px] bg-black/80 border border-white/25 space-y-1.5 font-mono text-[10px]">
+              <div class="flex justify-between text-white font-bold pb-1 border-b border-white/20">
                 <span>ACTIVE TARGETS</span>
-                <span class="text-white">● LIVE</span>
+                <span class="text-white">✦ LIVE 4K</span>
               </div>
-              <div class="flex justify-between"><span class="text-zinc-500">DESKTOP</span><span class="text-zinc-200">Obsidian Horizon 4K</span></div>
-              <div class="flex justify-between"><span class="text-zinc-500">SAVER</span><span class="text-zinc-200">Obsidian Horizon 4K</span></div>
-              <div class="flex justify-between"><span class="text-zinc-500">LOCK</span><span class="text-zinc-200">Synced (240fps)</span></div>
+              <div class="flex justify-between"><span class="text-zinc-400">DESKTOP</span><span class="text-white" id="mock-active-desk">Gargantua Black Hole 4K</span></div>
+              <div class="flex justify-between"><span class="text-zinc-400">SAVER</span><span class="text-white" id="mock-active-saver">Gargantua Black Hole 4K</span></div>
+              <div class="flex justify-between"><span class="text-zinc-400">LOCK</span><span class="text-white" id="mock-active-lock">Synced (240fps)</span></div>
             </div>
           </div>
 
           <!-- Right Main Workspace -->
           <div class="lg:col-span-9 p-6 flex flex-col justify-between">
             <div>
-              <div class="flex flex-wrap items-center justify-between gap-4 pb-4 mb-5 border-b border-zinc-800">
+              <div class="flex flex-wrap items-center justify-between gap-4 pb-4 mb-5 border-b border-white/20">
                 <div>
-                  <div class="text-xs font-mono font-bold text-white uppercase tracking-wider">OUR TOP 4K WALLPAPERS • INSTANT 1-CLICK APPLY</div>
-                  <div class="text-[11px] text-zinc-500">Click "Apply All 3" on any wallpaper to set Desktop, Screen Saver, and Lock Screen simultaneously</div>
+                  <div class="text-xs font-mono font-extrabold text-white uppercase tracking-wider">✦ OUR TOP 4K WALLPAPERS • INSTANT 1-CLICK APPLY</div>
+                  <div class="text-[11px] text-zinc-300">Click "Apply All 3" on any wallpaper to set Desktop, Screen Saver, and Lock Screen simultaneously</div>
                 </div>
-                <div class="px-3 py-1.5 rounded-[5px] bg-black border border-zinc-800 text-[11px] font-mono text-zinc-400">
-                  Search 350+ 4K wallpapers...
+                <div class="px-3 py-1.5 rounded-[5px] bg-black/80 border border-white/30 text-[11px] font-mono text-zinc-200">
+                  🔍 Search 350+ 4K wallpapers...
                 </div>
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="silver-sharp-card p-3">
-                  <div class="h-28 rounded-[5px] bg-gradient-to-br from-zinc-700 via-zinc-900 to-black border border-zinc-700/60 p-2.5 flex flex-col justify-between mb-3">
-                    <div class="flex justify-between items-center">
-                      <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white text-black">TOP 4K • SPACE</span>
-                      <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/80 text-zinc-200 border border-zinc-700">3840×2160</span>
+                  <div class="h-32 rounded-[6px] border border-white/30 mb-3 relative overflow-hidden">
+                    <canvas class="live-wallpaper-canvas absolute inset-0 w-full h-full" data-shader="blackhole"></canvas>
+                    <div class="relative z-10 p-2.5 h-full flex flex-col justify-between bg-gradient-to-t from-black/80 via-transparent to-black/35">
+                      <div class="flex justify-between items-center">
+                        <span class="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-white text-black">TOP 4K • SPACE</span>
+                        <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/80 text-white border border-white/30">3840×2160</span>
+                      </div>
+                      <div class="text-xs font-bold text-white drop-shadow">Gargantua Black Hole 4K</div>
                     </div>
-                    <div class="text-xs font-bold text-white">Event Horizon Monolith</div>
                   </div>
                   <div class="flex gap-1.5">
                     <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary flex-1 text-center py-1.5 text-[10px] font-mono uppercase">Apply All 3</a>
@@ -338,12 +387,15 @@
                 </div>
 
                 <div class="silver-sharp-card p-3">
-                  <div class="h-28 rounded-[5px] bg-gradient-to-br from-zinc-600 via-zinc-900 to-black border border-zinc-700/60 p-2.5 flex flex-col justify-between mb-3">
-                    <div class="flex justify-between items-center">
-                      <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white text-black">TOP 4K • DARK</span>
-                      <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/80 text-zinc-200 border border-zinc-700">3840×2160</span>
+                  <div class="h-32 rounded-[6px] border border-white/30 mb-3 relative overflow-hidden">
+                    <canvas class="live-wallpaper-canvas absolute inset-0 w-full h-full" data-shader="chrome"></canvas>
+                    <div class="relative z-10 p-2.5 h-full flex flex-col justify-between bg-gradient-to-t from-black/80 via-transparent to-black/35">
+                      <div class="flex justify-between items-center">
+                        <span class="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-white text-black">TOP 4K • DARK</span>
+                        <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/80 text-white border border-white/30">3840×2160</span>
+                      </div>
+                      <div class="text-xs font-bold text-white drop-shadow">Liquid Silver Chrome</div>
                     </div>
-                    <div class="text-xs font-bold text-white">Liquid Chrome Waves</div>
                   </div>
                   <div class="flex gap-1.5">
                     <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary flex-1 text-center py-1.5 text-[10px] font-mono uppercase">Apply All 3</a>
@@ -353,12 +405,15 @@
                 </div>
 
                 <div class="silver-sharp-card p-3">
-                  <div class="h-28 rounded-[5px] bg-gradient-to-br from-zinc-500 via-zinc-900 to-black border border-zinc-700/60 p-2.5 flex flex-col justify-between mb-3">
-                    <div class="flex justify-between items-center">
-                      <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white text-black">AERIAL 240FPS</span>
-                      <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/80 text-zinc-200 border border-zinc-700">3840×2160</span>
+                  <div class="h-32 rounded-[6px] border border-white/30 mb-3 relative overflow-hidden">
+                    <canvas class="live-wallpaper-canvas absolute inset-0 w-full h-full" data-shader="aurora"></canvas>
+                    <div class="relative z-10 p-2.5 h-full flex flex-col justify-between bg-gradient-to-t from-black/80 via-transparent to-black/35">
+                      <div class="flex justify-between items-center">
+                        <span class="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-white text-black">AERIAL 240FPS</span>
+                        <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-black/80 text-white border border-white/30">3840×2160</span>
+                      </div>
+                      <div class="text-xs font-bold text-white drop-shadow">Norwegian Starlight Horizon</div>
                     </div>
-                    <div class="text-xs font-bold text-white">Patagonia Monochrome Peak</div>
                   </div>
                   <div class="flex gap-1.5">
                     <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary flex-1 text-center py-1.5 text-[10px] font-mono uppercase">Apply All 3</a>
@@ -369,8 +424,8 @@
               </div>
             </div>
 
-            <div class="mt-6 pt-4 border-t border-zinc-800/80 flex flex-wrap items-center justify-between gap-4 text-[11px] font-mono text-zinc-400">
-              <span>● 4K ENGINE RUNNING — ZERO BATTERY DRAIN WHEN SLEEPING</span>
+            <div class="mt-6 pt-4 border-t border-white/20 flex flex-wrap items-center justify-between gap-4 text-[11px] font-mono text-zinc-200">
+              <span>✦ 4K ENGINE RUNNING — ZERO BATTERY DRAIN WHEN SLEEPING</span>
               <span>NATIVE HEVC / H.264 HARDWARE DECODING</span>
             </div>
           </div>
@@ -381,10 +436,12 @@
     <!-- 4. THREE-SURFACE ARCHITECTURE (SHARP BLACK & SILVER GRID) -->
     <section id="architecture" class="py-12">
       <div class="flex items-center gap-3 mb-8">
-        <div class="w-1 h-5 bg-white"></div>
+        <div class="w-1.5 h-6 bg-white shadow-[0_0_14px_#FFFFFF]"></div>
         <div>
-          <h2 class="text-lg font-extrabold tracking-wider uppercase font-mono text-white">PRECISION 3-SURFACE MACOS ENGINE</h2>
-          <p class="text-xs text-zinc-400">Unlike basic desktop players, AuraDesk drives all three macOS visual layers natively</p>
+          <h2 class="text-lg font-extrabold tracking-wider uppercase font-mono text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.45)]">
+            ✦ PRECISION 3-SURFACE MACOS ENGINE
+          </h2>
+          <p class="text-xs text-zinc-200">Unlike basic desktop players, AuraDesk drives all three macOS visual layers natively</p>
         </div>
       </div>
 
@@ -392,13 +449,13 @@
         <div class="silver-sharp-card p-6 flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4">
-              <span class="text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-1 rounded-[4px] bg-white text-black">01 / DESKTOP LAYER</span>
-              <span class="text-xs font-mono text-zinc-500">CGWindowLevel</span>
+              <span class="text-[10px] font-mono font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-[4px] bg-white text-black shadow-[0_0_14px_rgba(255,255,255,0.5)]">01 / DESKTOP LAYER</span>
+              <span class="text-xs font-mono text-zinc-300">CGWindowLevel</span>
             </div>
-            <img src="assets/mac-desktop.png" alt="4K Desktop Engine" class="w-full h-40 object-contain mb-4" />
+            <img src="assets/mac-desktop.png" alt="4K Desktop Engine" class="w-full h-40 object-contain mb-4 drop-shadow-[0_0_18px_rgba(255,255,255,0.2)]" />
             <h3 class="text-base font-bold text-white mb-2">Sub-Icon 4K Desktop Canvas</h3>
-            <p class="text-xs text-zinc-400 leading-relaxed">
-              Renders 4K 60/240fps video directly behind your desktop icons and Dock using hardware-accelerated <code class="text-zinc-200">AVPlayerLooper</code> across all connected displays.
+            <p class="text-xs text-zinc-200 leading-relaxed">
+              Renders 4K 60/240fps video directly behind your desktop icons and Dock using hardware-accelerated <code class="text-white font-semibold">AVPlayerLooper</code> across all connected displays.
             </p>
           </div>
         </div>
@@ -406,12 +463,12 @@
         <div class="silver-sharp-card p-6 flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4">
-              <span class="text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-1 rounded-[4px] bg-white text-black">02 / SCREEN SAVER</span>
-              <span class="text-xs font-mono text-zinc-500">Sonoma Clock</span>
+              <span class="text-[10px] font-mono font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-[4px] bg-white text-black shadow-[0_0_14px_rgba(255,255,255,0.5)]">02 / SCREEN SAVER</span>
+              <span class="text-xs font-mono text-zinc-300">Sonoma Clock</span>
             </div>
-            <img src="assets/mac-screensaver.png" alt="4K Screen Saver Engine" class="w-full h-40 object-contain mb-4" />
+            <img src="assets/mac-screensaver.png" alt="4K Screen Saver Engine" class="w-full h-40 object-contain mb-4 drop-shadow-[0_0_18px_rgba(255,255,255,0.2)]" />
             <h3 class="text-base font-bold text-white mb-2">Built-In 4K Idle Screen Saver</h3>
-            <p class="text-xs text-zinc-400 leading-relaxed">
+            <p class="text-xs text-zinc-200 leading-relaxed">
               Automatically launches a full-screen 4K cinema screen saver with an optional macOS Sonoma-style typography clock overlay and instant mouse/key wake.
             </p>
           </div>
@@ -420,13 +477,13 @@
         <div id="lockscreen-engine" class="silver-sharp-card p-6 flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4">
-              <span class="text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-1 rounded-[4px] bg-white text-black">03 / LOCK SCREEN</span>
-              <span class="text-xs font-mono text-zinc-500">idleassetsd</span>
+              <span class="text-[10px] font-mono font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-[4px] bg-white text-black shadow-[0_0_14px_rgba(255,255,255,0.5)]">03 / LOCK SCREEN</span>
+              <span class="text-xs font-mono text-zinc-300">idleassetsd</span>
             </div>
-            <img src="assets/mac-lockscreen.png" alt="Native Lock Screen Engine" class="w-full h-40 object-contain mb-4" />
+            <img src="assets/mac-lockscreen.png" alt="Native Lock Screen Engine" class="w-full h-40 object-contain mb-4 drop-shadow-[0_0_18px_rgba(255,255,255,0.2)]" />
             <h3 class="text-base font-bold text-white mb-2">Native macOS Lock Screen Injection</h3>
-            <p class="text-xs text-zinc-400 leading-relaxed">
-              Seamless zero-reencode <code class="text-zinc-200">.mov</code> remuxing into <code class="text-zinc-200">com.apple.idleassetsd</code> with automatic backup and 1-click default Apple Aerial restoration.
+            <p class="text-xs text-zinc-200 leading-relaxed">
+              Seamless zero-reencode <code class="text-white font-semibold">.mov</code> remuxing into <code class="text-white font-semibold">com.apple.idleassetsd</code> with automatic backup and 1-click default Apple Aerial restoration.
             </p>
           </div>
         </div>
@@ -437,15 +494,15 @@
     <section class="py-12">
       <div class="silver-sharp-card p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
         <div>
-          <div class="text-[11px] font-mono uppercase tracking-[0.16em] text-zinc-400 mb-2">100% Free • MIT Licensed • Zero Paywalls</div>
+          <div class="text-[11px] font-mono font-bold uppercase tracking-[0.16em] text-zinc-200 mb-2">✦ 100% Free • MIT Licensed • Zero Paywalls</div>
           <h2 class="text-2xl sm:text-4xl font-black text-chrome-grad mb-2">Upgrade Your Mac to 4K Motion Today.</h2>
-          <p class="text-sm text-zinc-400 max-w-xl">
+          <p class="text-sm text-zinc-200 max-w-xl">
             Download the prebuilt Universal macOS application bundle with 350+ curated 4K wallpapers built right in.
           </p>
         </div>
         <div class="flex flex-wrap gap-3 shrink-0">
           <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary px-6 py-3.5 text-xs font-mono uppercase tracking-wider">
-            Download AuraDesk.app
+            ✦ Download AuraDesk.app
           </a>
           <a href="https://github.com/shubhransh-gupta/AuraDesk" target="_blank" class="btn-silver-secondary px-5 py-3.5 text-xs font-mono uppercase tracking-wider">
             View Source on GitHub
@@ -457,9 +514,9 @@
   </main>
 
   <!-- FOOTER -->
-  <footer class="border-t border-zinc-800/90 bg-black py-10 mt-12">
-    <div class="max-w-[1320px] mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 font-mono">
-      <div>AURADESK PRO — OPEN SOURCE 4K WALLPAPER ENGINE FOR MACOS</div>
+  <footer class="relative z-10 border-t border-white/20 bg-black/80 backdrop-blur-xl py-10 mt-12">
+    <div class="max-w-[1320px] mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-300 font-mono">
+      <div>✦ AURADESK PRO — OPEN SOURCE 4K WALLPAPER ENGINE FOR MACOS</div>
       <div class="flex gap-6">
         <a href="https://github.com/shubhransh-gupta/AuraDesk" class="hover:text-white transition">GitHub</a>
         <a href="https://github.com/shubhransh-gupta/AuraDesk/releases" class="hover:text-white transition">Releases</a>
@@ -467,17 +524,19 @@
     </div>
   </footer>
 
-  <!-- Interactive Top 4K Catalog Script -->
+  <!-- ========================================================================= -->
+  <!-- 1. INTERACTIVE TOP 4K WALLPAPERS + LIVE 60FPS VIDEO CANVAS ENGINE         -->
+  <!-- ========================================================================= -->
   <script>
     const TOP_4K_WALLPAPERS = [
-      { name: "Gargantua Black Hole 4K", category: "Space", res: "3840×2160", fps: "60 FPS", size: "98 MB", shade: "from-zinc-700 via-zinc-900 to-black" },
-      { name: "Obsidian Liquid Chrome", category: "Dark", res: "3840×2160", fps: "60 FPS", size: "84 MB", shade: "from-zinc-600 via-zinc-900 to-black" },
-      { name: "Monolith Geometric Wave", category: "Abstract", res: "3840×2160", fps: "60 FPS", size: "92 MB", shade: "from-zinc-500 via-zinc-900 to-black" },
-      { name: "Porsche 911 GT3 Midnight", category: "Cars", res: "3840×2160", fps: "60 FPS", size: "112 MB", shade: "from-zinc-700 via-zinc-950 to-black" },
-      { name: "Patagonia Glacier Aerial", category: "Nature", res: "3840×2160", fps: "240 FPS", size: "290 MB", shade: "from-zinc-500 via-zinc-800 to-black" },
-      { name: "Tokyo Cyber Rain Monotone", category: "Anime", res: "3840×2160", fps: "60 FPS", size: "104 MB", shade: "from-zinc-600 via-zinc-900 to-black" },
-      { name: "Orbital Night Horizon", category: "Space", res: "3840×2160", fps: "240 FPS", size: "310 MB", shade: "from-zinc-400 via-zinc-900 to-black" },
-      { name: "Brushed Titanium Flow", category: "Dark", res: "3840×2160", fps: "60 FPS", size: "76 MB", shade: "from-zinc-500 via-zinc-950 to-black" }
+      { name: "Gargantua Black Hole 4K", category: "Space", res: "3840×2160", fps: "60 FPS", size: "98 MB", shader: "blackhole" },
+      { name: "Obsidian Liquid Chrome", category: "Dark", res: "3840×2160", fps: "60 FPS", size: "84 MB", shader: "chrome" },
+      { name: "Monolith Geometric Wave", category: "Abstract", res: "3840×2160", fps: "60 FPS", size: "92 MB", shader: "prism" },
+      { name: "Porsche 911 GT3 Midnight", category: "Cars", res: "3840×2160", fps: "60 FPS", size: "112 MB", shader: "speed" },
+      { name: "Patagonia Starlight Peak", category: "Nature", res: "3840×2160", fps: "240 FPS", size: "290 MB", shader: "aurora" },
+      { name: "Tokyo Cyber Rain Monotone", category: "Anime", res: "3840×2160", fps: "60 FPS", size: "104 MB", shader: "matrix" },
+      { name: "Orbital Night Horizon", category: "Space", res: "3840×2160", fps: "240 FPS", size: "310 MB", shader: "orbit" },
+      { name: "Brushed Titanium Flow", category: "Dark", res: "3840×2160", fps: "60 FPS", size: "76 MB", shader: "titanium" }
     ];
 
     function renderCatalog(category) {
@@ -487,22 +546,29 @@
         : TOP_4K_WALLPAPERS.filter(i => i.category.toLowerCase() === category.toLowerCase());
 
       grid.innerHTML = items.map(item => `
-        <div class="silver-sharp-card p-3.5 flex flex-col justify-between">
+        <div class="silver-sharp-card p-3.5 flex flex-col justify-between group">
           <div>
-            <div class="h-36 rounded-[5px] bg-gradient-to-br ${item.shade} border border-zinc-700/70 p-3 flex flex-col justify-between mb-3 relative overflow-hidden">
-              <div class="flex items-center justify-between z-10">
-                <span class="text-[9px] font-mono font-bold uppercase px-2 py-0.5 rounded-[3px] bg-white text-black">${item.category}</span>
-                <span class="text-[9px] font-mono font-semibold px-2 py-0.5 rounded-[3px] bg-black/80 text-zinc-200 border border-zinc-700">${item.res} • ${item.fps}</span>
-              </div>
-              <div class="z-10">
-                <div class="text-sm font-bold text-white truncate">${item.name}</div>
-                <div class="text-[10px] font-mono text-zinc-400">${item.size} • HEVC 4K</div>
+            <div class="h-40 rounded-[6px] border border-white/35 mb-3 relative overflow-hidden bg-black">
+              <canvas class="live-wallpaper-canvas absolute inset-0 w-full h-full" data-shader="${item.shader}"></canvas>
+              <div class="relative z-10 p-3 h-full flex flex-col justify-between bg-gradient-to-t from-black/85 via-black/15 to-black/40">
+                <div class="flex items-center justify-between">
+                  <span class="text-[9px] font-mono font-extrabold uppercase px-2 py-0.5 rounded-[3px] bg-white text-black shadow-[0_0_10px_rgba(255,255,255,0.6)]">✦ ${item.category}</span>
+                  <span class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-[3px] bg-black/80 text-white border border-white/35">${item.res} • ${item.fps}</span>
+                </div>
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+                    <span class="text-[9px] font-mono uppercase tracking-wider text-zinc-200">LIVE 4K PREVIEW</span>
+                  </div>
+                  <div class="text-sm font-extrabold text-white truncate drop-shadow">${item.name}</div>
+                  <div class="text-[10px] font-mono text-zinc-300">${item.size} • HEVC 4K</div>
+                </div>
               </div>
             </div>
           </div>
           <div class="flex items-center gap-1.5">
             <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary flex-1 text-center py-2 text-[10px] font-mono uppercase tracking-wider">
-              Apply All 3 in App
+              ✦ Apply All 3 in App
             </a>
             <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-silver-secondary px-2.5 py-2 text-[10px] font-mono">
               4K
@@ -510,6 +576,8 @@
           </div>
         </div>
       `).join('');
+
+      initCardShaders();
     }
 
     function filterCatalog(cat) {
@@ -525,7 +593,321 @@
       renderCatalog(cat);
     }
 
+    // Real-time 60fps Live Video Canvas Renderer for Every Wallpaper Card
+    let cardCanvases = [];
+    function initCardShaders() {
+      cardCanvases = Array.from(document.querySelectorAll('.live-wallpaper-canvas')).map(canvas => {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = Math.max(260, Math.floor(rect.width || 300));
+        canvas.height = Math.max(140, Math.floor(rect.height || 160));
+        return {
+          canvas,
+          ctx: canvas.getContext('2d'),
+          shader: canvas.dataset.shader || 'blackhole'
+        };
+      });
+    }
+
+    function drawCardShader(item, t) {
+      const { canvas, ctx, shader } = item;
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      // Base obsidian backdrop
+      const baseGrad = ctx.createLinearGradient(0, 0, w, h);
+      baseGrad.addColorStop(0, '#090A10');
+      baseGrad.addColorStop(1, '#020205');
+      ctx.fillStyle = baseGrad;
+      ctx.fillRect(0, 0, w, h);
+
+      if (shader === 'blackhole' || shader === 'orbit') {
+        const cx = w * 0.5 + Math.sin(t * 0.8) * 10;
+        const cy = h * 0.5 + Math.cos(t * 0.6) * 6;
+        // Glowing accretion disk rings
+        for (let i = 4; i >= 1; i--) {
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(t * 0.25 * (i % 2 === 0 ? 1 : -1));
+          ctx.scale(1.8, 0.52);
+          ctx.beginPath();
+          ctx.arc(0, 0, 18 + i * 11, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(255, 255, 255, ${0.18 + (5 - i) * 0.14})`;
+          ctx.lineWidth = 2.4;
+          ctx.shadowColor = '#FFFFFF';
+          ctx.shadowBlur = 14;
+          ctx.stroke();
+          ctx.restore();
+        }
+        // Event horizon core
+        ctx.beginPath();
+        ctx.arc(cx, cy, 15, 0, Math.PI * 2);
+        ctx.fillStyle = '#000000';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.92)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      } else if (shader === 'chrome' || shader === 'titanium') {
+        for (let k = 0; k < 5; k++) {
+          ctx.beginPath();
+          for (let x = 0; x <= w; x += 8) {
+            const y = h * (0.25 + k * 0.13) + Math.sin(x * 0.028 + t * 2.1 + k) * 16 + Math.cos(x * 0.015 - t * 1.4) * 8;
+            if (x === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.strokeStyle = `rgba(255, 255, 255, ${0.22 + k * 0.14})`;
+          ctx.lineWidth = 2.2;
+          ctx.shadowColor = '#FFFFFF';
+          ctx.shadowBlur = 10;
+          ctx.stroke();
+        }
+      } else if (shader === 'speed') {
+        // High-speed silver warp streaks
+        const cx = w * 0.5;
+        const cy = h * 0.52;
+        for (let i = 0; i < 26; i++) {
+          const angle = (i / 26) * Math.PI * 2 + 0.15;
+          const progress = ((t * 1.6 + i * 0.17) % 1);
+          const r1 = 8 + progress * (w * 0.45);
+          const r2 = r1 + 18 + progress * 25;
+          ctx.beginPath();
+          ctx.moveTo(cx + Math.cos(angle) * r1, cy + Math.sin(angle) * r1);
+          ctx.lineTo(cx + Math.cos(angle) * r2, cy + Math.sin(angle) * r2);
+          ctx.strokeStyle = `rgba(255, 255, 255, ${progress * 0.85})`;
+          ctx.lineWidth = 1.6;
+          ctx.stroke();
+        }
+      } else if (shader === 'matrix') {
+        // Cyberpunk silver rain columns
+        for (let i = 0; i < 22; i++) {
+          const x = (i / 22) * w + 6;
+          const y = ((t * (65 + (i % 5) * 22) + i * 37) % (h + 40)) - 20;
+          const grad = ctx.createLinearGradient(x, y - 32, x, y);
+          grad.addColorStop(0, 'rgba(255,255,255,0)');
+          grad.addColorStop(1, 'rgba(255,255,255,0.88)');
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 1.8;
+          ctx.beginPath();
+          ctx.moveTo(x, y - 32);
+          ctx.lineTo(x, y);
+          ctx.stroke();
+        }
+      } else {
+        // Aurora / Prism shimmering waves
+        for (let layer = 0; layer < 3; layer++) {
+          ctx.beginPath();
+          ctx.moveTo(0, h);
+          for (let x = 0; x <= w; x += 10) {
+            const y = h * (0.38 + layer * 0.12) + Math.sin(x * 0.02 + t * (1.5 + layer * 0.4)) * 20;
+            ctx.lineTo(x, y);
+          }
+          ctx.lineTo(w, h);
+          ctx.closePath();
+          const g = ctx.createLinearGradient(0, h * 0.2, 0, h);
+          g.addColorStop(0, `rgba(255, 255, 255, ${0.28 - layer * 0.06})`);
+          g.addColorStop(1, 'rgba(255, 255, 255, 0.01)');
+          ctx.fillStyle = g;
+          ctx.fill();
+        }
+      }
+      ctx.shadowBlur = 0;
+    }
+
     renderCatalog('All');
+
+    // =========================================================================
+    // 2. FULLSCREEN STAR GAZING + RADIANT SILVER MOON + SHOOTING METEORS ENGINE
+    // =========================================================================
+    const bgCanvas = document.getElementById('stargazing-bg');
+    const bgCtx = bgCanvas.getContext('2d');
+    let bw = window.innerWidth;
+    let bh = window.innerHeight;
+
+    function resizeBg() {
+      bw = window.innerWidth;
+      bh = window.innerHeight;
+      bgCanvas.width = bw;
+      bgCanvas.height = bh;
+      initCardShaders();
+    }
+    window.addEventListener('resize', resizeBg);
+    resizeBg();
+
+    // Create 320 glittering stars
+    const stars = Array.from({ length: 320 }, (_, i) => ({
+      x: Math.random(),
+      y: Math.random(),
+      r: 0.6 + Math.random() * 2.1,
+      speed: 1.2 + Math.random() * 3.5,
+      phase: Math.random() * Math.PI * 2,
+      isDiamond: i % 7 === 0
+    }));
+
+    // Create shooting meteors pool
+    const meteors = [];
+    function spawnMeteor() {
+      const startX = bw * (0.25 + Math.random() * 0.72);
+      const startY = bh * (Math.random() * 0.42);
+      const speed = 11 + Math.random() * 9;
+      const angle = Math.PI * (0.72 + Math.random() * 0.12); // Down-left diagonal
+      meteors.push({
+        x: startX,
+        y: startY,
+        vx: Math.cos(angle) * speed,
+        vy: -Math.sin(angle) * speed,
+        len: 110 + Math.random() * 110,
+        life: 0,
+        maxLife: 45 + Math.random() * 35,
+        sparks: []
+      });
+    }
+
+    // Spawn initial meteor immediately
+    spawnMeteor();
+
+    function drawMoon(ctx, time) {
+      const mx = bw * 0.84;
+      const my = bh * 0.17;
+      const mr = Math.min(bw, bh) * 0.068;
+
+      // Outer shimmering lunar corona / halo
+      const halo = ctx.createRadialGradient(mx, my, mr * 0.6, mx, my, mr * 4.8);
+      halo.addColorStop(0, 'rgba(255, 255, 255, 0.36)');
+      halo.addColorStop(0.28, 'rgba(226, 232, 240, 0.14)');
+      halo.addColorStop(0.6, 'rgba(148, 163, 184, 0.04)');
+      halo.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = halo;
+      ctx.beginPath();
+      ctx.arc(mx, my, mr * 4.8, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Luminous Full Silver Moon Disc
+      ctx.save();
+      ctx.shadowColor = 'rgba(255, 255, 255, 0.85)';
+      ctx.shadowBlur = 42;
+      const moonGrad = ctx.createRadialGradient(mx - mr * 0.28, my - mr * 0.28, mr * 0.1, mx, my, mr);
+      moonGrad.addColorStop(0, '#FFFFFF');
+      moonGrad.addColorStop(0.55, '#E2E8F0');
+      moonGrad.addColorStop(0.88, '#CBD5E1');
+      moonGrad.addColorStop(1, '#94A3B8');
+      ctx.fillStyle = moonGrad;
+      ctx.beginPath();
+      ctx.arc(mx, my, mr, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // Subtle lunar mares / craters
+      const craters = [
+        { dx: -0.28, dy: -0.18, r: 0.22, a: 0.13 },
+        { dx: 0.24, dy: -0.25, r: 0.16, a: 0.11 },
+        { dx: 0.18, dy: 0.22, r: 0.26, a: 0.14 },
+        { dx: -0.32, dy: 0.28, r: 0.14, a: 0.10 },
+        { dx: 0.02, dy: 0.04, r: 0.19, a: 0.09 }
+      ];
+      craters.forEach(c => {
+        ctx.fillStyle = `rgba(71, 85, 105, ${c.a})`;
+        ctx.beginPath();
+        ctx.arc(mx + c.dx * mr, my + c.dy * mr, c.r * mr, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    let lastMeteorSpawn = 0;
+    function animateAll(now) {
+      const t = now * 0.001;
+
+      // 1. Deep Starry Night Sky Backdrop
+      const sky = bgCtx.createRadialGradient(bw * 0.82, bh * 0.16, 20, bw * 0.5, bh * 0.5, Math.max(bw, bh));
+      sky.addColorStop(0, '#111522');
+      sky.addColorStop(0.45, '#060810');
+      sky.addColorStop(1, '#020205');
+      bgCtx.fillStyle = sky;
+      bgCtx.fillRect(0, 0, bw, bh);
+
+      // 2. Draw Radiant Silver Moon
+      drawMoon(bgCtx, t);
+
+      // 3. Draw Twinkling & Glittering Diamond Stars
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        const sx = s.x * bw;
+        const sy = s.y * bh;
+        const twinkle = 0.28 + 0.72 * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
+
+        bgCtx.fillStyle = `rgba(255, 255, 255, ${twinkle})`;
+        bgCtx.beginPath();
+        bgCtx.arc(sx, sy, s.r * (0.75 + 0.35 * twinkle), 0, Math.PI * 2);
+        bgCtx.fill();
+
+        // 4-point diamond glitter spikes on bright stars
+        if (s.isDiamond && twinkle > 0.65) {
+          const spike = s.r * 4.5 * twinkle;
+          bgCtx.strokeStyle = `rgba(255, 255, 255, ${twinkle * 0.65})`;
+          bgCtx.lineWidth = 0.8;
+          bgCtx.beginPath();
+          bgCtx.moveTo(sx - spike, sy);
+          bgCtx.lineTo(sx + spike, sy);
+          bgCtx.moveTo(sx, sy - spike);
+          bgCtx.lineTo(sx, sy + spike);
+          bgCtx.stroke();
+        }
+      }
+
+      // 4. Spawn & Render Shooting Meteors
+      if (now - lastMeteorSpawn > 1300) {
+        spawnMeteor();
+        if (Math.random() > 0.55) spawnMeteor();
+        lastMeteorSpawn = now;
+      }
+
+      for (let i = meteors.length - 1; i >= 0; i--) {
+        const m = meteors[i];
+        m.x += m.vx;
+        m.y += m.vy;
+        m.life++;
+
+        const alpha = Math.sin((m.life / m.maxLife) * Math.PI);
+        const normX = m.vx / Math.hypot(m.vx, m.vy);
+        const normY = m.vy / Math.hypot(m.vx, m.vy);
+        const tailX = m.x - normX * m.len;
+        const tailY = m.y - normY * m.len;
+
+        const tailGrad = bgCtx.createLinearGradient(m.x, m.y, tailX, tailY);
+        tailGrad.addColorStop(0, `rgba(255, 255, 255, ${alpha})`);
+        tailGrad.addColorStop(0.3, `rgba(226, 232, 240, ${alpha * 0.65})`);
+        tailGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+        bgCtx.save();
+        bgCtx.strokeStyle = tailGrad;
+        bgCtx.lineWidth = 2.2;
+        bgCtx.shadowColor = '#FFFFFF';
+        bgCtx.shadowBlur = 12;
+        bgCtx.beginPath();
+        bgCtx.moveTo(m.x, m.y);
+        bgCtx.lineTo(tailX, tailY);
+        bgCtx.stroke();
+
+        // Glowing meteor head spark
+        bgCtx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        bgCtx.beginPath();
+        bgCtx.arc(m.x, m.y, 2.4, 0, Math.PI * 2);
+        bgCtx.fill();
+        bgCtx.restore();
+
+        if (m.life >= m.maxLife || m.x < -200 || m.y > bh + 200) {
+          meteors.splice(i, 1);
+        }
+      }
+
+      // 5. Animate all Live 4K Wallpaper Card Previews
+      for (let i = 0; i < cardCanvases.length; i++) {
+        drawCardShader(cardCanvases[i], t);
+      }
+
+      requestAnimationFrame(animateAll);
+    }
+
+    requestAnimationFrame(animateAll);
   </script>
 </body>
 </html>
