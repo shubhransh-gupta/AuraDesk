@@ -2,19 +2,19 @@ import SwiftUI
 import AppKit
 
 @main
-struct AetherWallApp: App {
+struct AuraDeskApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @ObservedObject var store = WallpaperStore.shared
     @ObservedObject var desktop = DesktopWallpaperController.shared
     @ObservedObject var screenSaver = ScreenSaverController.shared
 
     var body: some Scene {
-        Window("AetherWall — 4K Live Wallpaper, Screen Saver & Lock Screen", id: "main-window") {
+        Window("AuraDesk — 4K Live Wallpaper, Screen Saver & Lock Screen", id: "main-window") {
             ContentView()
         }
         .defaultSize(width: 1060, height: 700)
 
-        MenuBarExtra("AetherWall", systemImage: "sparkles.tv.fill") {
+        MenuBarExtra("AuraDesk", systemImage: "sparkles.tv.fill") {
             MenuBarQuickMenu()
         }
     }
@@ -27,7 +27,7 @@ struct MenuBarQuickMenu: View {
     @ObservedObject var screenSaver = ScreenSaverController.shared
 
     var body: some View {
-        Button("Open AetherWall Studio...") {
+        Button("Open AuraDesk Studio...") {
             NSApp.activate(ignoringOtherApps: true)
             openWindow(id: "main-window")
         }
@@ -77,7 +77,7 @@ struct MenuBarQuickMenu: View {
 
         Divider()
 
-        Button("Quit AetherWall") {
+        Button("Quit AuraDesk") {
             NSApplication.shared.terminate(nil)
         }
         .keyboardShortcut("q", modifiers: [.command])

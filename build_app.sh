@@ -3,7 +3,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-APP_NAME="AetherWall"
+APP_NAME="AuraDesk"
 BUNDLE_DIR="${APP_NAME}.app"
 CONTENTS_DIR="${BUNDLE_DIR}/Contents"
 MACOS_DIR="${CONTENTS_DIR}/MacOS"
@@ -21,8 +21,8 @@ mkdir -p "${MACOS_DIR}" "${RESOURCES_DIR}"
 cp "${EXECUTABLE}" "${MACOS_DIR}/${APP_NAME}"
 chmod +x "${MACOS_DIR}/${APP_NAME}"
 
-if [ -f "Sources/AetherWall/Resources/curated_4k_catalog.json" ]; then
-    cp "Sources/AetherWall/Resources/curated_4k_catalog.json" "${RESOURCES_DIR}/curated_4k_catalog.json"
+if [ -f "Sources/AuraDesk/Resources/curated_4k_catalog.json" ]; then
+    cp "Sources/AuraDesk/Resources/curated_4k_catalog.json" "${RESOURCES_DIR}/curated_4k_catalog.json"
 fi
 
 cat > "${CONTENTS_DIR}/Info.plist" <<EOF
@@ -35,7 +35,7 @@ cat > "${CONTENTS_DIR}/Info.plist" <<EOF
     <key>CFBundleExecutable</key>
     <string>${APP_NAME}</string>
     <key>CFBundleIdentifier</key>
-    <string>com.opensource.aetherwall</string>
+    <string>com.opensource.auradesk</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
@@ -51,7 +51,7 @@ cat > "${CONTENTS_DIR}/Info.plist" <<EOF
     <key>NSHighResolutionCapable</key>
     <true/>
     <key>NSAppleEventsUsageDescription</key>
-    <string>AetherWall needs administrator permission to install custom 4K videos into the macOS Lock Screen &amp; Aerial wallpaper engine.</string>
+    <string>AuraDesk needs administrator permission to install custom 4K videos into the macOS Lock Screen &amp; Aerial wallpaper engine.</string>
 </dict>
 </plist>
 EOF

@@ -74,7 +74,7 @@ public struct ContentView: View {
                         .foregroundStyle(.white)
                 }
                 VStack(alignment: .leading, spacing: 1) {
-                    Text("AetherWall")
+                    Text("AuraDesk")
                         .font(.headline.weight(.bold))
                     Text("4K Desktop • Saver • Lock")
                         .font(.caption2)
@@ -345,7 +345,7 @@ public struct ContentView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Native macOS Lock Screen & Aerial Injection Engine")
                         .font(.title2.bold())
-                    Text("AetherWall injects your custom 4K video directly into macOS's native `idleassetsd` Aerial pipeline and updates `com.apple.wallpaper/Store/Index.plist`. This gives you genuine 4K Lock Screen playback and smooth slow-motion wake transitions.")
+                    Text("AuraDesk injects your custom 4K video directly into macOS's native `idleassetsd` Aerial pipeline and updates `com.apple.wallpaper/Store/Index.plist`. This gives you genuine 4K Lock Screen playback and smooth slow-motion wake transitions.")
                         .foregroundStyle(.secondary)
                 }
 
@@ -458,7 +458,7 @@ public struct ContentView: View {
             VStack(alignment: .leading, spacing: 20) {
                 Text("4K Screen Saver Engine")
                     .font(.title2.bold())
-                Text("AetherWall supports both macOS's native Aerial Screen Saver (when you apply a video to Lock Screen & Saver) and an instant built-in 4K Screen Saver overlay with a Sonoma-style clock.")
+                Text("AuraDesk supports both macOS's native Aerial Screen Saver (when you apply a video to Lock Screen & Saver) and an instant built-in 4K Screen Saver overlay with a Sonoma-style clock.")
                     .foregroundStyle(.secondary)
 
                 GroupBox("Built-in 4K Screen Saver Settings") {

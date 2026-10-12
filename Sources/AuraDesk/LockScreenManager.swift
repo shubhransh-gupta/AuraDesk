@@ -22,7 +22,7 @@ public final class LockScreenManager: ObservableObject {
 
     public var backupDirectoryURL: URL {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let dir = appSupport.appendingPathComponent("AetherWall/AerialBackups", isDirectory: true)
+        let dir = appSupport.appendingPathComponent("AuraDesk/AerialBackups", isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir
     }
@@ -193,7 +193,7 @@ public final class LockScreenManager: ObservableObject {
     }
 
     private func prepareCompatibleMovFile(from sourceURL: URL) async throws -> URL {
-        let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent("AetherWallStaging", isDirectory: true)
+        let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent("AuraDeskStaging", isDirectory: true)
         try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
         let outputURL = tempDir.appendingPathComponent("staged_lockscreen.mov")
         if FileManager.default.fileExists(atPath: outputURL.path) {
@@ -310,7 +310,7 @@ public final class LockScreenManager: ObservableObject {
 
                 if let errorDict = errorDict {
                     let message = errorDict[NSAppleScript.errorMessage] as? String ?? "Administrator privileges were cancelled or failed."
-                    continuation.resume(throwing: NSError(domain: "AetherWall.LockScreen", code: 1, userInfo: [NSLocalizedDescriptionKey: message]))
+                    continuation.resume(throwing: NSError(domain: "AuraDesk.LockScreen", code: 1, userInfo: [NSLocalizedDescriptionKey: message]))
                 } else {
                     continuation.resume(returning: ())
                 }

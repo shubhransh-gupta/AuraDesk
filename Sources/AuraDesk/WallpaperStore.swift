@@ -65,11 +65,11 @@ public final class WallpaperStore: ObservableObject {
     @Published public var isDropTargeted: Bool = false
 
     private let defaults = UserDefaults.standard
-    private let itemsKey = "aetherwall.wallpaper.items.v1"
+    private let itemsKey = "auradesk.wallpaper.items.v1"
 
     public var appStorageDirectory: URL {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let dir = appSupport.appendingPathComponent("AetherWall", isDirectory: true)
+        let dir = appSupport.appendingPathComponent("AuraDesk", isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir
     }
@@ -92,15 +92,15 @@ public final class WallpaperStore: ObservableObject {
     }
 
     private func loadState() {
-        isMuted = defaults.object(forKey: "aetherwall.isMuted") as? Bool ?? true
-        volume = defaults.object(forKey: "aetherwall.volume") as? Double ?? 0.5
-        loopPlayback = defaults.object(forKey: "aetherwall.loopPlayback") as? Bool ?? true
-        if let gravRaw = defaults.string(forKey: "aetherwall.videoGravity"),
+        isMuted = defaults.object(forKey: "auradesk.isMuted") as? Bool ?? true
+        volume = defaults.object(forKey: "auradesk.volume") as? Double ?? 0.5
+        loopPlayback = defaults.object(forKey: "auradesk.loopPlayback") as? Bool ?? true
+        if let gravRaw = defaults.string(forKey: "auradesk.videoGravity"),
            let mode = VideoGravityMode(rawValue: gravRaw) {
             videoGravity = mode
         }
-        playbackSpeed = defaults.object(forKey: "aetherwall.playbackSpeed") as? Float ?? 1.0
-        pauseOnScreenSleep = defaults.object(forKey: "aetherwall.pauseOnScreenSleep") as? Bool ?? true
+        playbackSpeed = defaults.object(forKey: "auradesk.playbackSpeed") as? Float ?? 1.0
+        pauseOnScreenSleep = defaults.object(forKey: "auradesk.pauseOnScreenSleep") as? Bool ?? true
 
         DesktopWallpaperController.shared.isMuted = isMuted
         DesktopWallpaperController.shared.volume = volume
@@ -114,13 +114,13 @@ public final class WallpaperStore: ObservableObject {
             self.items = decoded.filter { FileManager.default.fileExists(atPath: $0.filePath) }
         }
 
-        if let idStr = defaults.string(forKey: "aetherwall.activeDesktopID") {
+        if let idStr = defaults.string(forKey: "auradesk.activeDesktopID") {
             activeDesktopID = UUID(uuidString: idStr)
         }
-        if let idStr = defaults.string(forKey: "aetherwall.activeScreenSaverID") {
+        if let idStr = defaults.string(forKey: "auradesk.activeScreenSaverID") {
             activeScreenSaverID = UUID(uuidString: idStr)
         }
-        if let idStr = defaults.string(forKey: "aetherwall.activeLockScreenID") {
+        if let idStr = defaults.string(forKey: "auradesk.activeLockScreenID") {
             activeLockScreenID = UUID(uuidString: idStr)
         }
     }
@@ -129,15 +129,15 @@ public final class WallpaperStore: ObservableObject {
         if let data = try? JSONEncoder().encode(items) {
             defaults.set(data, forKey: itemsKey)
         }
-        defaults.set(isMuted, forKey: "aetherwall.isMuted")
-        defaults.set(volume, forKey: "aetherwall.volume")
-        defaults.set(loopPlayback, forKey: "aetherwall.loopPlayback")
-        defaults.set(videoGravity.rawValue, forKey: "aetherwall.videoGravity")
-        defaults.set(playbackSpeed, forKey: "aetherwall.playbackSpeed")
-        defaults.set(pauseOnScreenSleep, forKey: "aetherwall.pauseOnScreenSleep")
-        defaults.set(activeDesktopID?.uuidString, forKey: "aetherwall.activeDesktopID")
-        defaults.set(activeScreenSaverID?.uuidString, forKey: "aetherwall.activeScreenSaverID")
-        defaults.set(activeLockScreenID?.uuidString, forKey: "aetherwall.activeLockScreenID")
+        defaults.set(isMuted, forKey: "auradesk.isMuted")
+        defaults.set(volume, forKey: "auradesk.volume")
+        defaults.set(loopPlayback, forKey: "auradesk.loopPlayback")
+        defaults.set(videoGravity.rawValue, forKey: "auradesk.videoGravity")
+        defaults.set(playbackSpeed, forKey: "auradesk.playbackSpeed")
+        defaults.set(pauseOnScreenSleep, forKey: "auradesk.pauseOnScreenSleep")
+        defaults.set(activeDesktopID?.uuidString, forKey: "auradesk.activeDesktopID")
+        defaults.set(activeScreenSaverID?.uuidString, forKey: "auradesk.activeScreenSaverID")
+        defaults.set(activeLockScreenID?.uuidString, forKey: "auradesk.activeLockScreenID")
     }
 
     private func restoreActivePlaybackOnLaunch() {
@@ -315,7 +315,7 @@ public final class WallpaperStore: ObservableObject {
             let meta = await extractMetadataAndThumbnail(for: outputURL, id: id)
             let sampleItem = WallpaperItem(
                 id: id,
-                title: "Aether Aurora Horizon (4K Sample)",
+                title: "AuraDesk Aurora Horizon (4K Sample)",
                 category: "Synthesized 4K",
                 filePath: outputURL.path,
                 thumbnailPath: meta.thumbnailPath,

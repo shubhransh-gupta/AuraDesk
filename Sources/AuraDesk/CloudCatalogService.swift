@@ -66,9 +66,9 @@ public final class CloudCatalogService: ObservableObject {
         let execDir = Bundle.main.bundleURL
         let candidates = [
             execDir.appendingPathComponent("Contents/Resources/curated_4k_catalog.json"),
-            execDir.appendingPathComponent("AetherWall_AetherWall.bundle/curated_4k_catalog.json"),
+            execDir.appendingPathComponent("AuraDesk_AuraDesk.bundle/curated_4k_catalog.json"),
             URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
-                .appendingPathComponent("Sources/AetherWall/Resources/curated_4k_catalog.json")
+                .appendingPathComponent("Sources/AuraDesk/Resources/curated_4k_catalog.json")
         ]
         for c in candidates where FileManager.default.fileExists(atPath: c.path) {
             return c

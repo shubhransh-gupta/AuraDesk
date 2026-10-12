@@ -1,499 +1,675 @@
 <!DOCTYPE html>
-<html lang="en" class="dark scroll-smooth">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AetherWall — Free 4K Live Wallpaper, Screen Saver & Lock Screen for macOS</title>
-  <meta name="description" content="The 100% free & open-source native macOS engine that plays 4K 60/240fps videos on your Desktop, Screen Saver, and real macOS Lock Screen. Zero paywalls, zero subscriptions." />
+  <title>AuraDesk — Breathe Motion into Your Mac (4K Desktop, Screen Saver & Lock Screen)</title>
+  <meta name="description" content="Free & open-source macOS 4K live animation & video engine for Desktop, Screen Saver, and native Lock Screen. Built with Swift & AVFoundation." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          },
-          colors: {
-            oled: '#090914',
-            surface: '#121226',
-            card: '#181832',
-            borderGlow: '#312E81',
-            accentGold: '#F59E0B',
-          }
-        }
-      }
-    }
-  </script>
   <style>
+    :root {
+      --bg-forest: #171E15;
+      --bg-forest-deep: #11160F;
+      --glass-fill: rgba(255, 255, 255, 0.055);
+      --glass-border: rgba(255, 255, 255, 0.22);
+    }
+
     body {
-      background-color: #090914;
-      color: #F8FAFC;
+      background-color: var(--bg-forest);
+      background-image:
+        radial-gradient(circle at 50% 18%, rgba(56, 118, 68, 0.25) 0%, transparent 52%),
+        radial-gradient(circle at 82% 42%, rgba(42, 92, 55, 0.20) 0%, transparent 45%),
+        radial-gradient(circle at 18% 68%, rgba(45, 98, 58, 0.18) 0%, transparent 48%);
+      color: #F4F7F3;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       overflow-x: hidden;
     }
-    .aurora-bg {
-      background:
-        radial-gradient(circle at 18% 14%, rgba(79, 70, 229, 0.28) 0%, transparent 45%),
-        radial-gradient(circle at 82% 18%, rgba(6, 182, 212, 0.22) 0%, transparent 42%),
-        radial-gradient(circle at 50% 65%, rgba(245, 158, 11, 0.10) 0%, transparent 50%);
+
+    /* Figma Glassmorphic Card with Asymmetric Rounded Corners & Frosted Rim */
+    .figma-glass-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.03) 100%);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border-radius: 54px;
+      border: 1.5px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 28px 60px -15px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.28);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease, box-shadow 0.35s ease;
     }
-    .glass-panel {
-      background: rgba(24, 24, 50, 0.65);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(99, 102, 241, 0.22);
+
+    .figma-glass-card:hover {
+      border-color: rgba(134, 239, 172, 0.45);
+      box-shadow: 0 34px 70px -12px rgba(0, 0, 0, 0.78), inset 0 1px 2px rgba(255, 255, 255, 0.38);
     }
-    .text-glow {
-      text-shadow: 0 0 28px rgba(99, 102, 241, 0.45);
+
+    /* Figma Wide Banner Card ("Our Trendy" horizontal pill banner) */
+    .figma-wide-banner {
+      background: linear-gradient(115deg, rgba(255, 255, 255, 0.085) 0%, rgba(255, 255, 255, 0.025) 100%);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 78px;
+      border: 1.5px solid rgba(255, 255, 255, 0.24);
+      box-shadow: 0 32px 70px -15px rgba(0, 0, 0, 0.72), inset 0 1px 1px rgba(255, 255, 255, 0.28);
     }
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-      }
+
+    /* Figma Section Title Corner Bracket Effect: [ Our Top Selling ] */
+    .figma-bracket-title {
+      position: relative;
+      display: inline-block;
+      padding: 10px 28px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .figma-bracket-title::before,
+    .figma-bracket-title::after {
+      content: '';
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-color: rgba(167, 243, 208, 0.75);
+      pointer-events: none;
+    }
+    .figma-bracket-title::before {
+      top: 0;
+      right: 0;
+      border-top: 2.5px solid rgba(167, 243, 208, 0.75);
+      border-right: 2.5px solid rgba(167, 243, 208, 0.75);
+      border-top-right-radius: 10px;
+    }
+    .figma-bracket-title::after {
+      bottom: 0;
+      left: 0;
+      border-bottom: 2.5px solid rgba(167, 243, 208, 0.75);
+      border-left: 2.5px solid rgba(167, 243, 208, 0.75);
+      border-bottom-left-radius: 10px;
+    }
+
+    /* Figma Pill Outline Button */
+    .figma-outline-btn {
+      border: 1.5px solid rgba(255, 255, 255, 0.65);
+      border-radius: 12px;
+      padding: 10px 26px;
+      font-size: 0.925rem;
+      font-weight: 500;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.03);
+      transition: all 0.25s ease;
+    }
+    .figma-outline-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    /* Pop-out 3D Render Drop Shadow */
+    .render-3d-pop {
+      filter: drop-shadow(0 28px 32px rgba(0, 0, 0, 0.85));
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .group:hover .render-3d-pop {
+      transform: translateY(-10px) scale(1.04);
     }
   </style>
 </head>
-<body class="aurora-bg min-h-screen antialiased selection:bg-indigo-500 selection:text-white">
+<body class="min-h-screen selection:bg-emerald-500 selection:text-black">
 
-  <!-- Sticky Navigation -->
-  <header class="sticky top-0 z-50 border-b border-indigo-500/20 bg-[#090914]/80 backdrop-blur-xl">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-indigo-400 rounded-lg">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-          <svg class="w-5 h-5 text-white" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-        </div>
-        <div>
-          <span class="font-bold text-lg tracking-tight text-white">AetherWall</span>
-          <span class="ml-2 text-[11px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">v1.0 macOS</span>
-        </div>
-      </a>
-
-      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-        <a href="#preview" class="hover:text-white transition-colors cursor-pointer">Interactive Preview</a>
-        <a href="#catalog" class="hover:text-white transition-colors cursor-pointer">350+ 4K Catalog</a>
-        <a href="#architecture" class="hover:text-white transition-colors cursor-pointer">How Lock Screen Works</a>
-        <a href="#compare" class="hover:text-white transition-colors cursor-pointer">Comparison</a>
-      </nav>
-
-      <div class="flex items-center gap-3">
-        <a href="https://github.com/shubhransh-gupta/AetherWall" target="_blank" rel="noopener"
-           class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium text-slate-200 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all cursor-pointer">
-          <svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-          </svg>
-          <span>Star on GitHub</span>
-        </a>
-        <a href="#install"
-           class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-lg shadow-amber-500/20 transition-all cursor-pointer">
-          <span>Download Free</span>
-          <svg class="w-4 h-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-          </svg>
-        </a>
+  <!-- ======================= TOP NAVBAR (Matches Figma Header) ======================= -->
+  <header class="relative z-40 max-w-7xl mx-auto px-6 lg:px-12 pt-7 pb-4 flex items-center justify-between">
+    <!-- Left Brand Logo + Name -->
+    <a href="#" class="flex items-center gap-3 group">
+      <div class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center shadow-lg">
+        <svg class="w-5 h-5 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
       </div>
+      <span class="text-xl font-bold tracking-tight text-white">AuraDesk.</span>
+    </a>
+
+    <!-- Center Links -->
+    <nav class="hidden md:flex items-center gap-10 text-sm font-medium text-white/80">
+      <a href="#home" class="hover:text-white transition-colors">Home</a>
+      <a href="#surfaces" class="hover:text-white transition-colors flex items-center gap-1">
+        <span>Mac Surfaces</span>
+        <svg class="w-3.5 h-3.5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </a>
+      <a href="#features" class="hover:text-white transition-colors">3D Engines</a>
+      <a href="#catalog" class="hover:text-white transition-colors">4K Live Demo</a>
+    </nav>
+
+    <!-- Right Action Icons -->
+    <div class="flex items-center gap-5">
+      <a href="https://github.com/shubhransh-gupta/AuraDesk" target="_blank" rel="noopener" title="View on GitHub" class="text-white/80 hover:text-white transition-colors">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+        </svg>
+      </a>
+      <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener" title="Download AuraDesk.app" class="text-white/80 hover:text-white transition-colors">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+      </a>
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="relative pt-16 pb-20 lg:pt-24 lg:pb-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center max-w-4xl mx-auto">
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-panel text-xs font-medium text-cyan-300 mb-6">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>100% Free & Open Source • Native Swift & AVFoundation • macOS Sonoma, Sequoia & Tahoe</span>
-      </div>
+  <!-- ======================= HERO + CENTRAL GIANT 3D MAC SPINE + OVERLAPPING BANNERS ======================= -->
+  <!-- Exact Figma placement: Giant 3D centerpiece spans from Hero down behind "Our Trendy" horizontal glass cards -->
+  <div id="home" class="relative max-w-7xl mx-auto px-6 lg:px-12 pt-8 pb-20">
 
-      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] text-white text-glow">
-        4K Live Video on Your <br class="hidden sm:inline" />
-        <span class="bg-gradient-to-r from-cyan-400 via-indigo-400 to-amber-400 bg-clip-text text-transparent">
-          Desktop, Screen Saver & Lock Screen.
-        </span>
-      </h1>
-
-      <p class="mt-6 text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
-        Most free macOS wallpaper apps stop at the desktop window—and paid apps lock 4K catalogs and Lock Screen motion behind a paywall. <strong class="text-white">AetherWall</strong> gives you 350+ curated 4K wallpapers and native <code class="font-mono text-cyan-300 text-base">idleassetsd</code> Lock Screen injection completely free.
-      </p>
-
-      <div class="mt-9 flex flex-wrap items-center justify-center gap-4">
-        <a href="#install"
-           class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl text-base font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-xl shadow-amber-500/25 transition-all cursor-pointer">
-          <svg class="w-5 h-5" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-          </svg>
-          <span>Get AetherWall for macOS (Free Forever)</span>
-        </a>
-        <a href="https://github.com/shubhransh-gupta/AetherWall" target="_blank" rel="noopener"
-           class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl text-base font-semibold glass-panel hover:bg-white/10 text-white transition-all cursor-pointer">
-          <svg class="w-5 h-5 text-indigo-400" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-          </svg>
-          <span>Inspect Swift Source Code</span>
-        </a>
-      </div>
-
-      <!-- Key Metrics Bar -->
-      <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto">
-        <div class="glass-panel rounded-xl p-4">
-          <div class="text-2xl font-extrabold text-white">350+</div>
-          <div class="text-xs text-slate-400 mt-0.5">Built-in 4K Cloud Wallpapers</div>
-        </div>
-        <div class="glass-panel rounded-xl p-4">
-          <div class="text-2xl font-extrabold text-cyan-400">&lt; 1% CPU</div>
-          <div class="text-xs text-slate-400 mt-0.5">Apple Silicon Hardware HEVC</div>
-        </div>
-        <div class="glass-panel rounded-xl p-4">
-          <div class="text-2xl font-extrabold text-emerald-400">All 3 Surfaces</div>
-          <div class="text-xs text-slate-400 mt-0.5">Desktop + Saver + Lock Screen</div>
-        </div>
-        <div class="glass-panel rounded-xl p-4">
-          <div class="text-2xl font-extrabold text-amber-400">$0 / MIT</div>
-          <div class="text-xs text-slate-400 mt-0.5">No Trial Limits • No Watermarks</div>
-        </div>
-      </div>
+    <!-- GIANT CENTRAL 3D MAC STUDIO DISPLAY (Stands in the center background/midground just like the giant tree in Figma!) -->
+    <div class="hidden lg:flex justify-center pointer-events-none absolute left-1/2 -translate-x-1/2 top-[60px] z-10 w-[640px]">
+      <img src="./assets/hero-center-mac.png" alt="AuraDesk 4K Pro Display XDR & MacBook Centerpiece"
+           class="w-full h-auto object-contain render-3d-pop opacity-95" />
     </div>
 
-    <!-- Interactive MacBook Mode Simulator -->
-    <div id="preview" class="mt-16 max-w-5xl mx-auto">
-      <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
-        <div class="flex items-center gap-2">
-          <span class="text-xs font-mono uppercase tracking-wider text-indigo-300">Live Surface Simulator:</span>
-          <div class="inline-flex rounded-xl p-1 glass-panel" role="tablist">
-            <button onclick="setSurfaceMode('desktop')" id="btn-desktop"
-              class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white transition-all cursor-pointer">
-              1. Desktop Mode
-            </button>
-            <button onclick="setSurfaceMode('screensaver')" id="btn-screensaver"
-              class="px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all cursor-pointer">
-              2. 4K Screen Saver
-            </button>
-            <button onclick="setSurfaceMode('lockscreen')" id="btn-lockscreen"
-              class="px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all cursor-pointer">
-              3. Native Lock Screen
-            </button>
+    <!-- TOP ROW: Left Hero Headline + Floating Testimonial Card | Right 3D Pop-out Card -->
+    <div class="relative z-20 grid grid-cols-1 lg:grid-cols-12 gap-10 items-start pt-4">
+
+      <!-- Left Column (Cols 1-7): Headline + CTA + Play Demo + Mini Review Card -->
+      <div class="lg:col-span-7 space-y-8">
+        <div class="max-w-xl">
+          <h1 class="text-5xl sm:text-7xl font-bold tracking-tight text-white/95 leading-[1.06]">
+            Breathe 4K Motion
+          </h1>
+          <p class="mt-5 text-base sm:text-lg text-white/70 leading-relaxed max-w-md">
+            Bring any custom 4K 60/240fps animation or video to your macOS <strong class="text-white">Desktop</strong>, <strong class="text-white">Screen Saver</strong>, and native <strong class="text-white">Lock Screen</strong> — 100% free &amp; open source.
+          </p>
+
+          <!-- Explore Button + Live Demo Circle Button -->
+          <div class="mt-7 flex items-center gap-6">
+            <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
+               class="figma-outline-btn cursor-pointer">
+              Download Free
+            </a>
+
+            <a href="#catalog" class="inline-flex items-center gap-3 text-sm text-white/85 hover:text-white group cursor-pointer">
+              <span class="w-11 h-11 rounded-full border border-white/50 flex items-center justify-center group-hover:border-emerald-300 group-hover:scale-105 transition-all">
+                <svg class="w-4 h-4 translate-x-0.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+                </svg>
+              </span>
+              <span>Live 4K Demo...</span>
+            </a>
           </div>
         </div>
 
-        <div class="flex items-center gap-2">
-          <span class="text-xs text-slate-400">Switch Live 4K Video:</span>
-          <button onclick="switchDemoVideo(0)" class="px-3 py-1 rounded-lg text-xs glass-panel hover:border-cyan-400/60 cursor-pointer">SpaceX Starship</button>
-          <button onclick="switchDemoVideo(1)" class="px-3 py-1 rounded-lg text-xs glass-panel hover:border-cyan-400/60 cursor-pointer">Porsche 911 GT3</button>
-          <button onclick="switchDemoVideo(2)" class="px-3 py-1 rounded-lg text-xs glass-panel hover:border-cyan-400/60 cursor-pointer">Jinx & Ekko 4K</button>
-        </div>
-      </div>
-
-      <!-- Simulated macOS Display Frame -->
-      <div class="relative rounded-2xl overflow-hidden border-2 border-indigo-500/30 shadow-2xl shadow-indigo-950/60 aspect-video bg-black">
-        <video id="hero-video" autoplay loop muted playsinline poster="https://cdn.macwall.app/thumbs/spacex-starship-launchpad.jpg"
-               class="w-full h-full object-cover">
-          <source id="hero-video-src" src="https://cdn.macwall.app/videos/spacex-starship-launchpad.mp4" type="video/mp4" />
-        </video>
-
-        <!-- Top macOS Menu Bar Overlay -->
-        <div class="absolute top-0 inset-x-0 h-7 bg-black/45 backdrop-blur-md px-4 flex items-center justify-between text-[11px] text-white/90 font-medium">
-          <div class="flex items-center gap-4">
-            <span class="font-bold"></span>
-            <span class="font-semibold">AetherWall</span>
-            <span class="hidden sm:inline text-white/70">File</span>
-            <span class="hidden sm:inline text-white/70">Edit</span>
-            <span class="hidden sm:inline text-white/70">View</span>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px]">4K HEVC Active</span>
-            <span>Mon Oct 12  19:15</span>
-          </div>
-        </div>
-
-        <!-- Mode 1: Desktop Overlay (Desktop Icons + Dock) -->
-        <div id="overlay-desktop" class="absolute inset-0 pointer-events-none flex flex-col justify-between p-6 pt-12">
-          <div class="flex justify-end">
-            <div class="flex flex-col items-center gap-6">
-              <div class="flex flex-col items-center">
-                <div class="w-12 h-10 rounded bg-sky-400/80 border border-white/30 backdrop-blur-sm shadow-lg"></div>
-                <span class="text-[11px] text-white font-medium mt-1 drop-shadow">4K_Renders</span>
-              </div>
-              <div class="flex flex-col items-center">
-                <div class="w-12 h-10 rounded bg-indigo-400/80 border border-white/30 backdrop-blur-sm shadow-lg"></div>
-                <span class="text-[11px] text-white font-medium mt-1 drop-shadow">AetherWall.app</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Simulated macOS Dock -->
-          <div class="mx-auto px-4 py-2 rounded-2xl bg-white/15 backdrop-blur-xl border border-white/20 flex items-center gap-3 shadow-2xl">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-b from-sky-400 to-blue-600"></div>
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-b from-indigo-500 to-purple-600"></div>
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-b from-emerald-400 to-teal-600"></div>
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-b from-amber-400 to-orange-600"></div>
-          </div>
-        </div>
-
-        <!-- Mode 2: Screen Saver Overlay -->
-        <div id="overlay-screensaver" class="hidden absolute inset-0 pointer-events-none flex flex-col items-center justify-start pt-16 bg-black/15">
-          <div class="text-sm sm:text-lg font-medium text-white/85 drop-shadow-lg">Monday, October 12</div>
-          <div class="text-6xl sm:text-8xl font-bold tracking-tight text-white/95 drop-shadow-2xl">19:15</div>
-          <div class="mt-auto mb-8 px-4 py-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/15 text-xs text-slate-200">
-            Sonoma-Style 4K Screen Saver Engine • Move mouse or press any key to wake
-          </div>
-        </div>
-
-        <!-- Mode 3: Lock Screen Overlay -->
-        <div id="overlay-lockscreen" class="hidden absolute inset-0 pointer-events-none flex flex-col items-center justify-between py-14 bg-black/20">
-          <div class="text-center">
-            <div class="text-sm sm:text-lg font-medium text-white/85 drop-shadow-lg">Monday, October 12</div>
-            <div class="text-6xl sm:text-8xl font-bold tracking-tight text-white/95 drop-shadow-2xl">19:15</div>
-          </div>
-
-          <div class="flex flex-col items-center gap-2">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 border-2 border-white/60 shadow-lg flex items-center justify-center font-bold text-white">
+        <!-- Floating Glass Testimonial Card on Mid-Left (Exact Figma placement!) -->
+        <div class="figma-glass-card p-6 max-w-[330px] mt-16 lg:mt-24">
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-300 flex items-center justify-center text-slate-950 font-bold text-sm shadow-md">
               SG
             </div>
-            <div class="text-xs font-semibold text-white drop-shadow">Shubhransh Gupta</div>
-            <div class="px-5 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-[11px] text-white/90">
-              Touch ID or Enter Password
+            <div>
+              <div class="text-sm font-semibold text-white">macOS Sequoia &amp; Tahoe</div>
+              <div class="flex items-center text-amber-400 text-xs mt-0.5">
+                ★★★★★ <span class="ml-1.5 text-white/60 text-[11px]">Native Swift</span>
+              </div>
             </div>
-            <span class="text-[10px] text-emerald-300 font-mono mt-1"> Powered by AetherWall Native idleassetsd Injection</span>
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Live 4K Cloud Catalog Showcase -->
-  <section id="catalog" class="py-20 border-t border-indigo-500/15 bg-[#0C0C1D]/70">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-        <div>
-          <span class="text-xs font-mono uppercase tracking-widest text-cyan-400">Built-In 4K Discovery Engine</span>
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">
-            350+ Fresh 4K Wallpapers Built Right Into the App
-          </h2>
-          <p class="text-slate-400 mt-2 max-w-2xl">
-            Stream and download curated 4K UHD loops across Space, Cars, Anime, Nature, Cyberpunk, Dark OLED, and Apple's 240fps Aerial streams—with zero paywalls.
+          <p class="mt-3.5 text-xs text-white/70 leading-relaxed">
+            "Zero Dock clutter, &lt;1% CPU hardware HEVC decoding, and real Lock Screen motion via <code class="text-emerald-300">idleassetsd</code> injection with 1-click backup restore."
           </p>
         </div>
-
-        <div class="flex flex-wrap gap-2">
-          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Space & Rockets</span>
-          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">Supercars 4K</span>
-          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30">Anime & Cyberpunk</span>
-          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30">Apple 240fps Aerials</span>
-        </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Card 1 -->
-        <div class="glass-panel rounded-2xl overflow-hidden group hover:border-indigo-400/50 transition-all">
-          <div class="relative aspect-video overflow-hidden bg-black">
-            <img src="https://cdn.macwall.app/thumbs/spacex-starship-launchpad.jpg" alt="SpaceX Starship Launchpad 4K" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-            <div class="absolute top-3 right-3 flex gap-1.5">
-              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-600/90 text-white">Space</span>
-              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-black/75 text-white">3840×2160</span>
-            </div>
+      <!-- Right Column (Cols 8-12): Tall Glassmorphic Card with 3D Mac Pop-Out Top -->
+      <div class="lg:col-span-5 flex justify-center lg:justify-end mt-12 lg:mt-6">
+        <div class="figma-glass-card w-full max-w-[340px] pt-36 pb-8 px-8 relative group">
+          <!-- 3D Mac Asset Popping Out of Top of Card! -->
+          <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-64 h-64 flex items-center justify-center pointer-events-none">
+            <img src="./assets/mac-desktop.png" alt="3D macOS Desktop Live Video Engine"
+                 class="w-full h-full object-contain render-3d-pop" />
           </div>
-          <div class="p-5">
-            <h3 class="font-bold text-white text-lg">SpaceX Starship Launchpad</h3>
-            <p class="text-xs text-slate-400 mt-1">4K UHD • 25.4 MB • Hardware HEVC/H.264</p>
-          </div>
-        </div>
 
-        <!-- Card 2 -->
-        <div class="glass-panel rounded-2xl overflow-hidden group hover:border-indigo-400/50 transition-all">
-          <div class="relative aspect-video overflow-hidden bg-black">
-            <img src="https://cdn.macwall.app/thumbs/porsche-911-gt3-rs-garage.jpg" alt="Porsche 911 GT3 RS Garage 4K" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-            <div class="absolute top-3 right-3 flex gap-1.5">
-              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-cyan-600/90 text-white">Cars</span>
-              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-black/75 text-white">3840×2160</span>
+          <div class="mt-6 text-left">
+            <span class="text-xs text-white/60 uppercase tracking-wider">Native macOS Engine</span>
+            <h3 class="text-2xl font-semibold text-white mt-1">4K Desktop Layer</h3>
+            <p class="text-xs text-white/65 mt-1.5 leading-relaxed">
+              Plays behind desktop icons across all monitors &amp; Spaces.
+            </p>
+            <div class="mt-5 flex items-center justify-between">
+              <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
+                 class="figma-outline-btn text-xs py-2 px-5">
+                Install Now
+              </a>
+              <div class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-white/30"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-white/30"></span>
+              </div>
             </div>
-          </div>
-          <div class="p-5">
-            <h3 class="font-bold text-white text-lg">Porsche 911 GT3 RS Garage</h3>
-            <p class="text-xs text-slate-400 mt-1">4K UHD • Cinematic Automotive Loop</p>
-          </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="glass-panel rounded-2xl overflow-hidden group hover:border-indigo-400/50 transition-all">
-          <div class="relative aspect-video overflow-hidden bg-black">
-            <img src="https://cdn.macwall.app/thumbs/2e894139-8076-4037-8994-66179470115a.jpg" alt="Jinx and Ekko 4K" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-            <div class="absolute top-3 right-3 flex gap-1.5">
-              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-600/90 text-white">Anime</span>
-              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-black/75 text-white">3840×2160</span>
-            </div>
-          </div>
-          <div class="p-5">
-            <h3 class="font-bold text-white text-lg">Jinx & Ekko Arcane 4K</h3>
-            <p class="text-xs text-slate-400 mt-1">4K UHD • High-Bitrate Motion Loop</p>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- ======================= "OUR TRENDY SURFACES" (2 Wide Horizontal Glass Cards Overlapping the Central 3D Spine) ======================= -->
+    <div id="surfaces" class="relative z-20 mt-20 lg:mt-28">
+      <div class="text-center mb-16">
+        <h2 class="text-2xl sm:text-3xl text-white figma-bracket-title">
+          Our Trendy Surfaces
+        </h2>
+      </div>
+
+      <div class="space-y-20">
+        <!-- Wide Horizontal Banner 1: 3D Mac Lock Screen Pop-Out on Left, Text on Right -->
+        <div class="figma-wide-banner p-8 sm:p-12 lg:px-16 lg:py-12 relative group">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <!-- Left 3D Pop-Out Mac Lock Screen Icon -->
+            <div class="lg:col-span-5 relative flex justify-center">
+              <div class="w-64 sm:w-80 lg:w-96 lg:-my-20 flex items-center justify-center">
+                <img src="./assets/mac-lockscreen.png" alt="3D macOS Lock Screen Video Engine"
+                     class="w-full h-auto object-contain render-3d-pop" />
+              </div>
+            </div>
+
+            <!-- Right Content -->
+            <div class="lg:col-span-7 text-left lg:pl-8 space-y-4">
+              <h3 class="text-2xl sm:text-3xl font-semibold text-white">
+                For Native macOS Lock Screen Motion
+              </h3>
+              <p class="text-sm sm:text-base text-white/70 leading-relaxed max-w-xl">
+                AuraDesk automatically remuxes any 4K <code class="text-emerald-300">.mp4</code> or <code class="text-emerald-300">.mov</code> video without re-encoding, backs up Apple's original Aerial asset, updates <code class="text-emerald-300">Index.plist</code>, and injects your video into <code class="text-emerald-300">idleassetsd</code> for genuine Lock Screen playback.
+              </p>
+              <div class="text-xl font-bold text-emerald-300 pt-1">
+                Free Forever • $0
+              </div>
+              <div class="pt-2 flex items-center gap-4">
+                <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
+                   class="figma-outline-btn">
+                  Explore Lock Engine
+                </a>
+                <a href="https://github.com/shubhransh-gupta/AuraDesk" target="_blank" rel="noopener"
+                   class="w-11 h-11 rounded-xl border border-white/50 flex items-center justify-center hover:bg-white/10 transition-colors" title="View Source">
+                  <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wide Horizontal Banner 2: Text on Left, 3D Mac Screen Saver Pop-Out on Right -->
+        <div class="figma-wide-banner p-8 sm:p-12 lg:px-16 lg:py-12 relative group">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <!-- Left Content -->
+            <div class="lg:col-span-7 text-left space-y-4 order-2 lg:order-1">
+              <h3 class="text-2xl sm:text-3xl font-semibold text-white">
+                For 4K 240fps Screen Saver &amp; Clock
+              </h3>
+              <p class="text-sm sm:text-base text-white/70 leading-relaxed max-w-xl">
+                Includes both native macOS Aerial Screen Saver synchronization and an instant built-in fullscreen 4K Screen Saver overlay complete with the Sonoma-style date &amp; time clock and configurable idle timer.
+              </p>
+              <div class="text-xl font-bold text-emerald-300 pt-1">
+                4K UHD • 240 FPS
+              </div>
+              <div class="pt-2 flex items-center gap-4">
+                <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
+                   class="figma-outline-btn">
+                  Try Screen Saver
+                </a>
+                <a href="#catalog"
+                   class="w-11 h-11 rounded-xl border border-white/50 flex items-center justify-center hover:bg-white/10 transition-colors" title="Preview 4K">
+                  <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- Right 3D Pop-Out Mac Screen Saver Icon -->
+            <div class="lg:col-span-5 relative flex justify-center order-1 lg:order-2">
+              <div class="w-64 sm:w-80 lg:w-96 lg:-my-20 flex items-center justify-center">
+                <img src="./assets/mac-screensaver.png" alt="3D macOS 4K Screen Saver Engine"
+                     class="w-full h-auto object-contain render-3d-pop" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= "OUR TOP FEATURES" (3x2 Grid of 3D Pop-Out Glass Cards — Exact Figma Placement!) ======================= -->
+  <section id="features" class="max-w-7xl mx-auto px-6 lg:px-12 py-20">
+    <div class="text-center mb-24">
+      <h2 class="text-2xl sm:text-3xl text-white figma-bracket-title">
+        Our Top Capabilities
+      </h2>
+    </div>
+
+    <!-- 3x2 Grid with extra vertical gap so the 3D Mac renders pop out above the top border of each card -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-9 gap-y-24">
+
+      <!-- Card 1: 350+ 4K Cloud Catalog -->
+      <div class="figma-glass-card pt-36 pb-8 px-8 relative group">
+        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-56 h-56 flex items-center justify-center pointer-events-none">
+          <img src="./assets/mac-cloud.png" alt="350+ 4K Cloud Catalog" class="w-full h-full object-contain render-3d-pop" />
+        </div>
+        <h3 class="text-2xl font-semibold text-white mt-2">350+ 4K Cloud Feed</h3>
+        <p class="text-xs text-white/65 mt-2 leading-relaxed">
+          Built-in browser for 213+ Community 4K UHD loops (Space, Cars, Anime, Nature, Dark) + Apple's 240fps Aerials.
+        </p>
+        <div class="mt-6 flex items-center justify-between">
+          <span class="text-lg font-semibold text-white">350+ Videos</span>
+          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
+             class="w-10 h-10 rounded-xl border border-white/50 flex items-center justify-center hover:bg-white/15 transition-colors">
+            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 2: Apple Silicon M-Series Hardware Decode -->
+      <div class="figma-glass-card pt-36 pb-8 px-8 relative group">
+        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-56 h-56 flex items-center justify-center pointer-events-none">
+          <img src="./assets/mac-mchip.png" alt="Apple Silicon Hardware Decode" class="w-full h-full object-contain render-3d-pop" />
+        </div>
+        <h3 class="text-2xl font-semibold text-white mt-2">Apple Silicon Engine</h3>
+        <p class="text-xs text-white/65 mt-2 leading-relaxed">
+          Native AVQueuePlayer &amp; AVPlayerLooper hardware HEVC/H.264 decoding keeps CPU usage under 1%.
+        </p>
+        <div class="mt-6 flex items-center justify-between">
+          <span class="text-lg font-semibold text-white">&lt; 1% CPU</span>
+          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
+             class="w-10 h-10 rounded-xl border border-white/50 flex items-center justify-center hover:bg-white/15 transition-colors">
+            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 3: Multi-Monitor & Spaces -->
+      <div class="figma-glass-card pt-36 pb-8 px-8 relative group">
+        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-56 h-56 flex items-center justify-center pointer-events-none">
+          <img src="./assets/mac-multimonitor.png" alt="Multi-Monitor Ultrawide Support" class="w-full h-full object-contain render-3d-pop" />
+        </div>
+        <h3 class="text-2xl font-semibold text-white mt-2">Multi-Display Sync</h3>
+        <p class="text-xs text-white/65 mt-2 leading-relaxed">
+          Spans ultrawide and multi-monitor macOS setups seamlessly across all Mission Control Spaces.
+        </p>
+        <div class="mt-6 flex items-center justify-between">
+          <span class="text-lg font-semibold text-white">All Displays</span>
+          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
+             class="w-10 h-10 rounded-xl border border-white/50 flex items-center justify-center hover:bg-white/15 transition-colors">
+            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 4: Smart Battery & Sleep Shield -->
+      <div class="figma-glass-card pt-36 pb-8 px-8 relative group">
+        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-56 h-56 flex items-center justify-center pointer-events-none">
+          <img src="./assets/mac-battery.png" alt="Smart Sleep & Battery Shield" class="w-full h-full object-contain render-3d-pop" />
+        </div>
+        <h3 class="text-2xl font-semibold text-white mt-2">Smart Energy Shield</h3>
+        <p class="text-xs text-white/65 mt-2 leading-relaxed">
+          Automatically pauses desktop video playback the moment your display sleeps or session locks.
+        </p>
+        <div class="mt-6 flex items-center justify-between">
+          <span class="text-lg font-semibold text-white">Zero Drain</span>
+          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
+             class="w-10 h-10 rounded-xl border border-white/50 flex items-center justify-center hover:bg-white/15 transition-colors">
+            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 5: Native Lock Screen Backup & Restore -->
+      <div class="figma-glass-card pt-36 pb-8 px-8 relative group">
+        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-56 h-56 flex items-center justify-center pointer-events-none">
+          <img src="./assets/mac-lockscreen.png" alt="1-Click Aerial Backup & Restore" class="w-full h-full object-contain render-3d-pop" />
+        </div>
+        <h3 class="text-2xl font-semibold text-white mt-2">1-Click Safe Backup</h3>
+        <p class="text-xs text-white/65 mt-2 leading-relaxed">
+          Automatically backs up Apple's original <code class="text-emerald-300">4KSDR240FPS</code> `.mov` file so you can restore it anytime.
+        </p>
+        <div class="mt-6 flex items-center justify-between">
+          <span class="text-lg font-semibold text-white">Safe Swap</span>
+          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
+             class="w-10 h-10 rounded-xl border border-white/50 flex items-center justify-center hover:bg-white/15 transition-colors">
+            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 6: Built-in 4K Aurora Synthesizer -->
+      <div class="figma-glass-card pt-36 pb-8 px-8 relative group">
+        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-56 h-56 flex items-center justify-center pointer-events-none">
+          <img src="./assets/mac-screensaver.png" alt="4K Procedural Video Synthesizer" class="w-full h-full object-contain render-3d-pop" />
+        </div>
+        <h3 class="text-2xl font-semibold text-white mt-2">4K Video Synthesizer</h3>
+        <p class="text-xs text-white/65 mt-2 leading-relaxed">
+          Don't have a 4K file handy? AuraDesk synthesizes a native 3840×2160 HEVC Aurora Borealis `.mov` on the spot.
+        </p>
+        <div class="mt-6 flex items-center justify-between">
+          <span class="text-lg font-semibold text-white">Built-In 4K</span>
+          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
+             class="w-10 h-10 rounded-xl border border-white/50 flex items-center justify-center hover:bg-white/15 transition-colors">
+            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
   </section>
 
-  <!-- 3-Step Funnel Architecture Section -->
-  <section id="architecture" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center max-w-3xl mx-auto mb-16">
-      <span class="text-xs font-mono uppercase tracking-widest text-amber-400">Under The Hood</span>
-      <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">
-        How AetherWall Conquers the macOS Lock Screen
+  <!-- ======================= "COMMUNITY REVIEW" (3 Glass Cards in a Row — Exact Figma Placement!) ======================= -->
+  <section class="max-w-7xl mx-auto px-6 lg:px-12 py-16">
+    <div class="text-center mb-16">
+      <h2 class="text-2xl sm:text-3xl text-white figma-bracket-title">
+        Mac Community Review
       </h2>
-      <p class="text-slate-400 mt-3">
-        macOS Sonoma, Sequoia, and Tahoe block normal third-party windows from rendering above the secure login session. AetherWall solves this natively in three automated steps.
-      </p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div class="glass-panel rounded-2xl p-7 relative">
-        <div class="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center font-mono font-bold text-indigo-300 mb-5">01</div>
-        <h3 class="text-xl font-bold text-white">Zero-Reencode .MOV Remux</h3>
-        <p class="text-sm text-slate-300 mt-3 leading-relaxed">
-          Drop any <code class="text-cyan-300 font-mono">.mp4</code> or <code class="text-cyan-300 font-mono">.mov</code> file. AetherWall uses <code class="text-indigo-300 font-mono">AVAssetExportPresetPassthrough</code> to wrap the 4K stream into an Apple-compliant QuickTime container in milliseconds without losing quality.
+      <div class="figma-glass-card p-8">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-emerald-400/20 border border-emerald-300/40 flex items-center justify-center font-bold text-emerald-200">
+            AK
+          </div>
+          <div>
+            <h4 class="font-semibold text-white text-base">Aarav K.</h4>
+            <div class="text-amber-400 text-xs">★★★★★</div>
+          </div>
+        </div>
+        <p class="mt-5 text-xs sm:text-sm text-white/70 leading-relaxed">
+          "Finally an open-source macOS wallpaper app that actually puts 4K video on the real Lock Screen without asking for a $29 subscription."
         </p>
       </div>
 
-      <div class="glass-panel rounded-2xl p-7 relative">
-        <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center font-mono font-bold text-cyan-300 mb-5">02</div>
-        <h3 class="text-xl font-bold text-white">Binary Plist Store Injection</h3>
-        <p class="text-sm text-slate-300 mt-3 leading-relaxed">
-          Automatically serializes nested binary property lists inside <code class="text-cyan-300 font-mono">com.apple.wallpaper/Store/Index.plist</code> so macOS points your Lock Screen (<code class="text-indigo-300 font-mono">Idle</code>) to the high-framerate Aerial video pipeline.
+      <div class="figma-glass-card p-8">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-teal-400/20 border border-teal-300/40 flex items-center justify-center font-bold text-teal-200">
+            MR
+          </div>
+          <div>
+            <h4 class="font-semibold text-white text-base">Maya R.</h4>
+            <div class="text-amber-400 text-xs">★★★★★</div>
+          </div>
+        </div>
+        <p class="mt-5 text-xs sm:text-sm text-white/70 leading-relaxed">
+          "Having 350+ 4K wallpapers built right into the Discover tab—from SpaceX launches to Porsche GT3 and Apple 240fps Aerials—is incredible."
         </p>
       </div>
 
-      <div class="glass-panel rounded-2xl p-7 relative">
-        <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center font-mono font-bold text-amber-300 mb-5">03</div>
-        <h3 class="text-xl font-bold text-white">Safe Backup & <code class="font-mono">idleassetsd</code> Swap</h3>
-        <p class="text-sm text-slate-300 mt-3 leading-relaxed">
-          Backs up Apple's original <code class="text-cyan-300 font-mono">4KSDR240FPS</code> asset first, injects your custom 4K video with one native macOS admin prompt, and reloads <code class="text-indigo-300 font-mono">WallpaperAgent</code>. Restore original anytime in 1 click.
+      <div class="figma-glass-card p-8">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-lime-400/20 border border-lime-300/40 flex items-center justify-center font-bold text-lime-200">
+            DL
+          </div>
+          <div>
+            <h4 class="font-semibold text-white text-base">Devon L.</h4>
+            <div class="text-amber-400 text-xs">★★★★★</div>
+          </div>
+        </div>
+        <p class="mt-5 text-xs sm:text-sm text-white/70 leading-relaxed">
+          "Runs at 0.4% CPU on my M3 Max MacBook Pro and automatically pauses when I lock the screen or close the lid. Clean native Swift."
         </p>
       </div>
     </div>
   </section>
 
-  <!-- Comparison Table -->
-  <section id="compare" class="py-20 border-t border-indigo-500/15 bg-[#0C0C1D]/70">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-extrabold text-white">Why Switch to AetherWall?</h2>
-        <p class="text-slate-400 mt-2">Every pro feature included. Zero subscriptions, zero license keys.</p>
-      </div>
+  <!-- ======================= "OUR BEST o2" BOTTOM SHOWCASE CARD (Large Glass Card with 3D Mac Left + Interactive 4K Preview Right) ======================= -->
+  <section id="catalog" class="max-w-7xl mx-auto px-6 lg:px-12 py-16">
+    <div class="text-center mb-16">
+      <h2 class="text-2xl sm:text-3xl text-white figma-bracket-title">
+        Our Best 4K Engine
+      </h2>
+    </div>
 
-      <div class="glass-panel rounded-2xl overflow-hidden">
-        <table class="w-full text-left border-collapse">
-          <thead>
-            <tr class="border-b border-indigo-500/20 bg-white/5 text-xs font-mono uppercase text-slate-300">
-              <th class="py-4 px-6">Capability</th>
-              <th class="py-4 px-6 text-amber-400 font-bold">AetherWall (Open Source)</th>
-              <th class="py-4 px-6">Basic Desktop Players</th>
-              <th class="py-4 px-6">Paid Wallpaper Apps</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-indigo-500/10 text-sm">
-            <tr>
-              <td class="py-4 px-6 font-medium text-white">4K Desktop Live Video</td>
-              <td class="py-4 px-6 text-emerald-400 font-semibold">Yes (Multi-Monitor + Spaces)</td>
-              <td class="py-4 px-6 text-slate-300">Yes</td>
-              <td class="py-4 px-6 text-slate-300">Yes</td>
-            </tr>
-            <tr>
-              <td class="py-4 px-6 font-medium text-white">Native macOS Lock Screen Video</td>
-              <td class="py-4 px-6 text-emerald-400 font-semibold">Yes (1-Click + Auto Backup)</td>
-              <td class="py-4 px-6 text-rose-400">No</td>
-              <td class="py-4 px-6 text-amber-300">Paid Pro Tier Only</td>
-            </tr>
-            <tr>
-              <td class="py-4 px-6 font-medium text-white">4K Screen Saver + Sonoma Clock</td>
-              <td class="py-4 px-6 text-emerald-400 font-semibold">Yes (Built-in + Native Aerial)</td>
-              <td class="py-4 px-6 text-rose-400">No</td>
-              <td class="py-4 px-6 text-slate-300">Partial</td>
-            </tr>
-            <tr>
-              <td class="py-4 px-6 font-medium text-white">Built-in 350+ 4K Cloud Catalog</td>
-              <td class="py-4 px-6 text-emerald-400 font-semibold">Yes (Unlimited Free Downloads)</td>
-              <td class="py-4 px-6 text-rose-400">Bring Your Own File Only</td>
-              <td class="py-4 px-6 text-amber-300">Paywalled After Trial</td>
-            </tr>
-            <tr>
-              <td class="py-4 px-6 font-medium text-white">Price & License</td>
-              <td class="py-4 px-6 text-emerald-400 font-bold">$0 Forever (MIT License)</td>
-              <td class="py-4 px-6 text-slate-300">Free</td>
-              <td class="py-4 px-6 text-rose-400">$15 – $39</td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="figma-wide-banner p-8 sm:p-12 lg:p-16 relative">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+
+        <!-- Left: Live Interactive 4K Video Preview inside macOS Frame -->
+        <div class="lg:col-span-6">
+          <div class="relative rounded-3xl overflow-hidden border border-white/25 shadow-2xl aspect-video bg-black">
+            <video id="demo-video" autoplay loop muted playsinline poster="https://cdn.macwall.app/thumbs/spacex-starship-launchpad.jpg"
+                   class="w-full h-full object-cover">
+              <source id="demo-video-src" src="https://cdn.macwall.app/videos/spacex-starship-launchpad.mp4" type="video/mp4" />
+            </video>
+            <div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-[11px] text-emerald-300 font-medium">
+              <span id="demo-label">SpaceX Starship Launchpad • 3840×2160</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Description + Explore + Prev/Next Slide Controls (Exact Figma Bottom Card Layout!) -->
+        <div class="lg:col-span-6 space-y-5 text-left">
+          <h3 class="text-2xl sm:text-3xl font-semibold text-white leading-snug">
+            We Provide 350+ Curated 4K Ultra-HD Live Wallpapers &amp; Native Lock Screen Injection
+          </h3>
+          <p class="text-sm text-white/70 leading-relaxed">
+            Preview live 4K streams directly from the built-in AuraDesk Cloud Catalog or drag-and-drop any personal `.mp4` or `.mov` creation. One click applies your video across Desktop, Screen Saver, and Lock Screen.
+          </p>
+          <p class="text-xs text-white/60 font-mono bg-black/30 px-4 py-3 rounded-2xl border border-white/10">
+            git clone https://github.com/shubhransh-gupta/AuraDesk.git &amp;&amp; cd AuraDesk &amp;&amp; ./build_app.sh
+          </p>
+
+          <div class="pt-3 flex items-center justify-between">
+            <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" target="_blank" rel="noopener"
+               class="figma-outline-btn">
+              Download AuraDesk.app
+            </a>
+
+            <!-- Figma < 01/04 > Carousel Controls -->
+            <div class="flex items-center gap-4 text-sm text-white/80">
+              <button onclick="prevSlide()" class="w-9 h-9 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 cursor-pointer" aria-label="Previous 4K preview">
+                ‹
+              </button>
+              <span id="slide-counter" class="font-mono text-xs">01/04</span>
+              <button onclick="nextSlide()" class="w-9 h-9 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/10 cursor-pointer" aria-label="Next 4K preview">
+                ›
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- Quick Install CTA -->
-  <section id="install" class="py-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <div class="glass-panel rounded-3xl p-8 sm:p-12 border border-indigo-400/30 shadow-2xl">
-      <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Install AetherWall in 10 Seconds</h2>
-      <p class="text-slate-300 mt-3 max-w-xl mx-auto">
-        Clone and build directly with Swift Package Manager on macOS 14+ (Apple Silicon & Intel), or grab the prebuilt app bundle from GitHub.
-      </p>
-
-      <div class="mt-8 text-left bg-[#06060E] border border-indigo-500/30 rounded-xl p-5 font-mono text-xs sm:text-sm text-cyan-300 overflow-x-auto">
-        <div>git clone https://github.com/shubhransh-gupta/AetherWall.git</div>
-        <div class="mt-1">cd AetherWall</div>
-        <div class="mt-1">./build_app.sh && open AetherWall.app</div>
+  <!-- ======================= FOOTER (Exact Figma 3-Column Dark Forest Footer) ======================= -->
+  <footer class="mt-16 border-t border-white/10 bg-[#11160F] py-14">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+      <!-- Col 1 -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center">
+            <svg class="w-4 h-4 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <span class="text-xl font-bold text-white">AuraDesk.</span>
+        </div>
+        <p class="text-xs text-white/65 leading-relaxed max-w-xs">
+          100% free and open-source native macOS 4K Live Wallpaper, Screen Saver, and Lock Screen engine built with Swift &amp; AVFoundation.
+        </p>
+        <div class="flex items-center gap-4 text-xs font-semibold text-white/70 pt-2">
+          <a href="https://github.com/shubhransh-gupta/AuraDesk" class="hover:text-white">GH</a>
+          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases" class="hover:text-white">REL</a>
+          <a href="https://github.com/shubhransh-gupta/AuraDesk/issues" class="hover:text-white">ISSUES</a>
+        </div>
       </div>
 
-      <div class="mt-8 flex flex-wrap justify-center gap-4">
-        <a href="https://github.com/shubhransh-gupta/AetherWall" target="_blank" rel="noopener"
-           class="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-base font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 transition-all cursor-pointer">
-          <span>View Repository & Releases on GitHub</span>
-        </a>
+      <!-- Col 2 -->
+      <div class="space-y-3">
+        <h4 class="text-sm font-semibold text-white">Quick Links</h4>
+        <ul class="space-y-2 text-xs text-white/70">
+          <li><a href="#home" class="hover:text-white">Home</a></li>
+          <li><a href="#surfaces" class="hover:text-white">Mac Surfaces (Desktop, Saver, Lock)</a></li>
+          <li><a href="#features" class="hover:text-white">3D Hardware Capabilities</a></li>
+          <li><a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest" class="hover:text-white">Download macOS App (.zip)</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3 -->
+      <div class="space-y-4">
+        <h4 class="text-sm font-semibold text-white">One-Line Terminal Install</h4>
+        <div class="flex items-center rounded-xl border border-white/30 p-1 bg-white/5">
+          <input type="text" readonly value="git clone https://github.com/shubhransh-gupta/AuraDesk.git"
+                 class="bg-transparent text-xs text-white/85 px-3 py-2 w-full focus:outline-none font-mono" />
+          <button onclick="navigator.clipboard.writeText('git clone https://github.com/shubhransh-gupta/AuraDesk.git')"
+                  class="px-4 py-2 rounded-lg bg-white text-slate-950 text-xs font-semibold hover:bg-emerald-200 transition-colors cursor-pointer shrink-0">
+            Copy
+          </button>
+        </div>
+        <p class="text-[11px] text-white/50">
+          AuraDesk © all rights reserved • Released under the MIT License.
+        </p>
       </div>
     </div>
-  </section>
-
-  <footer class="border-t border-white/10 py-10 text-center text-xs text-slate-500">
-    <p>AetherWall — Crafted with Swift, SwiftUI & AVFoundation for macOS. Released under the MIT License.</p>
   </footer>
 
   <script>
-    const demos = [
+    const slides = [
       {
+        title: "SpaceX Starship Launchpad • 3840×2160",
         video: "https://cdn.macwall.app/videos/spacex-starship-launchpad.mp4",
         poster: "https://cdn.macwall.app/thumbs/spacex-starship-launchpad.jpg"
       },
       {
+        title: "Porsche 911 GT3 RS Garage • 3840×2160",
         video: "https://cdn.macwall.app/videos/porsche-911-gt3-rs-garage.mp4",
         poster: "https://cdn.macwall.app/thumbs/porsche-911-gt3-rs-garage.jpg"
       },
       {
+        title: "Jinx & Ekko Arcane 4K • 3840×2160",
         video: "https://cdn.macwall.app/videos/2e894139-8076-4037-8994-66179470115a.mp4",
         poster: "https://cdn.macwall.app/thumbs/2e894139-8076-4037-8994-66179470115a.jpg"
+      },
+      {
+        title: "Porsche 911 Front Glow • 3840×2160",
+        video: "https://cdn.macwall.app/videos/porsche-911-front-glow.mp4",
+        poster: "https://cdn.macwall.app/thumbs/porsche-911-front-glow.jpg"
       }
     ];
+    let currentSlide = 0;
 
-    function setSurfaceMode(mode) {
-      const modes = ['desktop', 'screensaver', 'lockscreen'];
-      modes.forEach(m => {
-        const overlay = document.getElementById('overlay-' + m);
-        const btn = document.getElementById('btn-' + m);
-        if (m === mode) {
-          overlay.classList.remove('hidden');
-          btn.className = "px-4 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white transition-all cursor-pointer";
-        } else {
-          overlay.classList.add('hidden');
-          btn.className = "px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white transition-all cursor-pointer";
-        }
-      });
-    }
+    function updateSlide() {
+      const v = document.getElementById('demo-video');
+      const src = document.getElementById('demo-video-src');
+      const label = document.getElementById('demo-label');
+      const counter = document.getElementById('slide-counter');
+      const s = slides[currentSlide];
 
-    function switchDemoVideo(index) {
-      const v = document.getElementById('hero-video');
-      const src = document.getElementById('hero-video-src');
-      v.poster = demos[index].poster;
-      src.src = demos[index].video;
+      v.poster = s.poster;
+      src.src = s.video;
+      label.textContent = s.title;
+      counter.textContent = `0${currentSlide + 1}/0${slides.length}`;
       v.load();
       v.play();
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      updateSlide();
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      updateSlide();
     }
   </script>
 </body>

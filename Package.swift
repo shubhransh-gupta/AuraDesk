@@ -2,17 +2,17 @@
 import PackageDescription
 
 let package = Package(
-    name: "AetherWall",
+    name: "AuraDesk",
     platforms: [
         .macOS(.v14)
     ],
     products: [
-        .executable(name: "AetherWall", targets: ["AetherWall"])
+        .executable(name: "AuraDesk", targets: ["AuraDesk"])
     ],
     targets: [
         .executableTarget(
-            name: "AetherWall",
-            path: "Sources/AetherWall",
+            name: "AuraDesk",
+            path: "Sources/AuraDesk",
             resources: [
                 .copy("Resources/curated_4k_catalog.json")
             ],
