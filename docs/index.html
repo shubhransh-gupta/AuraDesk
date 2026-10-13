@@ -240,9 +240,9 @@
           <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
           <span>GitHub</span>
         </a>
-        <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary px-4 py-2 text-xs font-mono uppercase tracking-wider">
+        <button onclick="openDownloadModal()" class="btn-chrome-primary px-4 py-2 text-xs font-mono uppercase tracking-wider cursor-pointer">
           ✦ Download macOS App
-        </a>
+        </button>
       </div>
     </div>
   </header>
@@ -280,16 +280,31 @@
             </div>
           </div>
 
-          <!-- Quick CTAs -->
-          <div class="flex flex-wrap items-center gap-3 pt-2">
-            <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary px-6 py-3.5 text-xs font-mono uppercase tracking-wider flex items-center gap-2.5">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
-              <span>Download AuraDesk.app</span>
+          <!-- 1-Command Terminal Install Box (Primary Hero Action) -->
+          <div class="p-3.5 sm:p-4 rounded-[8px] bg-black/90 border border-white/35 shadow-[0_0_30px_rgba(255,255,255,0.18)]">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-mono font-extrabold uppercase tracking-widest text-zinc-300 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                ONE-LINE TERMINAL INSTALL
+              </span>
+              <span class="text-[10px] font-mono text-zinc-400">Zero Setup • Auto Quarantine Fix</span>
+            </div>
+            <div class="flex items-center justify-between gap-3 bg-zinc-950 px-3 py-2.5 rounded-[5px] border border-white/20">
+              <code class="text-xs sm:text-sm font-mono text-white select-all overflow-x-auto whitespace-nowrap">
+                <span class="text-zinc-500">$ </span><span id="hero-curl-cmd">curl -fsSL https://raw.githubusercontent.com/shubhransh-gupta/AuraDesk/main/install.sh | bash</span>
+              </code>
+              <button onclick="copyCommand('hero-curl-cmd', this)" class="shrink-0 btn-chrome-primary px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-wider font-extrabold cursor-pointer">
+                Copy
+              </button>
+            </div>
+          </div>
+
+          <!-- Secondary Actions (Homebrew & GitHub) -->
+          <div class="flex flex-wrap items-center gap-3 pt-1">
+            <a href="#install" class="btn-silver-secondary px-4 py-2.5 text-xs font-mono uppercase tracking-wider flex items-center gap-2">
+              <span>⚡ Homebrew Cask</span>
             </a>
-            <a href="#install" class="btn-silver-secondary px-5 py-3.5 text-xs font-mono uppercase tracking-wider flex items-center gap-2">
-              <span>⚡ Terminal Install</span>
-            </a>
-            <a href="https://github.com/shubhransh-gupta/AuraDesk" target="_blank" class="btn-silver-secondary px-5 py-3.5 text-xs font-mono uppercase tracking-wider flex items-center gap-2">
+            <a href="https://github.com/shubhransh-gupta/AuraDesk" target="_blank" class="btn-silver-secondary px-4 py-2.5 text-xs font-mono uppercase tracking-wider flex items-center gap-2">
               <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
               <span>GitHub v1.2.0</span>
             </a>
@@ -528,9 +543,9 @@
                     </div>
                   </div>
                   <div class="flex gap-1.5">
-                    <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary flex-1 text-center py-1.5 text-[10px] font-mono uppercase">Apply All 3</a>
-                    <span class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono">Desk</span>
-                    <span class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono">Lock</span>
+                    <button onclick="openDownloadModal()" class="btn-chrome-primary flex-1 text-center py-1.5 text-[10px] font-mono uppercase cursor-pointer">Apply All 3</button>
+                    <button onclick="openDownloadModal()" class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono cursor-pointer">Desk</button>
+                    <button onclick="openDownloadModal()" class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono cursor-pointer">Lock</button>
                   </div>
                 </div>
 
@@ -546,9 +561,9 @@
                     </div>
                   </div>
                   <div class="flex gap-1.5">
-                    <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary flex-1 text-center py-1.5 text-[10px] font-mono uppercase">Apply All 3</a>
-                    <span class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono">Desk</span>
-                    <span class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono">Lock</span>
+                    <button onclick="openDownloadModal()" class="btn-chrome-primary flex-1 text-center py-1.5 text-[10px] font-mono uppercase cursor-pointer">Apply All 3</button>
+                    <button onclick="openDownloadModal()" class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono cursor-pointer">Desk</button>
+                    <button onclick="openDownloadModal()" class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono cursor-pointer">Lock</button>
                   </div>
                 </div>
 
@@ -564,9 +579,9 @@
                     </div>
                   </div>
                   <div class="flex gap-1.5">
-                    <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary flex-1 text-center py-1.5 text-[10px] font-mono uppercase">Apply All 3</a>
-                    <span class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono">Desk</span>
-                    <span class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono">Lock</span>
+                    <button onclick="openDownloadModal()" class="btn-chrome-primary flex-1 text-center py-1.5 text-[10px] font-mono uppercase cursor-pointer">Apply All 3</button>
+                    <button onclick="openDownloadModal()" class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono cursor-pointer">Desk</button>
+                    <button onclick="openDownloadModal()" class="btn-silver-secondary px-2 py-1.5 text-[10px] font-mono cursor-pointer">Lock</button>
                   </div>
                 </div>
               </div>
@@ -854,17 +869,96 @@
           </div>
         </div>
         <div class="flex flex-wrap gap-3 shrink-0">
-          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary px-6 py-3.5 text-xs font-mono uppercase tracking-wider">
-            ✦ Download AuraDesk.app
-          </a>
+          <button onclick="openDownloadModal()" class="btn-chrome-primary px-6 py-3.5 text-xs font-mono uppercase tracking-wider cursor-pointer">
+            ✦ Quick Install
+          </button>
           <a href="https://github.com/shubhransh-gupta/AuraDesk" target="_blank" class="btn-silver-secondary px-5 py-3.5 text-xs font-mono uppercase tracking-wider">
-            GitHub
+            GitHub v1.2.0
           </a>
         </div>
       </div>
     </section>
 
   </main>
+
+  <!-- ========================================================================= -->
+  <!-- DOWNLOAD INTERCEPT MODAL: PROMOTES 1-COMMAND TERMINAL & PREVENTS MANUAL CLUTTER -->
+  <!-- ========================================================================= -->
+  <div id="download-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/85 backdrop-blur-xl animate-fadeIn">
+    <!-- Click backdrop to dismiss -->
+    <div class="fixed inset-0" onclick="closeDownloadModal()"></div>
+
+    <!-- Modal Box -->
+    <div class="relative w-full max-w-xl silver-sharp-card p-6 sm:p-8 z-10 border border-white/40 shadow-[0_25px_80px_rgba(0,0,0,0.95)]">
+      <!-- Close Button -->
+      <button onclick="closeDownloadModal()" class="absolute top-4 right-4 w-8 h-8 rounded-[4px] bg-white/10 hover:bg-white hover:text-black border border-white/20 text-white flex items-center justify-center transition font-mono text-sm cursor-pointer">
+        ✕
+      </button>
+
+      <!-- Badge & Header -->
+      <div class="flex items-center gap-2 mb-3">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+        <span class="text-[10px] font-mono font-extrabold uppercase tracking-widest text-emerald-400">
+          PRO TIP • ZERO MANUAL HASSLE
+        </span>
+      </div>
+
+      <h3 class="text-xl sm:text-2xl font-black text-chrome-grad mb-2">
+        No need to install manually!
+      </h3>
+      <p class="text-xs sm:text-sm font-mono text-zinc-300 leading-relaxed mb-6">
+        Don't waste time downloading, unzipping, dragging to Applications, and fighting Gatekeeper quarantine. Simply run this 1-line command in your Terminal:
+      </p>
+
+      <!-- Primary Option: 1-Line Curl -->
+      <div class="mb-5 p-4 rounded-[8px] bg-black/95 border border-white/35 shadow-[0_0_25px_rgba(255,255,255,0.15)]">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[10px] font-mono font-extrabold uppercase tracking-widest text-white flex items-center gap-1.5">
+            ⚡ RECOMMENDED (1-COMMAND CURL)
+          </span>
+          <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white text-black font-extrabold">FASTEST</span>
+        </div>
+        <div class="flex items-center justify-between gap-3 bg-zinc-950 px-3 py-2.5 rounded-[5px] border border-white/20">
+          <code class="text-xs font-mono text-white select-all overflow-x-auto whitespace-nowrap">
+            <span class="text-zinc-500">$ </span><span id="modal-cmd-curl">curl -fsSL https://raw.githubusercontent.com/shubhransh-gupta/AuraDesk/main/install.sh | bash</span>
+          </code>
+          <button onclick="copyCommand('modal-cmd-curl', this)" class="shrink-0 btn-chrome-primary px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-wider font-extrabold cursor-pointer">
+            Copy
+          </button>
+        </div>
+        <div class="mt-2 text-[10px] font-mono text-zinc-400">
+          ✓ Downloads v1.2.0 &bull; ✓ Auto-installs to /Applications &bull; ✓ Clears Gatekeeper quarantine
+        </div>
+      </div>
+
+      <!-- Secondary Option: Homebrew Tap -->
+      <div class="mb-6 p-3.5 rounded-[8px] bg-black/75 border border-white/20">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[10px] font-mono uppercase tracking-widest text-zinc-300 font-bold">
+            ALTERNATIVE: HOMEBREW CASK
+          </span>
+          <span class="text-[10px] font-mono text-zinc-400">brew.sh</span>
+        </div>
+        <div class="flex items-center justify-between gap-3 bg-zinc-950 px-3 py-2 rounded-[5px] border border-white/15">
+          <code class="text-xs font-mono text-white select-all overflow-x-auto whitespace-nowrap">
+            <span class="text-zinc-500">$ </span><span id="modal-cmd-brew">brew install --cask shubhransh-gupta/tap/auradesk</span>
+          </code>
+          <button onclick="copyCommand('modal-cmd-brew', this)" class="shrink-0 px-3 py-1.5 text-[10px] uppercase font-bold rounded bg-white/20 hover:bg-white hover:text-black text-white transition cursor-pointer">
+            Copy
+          </button>
+        </div>
+      </div>
+
+      <!-- Fallback Option for insistent users -->
+      <div class="pt-4 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] font-mono">
+        <span class="text-zinc-400">Still prefer the raw binary archive?</span>
+        <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="text-white underline hover:text-zinc-300 transition inline-flex items-center gap-1.5">
+          <span>Download AuraDesk-macOS.zip directly</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </div>
 
   <!-- FOOTER (SPACIOUS PADDING) -->
   <footer class="relative z-10 border-t border-white/15 bg-black/85 backdrop-blur-2xl py-14 mt-16">
@@ -928,12 +1022,12 @@
             </div>
           </div>
           <div class="flex items-center gap-1.5">
-            <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary flex-1 text-center py-2 text-[10px] font-mono uppercase tracking-wider">
-              ✦ Apply All 3 in App
-            </a>
-            <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-silver-secondary px-2.5 py-2 text-[10px] font-mono">
+            <button onclick="openDownloadModal()" class="btn-chrome-primary flex-1 text-center py-2 text-[10px] font-mono uppercase tracking-wider cursor-pointer">
+              ✦ Apply in AuraDesk
+            </button>
+            <button onclick="openDownloadModal()" class="btn-silver-secondary px-2.5 py-2 text-[10px] font-mono cursor-pointer">
               4K
-            </a>
+            </button>
           </div>
         </div>
       `).join('');
@@ -1144,6 +1238,32 @@
         }, 2000);
       });
     }
+
+    // Download intercept modal controls
+    function openDownloadModal() {
+      const modal = document.getElementById('download-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeDownloadModal() {
+      const modal = document.getElementById('download-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Dismiss modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeDownloadModal();
+      }
+    });
   </script>
 </body>
 </html>
