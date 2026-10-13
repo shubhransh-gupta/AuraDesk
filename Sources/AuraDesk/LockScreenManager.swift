@@ -6,9 +6,26 @@ import AppKit
 public final class LockScreenManager: ObservableObject {
     public static let shared = LockScreenManager()
 
-    private let customerDir = "/Library/Application Support/com.apple.idleassetsd/Customer"
-    private let aerials4KDir = "/Library/Application Support/com.apple.idleassetsd/Customer/4KSDR240FPS"
-    private let entriesPath = "/Library/Application Support/com.apple.idleassetsd/Customer/entries.json"
+    // Modern macOS (Sequoia 15+, Tahoe 16/26+) user-level Aerial directories:
+    private var userAerialsDir: String {
+        (NSHomeDirectory() as NSString).appendingPathComponent("Library/Application Support/com.apple.wallpaper/aerials/videos")
+    }
+    private var userManifestDir: String {
+        (NSHomeDirectory() as NSString).appendingPathComponent("Library/Application Support/com.apple.wallpaper/aerials/manifest")
+    }
+    private var userEntriesPath: String {
+        "\(userManifestDir)/entries.json"
+    }
+
+    // Legacy macOS (Sonoma 14) system-level Aerial directories:
+    private let systemCustomerDir = "/Library/Application Support/com.apple.idleassetsd/Customer"
+    private let systemAerials4KDir = "/Library/Application Support/com.apple.idleassetsd/Customer/4KSDR240FPS"
+    private let systemEntriesPath = "/Library/Application Support/com.apple.idleassetsd/Customer/entries.json"
+
+    // Index.plist where macOS stores current active wallpaper and aerial preferences
+    private var wallpaperStoreIndexPlistPath: String {
+        (NSHomeDirectory() as NSString).appendingPathComponent("Library/Application Support/com.apple.wallpaper/Store/Index.plist")
+    }
 
     @Published public private(set) var availableTargets: [AerialTargetAsset] = []
     @Published public var selectedTargetID: String = ""
@@ -31,34 +48,43 @@ public final class LockScreenManager: ObservableObject {
         var nameMap: [String: (name: String, category: String)] = [:]
         let localizedStrings = loadLocalizedStrings()
 
-        if let data = try? Data(contentsOf: URL(fileURLWithPath: entriesPath)),
-           let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-           let assets = json["assets"] as? [[String: Any]] {
-            for asset in assets {
-                if let id = asset["id"] as? String {
-                    let locKey = asset["localizedNameKey"] as? String ?? ""
-                    let fallback = asset["accessibilityLabel"] as? String ?? asset["shotID"] as? String ?? id
-                    let resolvedName = localizedStrings[locKey] ?? fallback
-                    let category = asset["accessibilityLabel"] as? String ?? "Aerial"
-                    nameMap[id] = (resolvedName, category)
+        // 1. Try user entries.json first, then fall back to system entries.json
+        let manifestPaths = [userEntriesPath, systemEntriesPath]
+        for path in manifestPaths {
+            if let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
+               let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let assets = json["assets"] as? [[String: Any]] {
+                for asset in assets {
+                    if let id = asset["id"] as? String {
+                        let locKey = asset["localizedNameKey"] as? String ?? ""
+                        let fallback = asset["accessibilityLabel"] as? String ?? asset["shotID"] as? String ?? id
+                        let resolvedName = localizedStrings[locKey] ?? fallback
+                        let category = asset["accessibilityLabel"] as? String ?? "Aerial"
+                        if nameMap[id] == nil {
+                            nameMap[id] = (resolvedName, category)
+                        }
+                    }
                 }
             }
         }
 
         var targets: [AerialTargetAsset] = []
+        var seenIDs = Set<String>()
         let fm = FileManager.default
 
-        if let files = try? fm.contentsOfDirectory(atPath: aerials4KDir) {
-            for file in files where file.hasSuffix(".mov") {
+        // 2. Scan user aerials folder (~/Library/Application Support/com.apple.wallpaper/aerials/videos)
+        if let userFiles = try? fm.contentsOfDirectory(atPath: userAerialsDir) {
+            for file in userFiles where file.hasSuffix(".mov") {
                 let assetID = (file as NSString).deletingPathExtension
-                let fullPath = (aerials4KDir as NSString).appendingPathComponent(file)
+                let fullPath = (userAerialsDir as NSString).appendingPathComponent(file)
                 let backupURL = backupDirectoryURL.appendingPathComponent(file)
                 let info = nameMap[assetID]
+                seenIDs.insert(assetID)
                 targets.append(
                     AerialTargetAsset(
                         id: assetID,
                         name: info?.name ?? "Aerial (\(assetID.prefix(8)))",
-                        category: info?.category ?? "Downloaded Aerial",
+                        category: info?.category ?? "User Aerial",
                         filePath: fullPath,
                         isDownloaded: true,
                         hasBackup: fm.fileExists(atPath: backupURL.path)
@@ -67,11 +93,40 @@ public final class LockScreenManager: ObservableObject {
             }
         }
 
-        if targets.isEmpty {
-            for (id, info) in nameMap.prefix(5) {
-                let file = "\(id).mov"
-                let fullPath = (aerials4KDir as NSString).appendingPathComponent(file)
+        // 3. Scan system aerials folder (/Library/Application Support/com.apple.idleassetsd/Customer/4KSDR240FPS)
+        if let sysFiles = try? fm.contentsOfDirectory(atPath: systemAerials4KDir) {
+            for file in sysFiles where file.hasSuffix(".mov") {
+                let assetID = (file as NSString).deletingPathExtension
+                guard !seenIDs.contains(assetID) else { continue }
+                let fullPath = (systemAerials4KDir as NSString).appendingPathComponent(file)
                 let backupURL = backupDirectoryURL.appendingPathComponent(file)
+                let info = nameMap[assetID]
+                seenIDs.insert(assetID)
+                targets.append(
+                    AerialTargetAsset(
+                        id: assetID,
+                        name: info?.name ?? "Aerial (\(assetID.prefix(8)))",
+                        category: info?.category ?? "System Aerial",
+                        filePath: fullPath,
+                        isDownloaded: true,
+                        hasBackup: fm.fileExists(atPath: backupURL.path)
+                    )
+                )
+            }
+        }
+
+        // 4. If still empty, add default candidate slots from nameMap
+        if targets.isEmpty {
+            let defaults = [
+                "4207734D-74FE-4F92-B5E1-6EC8DEE24A15", // Golden Gate Sunset
+                "9680B8EB-CE2A-4395-AF41-402801F4D6A6", // Dubai
+                "6511D2B5-E185-4886-9505-B4004E920D27", // Golden Gate Day
+                "3FD9FD5C-6DC5-4362-9932-4087C942F1C5"  // Golden Gate Evening
+            ]
+            for id in defaults {
+                let info = nameMap[id] ?? ("macOS Aerial (\(id.prefix(8)))", "Aerial 4K")
+                let fullPath = (userAerialsDir as NSString).appendingPathComponent("\(id).mov")
+                let backupURL = backupDirectoryURL.appendingPathComponent("\(id).mov")
                 targets.append(
                     AerialTargetAsset(
                         id: id,
@@ -87,30 +142,57 @@ public final class LockScreenManager: ObservableObject {
 
         targets.sort { $0.name < $1.name }
         self.availableTargets = targets
-        if selectedTargetID.isEmpty || !targets.contains(where: { $0.id == selectedTargetID }) {
-            selectedTargetID = targets.first?.id ?? "9680B8EB-CE2A-4395-AF41-402801F4D6A6"
+
+        // 5. Default selectedTargetID: check Index.plist for currently configured assetID!
+        let activeConfiguredID = readCurrentConfiguredAssetID()
+        if let active = activeConfiguredID, targets.contains(where: { $0.id == active }) {
+            selectedTargetID = active
+        } else if selectedTargetID.isEmpty || !targets.contains(where: { $0.id == selectedTargetID }) {
+            selectedTargetID = targets.first(where: { $0.isDownloaded })?.id ?? targets.first?.id ?? "4207734D-74FE-4F92-B5E1-6EC8DEE24A15"
         }
     }
 
+    public func readCurrentConfiguredAssetID() -> String? {
+        guard FileManager.default.fileExists(atPath: wallpaperStoreIndexPlistPath),
+              let rawData = try? Data(contentsOf: URL(fileURLWithPath: wallpaperStoreIndexPlistPath)),
+              let root = try? PropertyListSerialization.propertyList(from: rawData, options: [], format: nil) as? [String: Any],
+              let allSpaces = root["AllSpacesAndDisplays"] as? [String: Any],
+              let idle = allSpaces["Idle"] as? [String: Any],
+              let content = idle["Content"] as? [String: Any],
+              let choices = content["Choices"] as? [[String: Any]],
+              let firstChoice = choices.first,
+              let configData = firstChoice["Configuration"] as? Data,
+              let configDict = try? PropertyListSerialization.propertyList(from: configData, options: [], format: nil) as? [String: Any],
+              let assetID = configDict["assetID"] as? String else {
+            return nil
+        }
+        return assetID
+    }
+
     public func loadLocalizedStrings() -> [String: String] {
-        let bundlePath = "\(customerDir)/TVIdleScreenStrings.bundle"
-        let preferredBoxes = ["en.lproj", "en_US.lproj", "en_GB.lproj", "en_AU.lproj", "Base.lproj"]
+        let candidateBundles = [
+            "\(userManifestDir)/TVIdleScreenStrings.bundle",
+            "\(systemCustomerDir)/TVIdleScreenStrings.bundle"
+        ]
+        let preferredLangs = ["en.lproj", "en_US.lproj", "en_GB.lproj", "en_AU.lproj", "Base.lproj"]
         let fm = FileManager.default
 
-        for proj in preferredBoxes {
-            let path = "\(bundlePath)/\(proj)/Localizable.nocache.strings"
-            if fm.fileExists(atPath: path),
-               let dict = NSDictionary(contentsOfFile: path) as? [String: String] {
-                return dict
-            }
-        }
-
-        if let subdirs = try? fm.contentsOfDirectory(atPath: bundlePath) {
-            for sub in subdirs where sub.hasSuffix(".lproj") {
-                let path = "\(bundlePath)/\(sub)/Localizable.nocache.strings"
+        for bundlePath in candidateBundles {
+            guard fm.fileExists(atPath: bundlePath) else { continue }
+            for lang in preferredLangs {
+                let path = "\(bundlePath)/\(lang)/Localizable.nocache.strings"
                 if fm.fileExists(atPath: path),
                    let dict = NSDictionary(contentsOfFile: path) as? [String: String] {
                     return dict
+                }
+            }
+            if let subdirs = try? fm.contentsOfDirectory(atPath: bundlePath) {
+                for sub in subdirs where sub.hasSuffix(".lproj") {
+                    let path = "\(bundlePath)/\(sub)/Localizable.nocache.strings"
+                    if fm.fileExists(atPath: path),
+                       let dict = NSDictionary(contentsOfFile: path) as? [String: String] {
+                        return dict
+                    }
                 }
             }
         }
@@ -126,35 +208,68 @@ public final class LockScreenManager: ObservableObject {
         statusIsError = false
         statusMessage = "Preparing 4K video for Lock Screen & Screen Saver..."
 
-        let targetID = selectedTargetID.isEmpty ? "9680B8EB-CE2A-4395-AF41-402801F4D6A6" : selectedTargetID
-        let targetMovPath = "\(aerials4KDir)/\(targetID).mov"
+        // Choose target ID (e.g. 4207734D-74FE-4F92-B5E1-6EC8DEE24A15)
+        let targetID: String
+        if !selectedTargetID.isEmpty {
+            targetID = selectedTargetID
+        } else if let active = readCurrentConfiguredAssetID() {
+            targetID = active
+        } else if let firstDownloaded = availableTargets.first(where: { $0.isDownloaded }) {
+            targetID = firstDownloaded.id
+        } else {
+            targetID = "4207734D-74FE-4F92-B5E1-6EC8DEE24A15"
+        }
+
+        let fm = FileManager.default
         let backupMovURL = backupDirectoryURL.appendingPathComponent("\(targetID).mov")
 
         do {
             let preparedMovURL = try await prepareCompatibleMovFile(from: item.fileURL)
 
-            let fm = FileManager.default
-            if fm.fileExists(atPath: targetMovPath) && !fm.fileExists(atPath: backupMovURL.path) {
-                statusMessage = "Backing up original Apple Aerial asset..."
-                try? fm.copyItem(atPath: targetMovPath, toPath: backupMovURL.path)
+            statusMessage = "Backing up original Apple asset..."
+            let userTargetMovPath = "\(userAerialsDir)/\(targetID).mov"
+            let sysTargetMovPath = "\(systemAerials4KDir)/\(targetID).mov"
+
+            // 1. Back up existing asset if not already backed up
+            if fm.fileExists(atPath: userTargetMovPath) && !fm.fileExists(atPath: backupMovURL.path) {
+                try? fm.copyItem(atPath: userTargetMovPath, toPath: backupMovURL.path)
+            } else if fm.fileExists(atPath: sysTargetMovPath) && !fm.fileExists(atPath: backupMovURL.path) {
+                try? fm.copyItem(atPath: sysTargetMovPath, toPath: backupMovURL.path)
             }
 
-            statusMessage = "Configuring macOS Lock Screen & Screen Saver plist..."
+            statusMessage = "Installing 4K video to macOS Aerial pipeline..."
+            // 2. Ensure user aerial directory exists (~/Library/Application Support/com.apple.wallpaper/aerials/videos)
+            try? fm.createDirectory(atPath: userAerialsDir, withIntermediateDirectories: true)
+
+            // Direct user-space copy (Instant, NO ADMIN PERMISSION PROMPT NEEDED!)
+            if fm.fileExists(atPath: userTargetMovPath) {
+                try? fm.removeItem(atPath: userTargetMovPath)
+            }
+            try fm.copyItem(atPath: preparedMovURL.path, toPath: userTargetMovPath)
+            try? fm.setAttributes([.posixPermissions: 0o600], ofItemAtPath: userTargetMovPath)
+
+            // 3. If system directory also exists and is writable, copy there too
+            if fm.fileExists(atPath: systemAerials4KDir) && fm.isWritableFile(atPath: systemAerials4KDir) {
+                let sysDest = "\(systemAerials4KDir)/\(targetID).mov"
+                if fm.fileExists(atPath: sysDest) { try? fm.removeItem(atPath: sysDest) }
+                try? fm.copyItem(atPath: preparedMovURL.path, toPath: sysDest)
+            }
+
+            // 4. Configure Index.plist for Lock Screen & Screen Saver
+            statusMessage = "Configuring macOS Lock Screen preference..."
             try updateWallpaperStoreIndexPlist(assetID: targetID, alsoSetDesktop: alsoSetNativeDesktop)
 
-            statusMessage = "Requesting administrator permission to install Lock Screen video..."
-            try await installAerialFileWithAdminPrivileges(
-                sourceMovPath: preparedMovURL.path,
-                targetMovPath: targetMovPath
-            )
+            // 5. Restart macOS wallpaper daemons cleanly
+            statusMessage = "Refreshing native macOS Lock Screen & Screen Saver..."
+            restartWallpaperDaemons()
 
             refreshTargets()
             let targetName = availableTargets.first(where: { $0.id == targetID })?.name ?? targetID
             statusIsError = false
-            statusMessage = "Applied '\(item.title)' to Lock Screen & Screen Saver (via Aerial slot: \(targetName))!"
+            statusMessage = "Active on Lock Screen: '\(item.title)' (via \(targetName))"
         } catch {
             statusIsError = true
-            statusMessage = "Failed to set Lock Screen: \(error.localizedDescription)"
+            statusMessage = "Lock Screen error: \(error.localizedDescription)"
         }
 
         isBusy = false
@@ -162,13 +277,14 @@ public final class LockScreenManager: ObservableObject {
 
     public func restoreOriginalAerial() async {
         guard !isBusy else { return }
-        let targetID = selectedTargetID.isEmpty ? "9680B8EB-CE2A-4395-AF41-402801F4D6A6" : selectedTargetID
+        let targetID = selectedTargetID.isEmpty ? (readCurrentConfiguredAssetID() ?? "4207734D-74FE-4F92-B5E1-6EC8DEE24A15") : selectedTargetID
         let backupMovURL = backupDirectoryURL.appendingPathComponent("\(targetID).mov")
-        let targetMovPath = "\(aerials4KDir)/\(targetID).mov"
+        let userTargetMovPath = "\(userAerialsDir)/\(targetID).mov"
+        let sysTargetMovPath = "\(systemAerials4KDir)/\(targetID).mov"
 
         guard FileManager.default.fileExists(atPath: backupMovURL.path) else {
             statusIsError = true
-            statusMessage = "No backup found for selected Aerial slot."
+            statusMessage = "No backup found for Aerial slot \(targetID.prefix(8))."
             return
         }
 
@@ -177,13 +293,22 @@ public final class LockScreenManager: ObservableObject {
         statusMessage = "Restoring original Apple Aerial video..."
 
         do {
-            try await installAerialFileWithAdminPrivileges(
-                sourceMovPath: backupMovURL.path,
-                targetMovPath: targetMovPath
-            )
-            try? FileManager.default.removeItem(at: backupMovURL)
+            let fm = FileManager.default
+            if fm.fileExists(atPath: userTargetMovPath) {
+                try? fm.removeItem(atPath: userTargetMovPath)
+            }
+            try fm.copyItem(atPath: backupMovURL.path, toPath: userTargetMovPath)
+            try? fm.setAttributes([.posixPermissions: 0o600], ofItemAtPath: userTargetMovPath)
+
+            if fm.fileExists(atPath: sysTargetMovPath) && fm.isWritableFile(atPath: sysTargetMovPath) {
+                try? fm.removeItem(atPath: sysTargetMovPath)
+                try? fm.copyItem(atPath: backupMovURL.path, toPath: sysTargetMovPath)
+            }
+
+            try? fm.removeItem(at: backupMovURL)
+            restartWallpaperDaemons()
             refreshTargets()
-            statusMessage = "Original Apple Aerial video restored!"
+            statusMessage = "Original Apple Lock Screen video restored!"
         } catch {
             statusIsError = true
             statusMessage = "Restore failed: \(error.localizedDescription)"
@@ -197,34 +322,95 @@ public final class LockScreenManager: ObservableObject {
         try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
         let outputURL = tempDir.appendingPathComponent("staged_lockscreen.mov")
         if FileManager.default.fileExists(atPath: outputURL.path) {
-            try FileManager.default.removeItem(at: outputURL)
+            try? FileManager.default.removeItem(at: outputURL)
         }
 
-        if sourceURL.pathExtension.lowercased() == "mov" {
-            try FileManager.default.copyItem(at: sourceURL, to: outputURL)
-            return outputURL
-        }
+        // 1. Look for ffmpeg on the system for ultra-fast, robust remuxing
+        let ffmpegPaths = ["/opt/homebrew/bin/ffmpeg", "/usr/local/bin/ffmpeg", "/usr/bin/ffmpeg"]
+        let ffmpegPath = ffmpegPaths.first { FileManager.default.isExecutableFile(atPath: $0) }
 
-        let asset = AVURLAsset(url: sourceURL)
-        guard let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetPassthrough) else {
-            try FileManager.default.copyItem(at: sourceURL, to: outputURL)
-            return outputURL
-        }
+        if let ffmpeg = ffmpegPath {
+            // First try fast zero-reencode remux with video copy and audio strip (-an)
+            let remuxProcess = Process()
+            remuxProcess.executableURL = URL(fileURLWithPath: ffmpeg)
+            remuxProcess.arguments = [
+                "-y",
+                "-i", sourceURL.path,
+                "-c:v", "copy",
+                "-an",
+                "-movflags", "+faststart",
+                outputURL.path
+            ]
+            let pipe = Pipe()
+            remuxProcess.standardError = pipe
+            remuxProcess.standardOutput = pipe
 
-        exportSession.outputURL = outputURL
-        exportSession.outputFileType = .mov
-        exportSession.shouldOptimizeForNetworkUse = false
+            do {
+                try remuxProcess.run()
+                remuxProcess.waitUntilExit()
+                if remuxProcess.terminationStatus == 0 && FileManager.default.fileExists(atPath: outputURL.path) {
+                    let attrs = try FileManager.default.attributesOfItem(atPath: outputURL.path)
+                    if let size = attrs[.size] as? Int64, size > 1024 {
+                        return outputURL
+                    }
+                }
+            } catch {}
 
-        await exportSession.export()
-
-        if exportSession.status == .completed {
-            return outputURL
-        } else {
-            if !FileManager.default.fileExists(atPath: outputURL.path) {
-                try FileManager.default.copyItem(at: sourceURL, to: outputURL)
+            // If direct stream copy failed, transcode via VideoToolbox hardware acceleration
+            if FileManager.default.fileExists(atPath: outputURL.path) {
+                try? FileManager.default.removeItem(at: outputURL)
             }
-            return outputURL
+
+            let transcodeProcess = Process()
+            transcodeProcess.executableURL = URL(fileURLWithPath: ffmpeg)
+            transcodeProcess.arguments = [
+                "-y",
+                "-i", sourceURL.path,
+                "-c:v", "hevc_videotoolbox",
+                "-b:v", "14M",
+                "-tag:v", "hvc1",
+                "-an",
+                "-movflags", "+faststart",
+                outputURL.path
+            ]
+            let transPipe = Pipe()
+            transcodeProcess.standardError = transPipe
+            transcodeProcess.standardOutput = transPipe
+
+            do {
+                try transcodeProcess.run()
+                transcodeProcess.waitUntilExit()
+                if transcodeProcess.terminationStatus == 0 && FileManager.default.fileExists(atPath: outputURL.path) {
+                    return outputURL
+                }
+            } catch {}
         }
+
+        // 2. Native AVFoundation fallback (stripping audio tracks)
+        let asset = AVURLAsset(url: sourceURL)
+        let composition = AVMutableComposition()
+        if let videoTrack = try? await asset.loadTracks(withMediaType: .video).first,
+           let duration = try? await asset.load(.duration) {
+            let compVideoTrack = composition.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
+            let timeRange = CMTimeRange(start: .zero, duration: duration)
+            try? compVideoTrack?.insertTimeRange(timeRange, of: videoTrack, at: .zero)
+
+            if let exportSession = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetPassthrough) {
+                exportSession.outputURL = outputURL
+                exportSession.outputFileType = .mov
+                exportSession.shouldOptimizeForNetworkUse = true
+                await exportSession.export()
+                if exportSession.status == .completed && FileManager.default.fileExists(atPath: outputURL.path) {
+                    return outputURL
+                }
+            }
+        }
+
+        // 3. Final fallback: copy file directly
+        if !FileManager.default.fileExists(atPath: outputURL.path) {
+            try FileManager.default.copyItem(at: sourceURL, to: outputURL)
+        }
+        return outputURL
     }
 
     private func updateWallpaperStoreIndexPlist(assetID: String, alsoSetDesktop: Bool) throws {
@@ -281,40 +467,35 @@ public final class LockScreenManager: ObservableObject {
             root[topKey] = section
         }
 
+        // Also update any explicit display configurations in Displays
+        if var displays = root["Displays"] as? [String: Any] {
+            for (dispKey, val) in displays {
+                if var dispDict = val as? [String: Any] {
+                    dispDict["Idle"] = aerialSection
+                    if alsoSetDesktop {
+                        dispDict["Desktop"] = aerialSection
+                        dispDict["Type"] = "linked"
+                    }
+                    displays[dispKey] = dispDict
+                }
+            }
+            root["Displays"] = displays
+        }
+
         let updatedData = try PropertyListSerialization.data(fromPropertyList: root, format: .binary, options: 0)
         try updatedData.write(to: URL(fileURLWithPath: plistPath), options: .atomic)
     }
 
-    private func installAerialFileWithAdminPrivileges(sourceMovPath: String, targetMovPath: String) async throws {
-        let escapedSource = sourceMovPath.replacingOccurrences(of: "'", with: "'\\''")
-        let escapedTarget = targetMovPath.replacingOccurrences(of: "'", with: "'\\''")
-        let escapedDir = aerials4KDir.replacingOccurrences(of: "'", with: "'\\''")
-
-        let shellCmd = """
-        mkdir -p '\(escapedDir)' && \
-        cp -f '\(escapedSource)' '\(escapedTarget)' && \
-        chown root:admin '\(escapedTarget)' && \
-        chmod 644 '\(escapedTarget)' && \
-        killall idleassetsd 2>/dev/null || true && \
-        killall WallpaperAgent 2>/dev/null || true && \
-        killall WallpaperVideoExtension 2>/dev/null || true
-        """
-
-        let appleScriptSource = "do shell script \"\(shellCmd.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "\"", with: "\\\""))\" with administrator privileges"
-
-        return try await withCheckedThrowingContinuation { continuation in
-            DispatchQueue.global(qos: .userInitiated).async {
-                var errorDict: NSDictionary?
-                let script = NSAppleScript(source: appleScriptSource)
-                _ = script?.executeAndReturnError(&errorDict)
-
-                if let errorDict = errorDict {
-                    let message = errorDict[NSAppleScript.errorMessage] as? String ?? "Administrator privileges were cancelled or failed."
-                    continuation.resume(throwing: NSError(domain: "AuraDesk.LockScreen", code: 1, userInfo: [NSLocalizedDescriptionKey: message]))
-                } else {
-                    continuation.resume(returning: ())
-                }
-            }
-        }
+    private func restartWallpaperDaemons() {
+        let killProcess = Process()
+        killProcess.executableURL = URL(fileURLWithPath: "/usr/bin/killall")
+        killProcess.arguments = [
+            "WallpaperAerialsExtension",
+            "WallpaperAgent",
+            "idleassetsd",
+            "WallpaperVideoExtension"
+        ]
+        try? killProcess.run()
+        killProcess.waitUntilExit()
     }
 }

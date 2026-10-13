@@ -106,14 +106,26 @@ public final class CloudCatalogService: ObservableObject {
     }
 
     private func loadAppleAerial4KStreams() -> [RemoteWallpaperItem] {
-        let entriesPath = "/Library/Application Support/com.apple.idleassetsd/Customer/entries.json"
-        guard let data = try? Data(contentsOf: URL(fileURLWithPath: entriesPath)),
+        let userEntries = (NSHomeDirectory() as NSString).appendingPathComponent("Library/Application Support/com.apple.wallpaper/aerials/manifest/entries.json")
+        let sysEntries = "/Library/Application Support/com.apple.idleassetsd/Customer/entries.json"
+        let entriesCandidates = [userEntries, sysEntries]
+
+        var data: Data? = nil
+        for path in entriesCandidates {
+            if let d = try? Data(contentsOf: URL(fileURLWithPath: path)) {
+                data = d
+                break
+            }
+        }
+
+        guard let data = data,
               let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
               let assets = json["assets"] as? [[String: Any]] else {
             return []
         }
 
         let localizedStrings = LockScreenManager.shared.loadLocalizedStrings()
+        let userThumbDir = (NSHomeDirectory() as NSString).appendingPathComponent("Library/Application Support/com.apple.wallpaper/aerials/thumbnails")
         var results: [RemoteWallpaperItem] = []
 
         for asset in assets.prefix(80) {
@@ -125,10 +137,13 @@ public final class CloudCatalogService: ObservableObject {
             let label = asset["accessibilityLabel"] as? String ?? "Aerial"
             let name = localizedStrings[locKey] ?? label
 
-            // Prefer local snapshot if macOS already cached it in idleassetsd/snapshots
+            // Prefer local snapshot if available
+            let localUserThumb = "\(userThumbDir)/\(id).png"
             let localSnap = "/Library/Application Support/com.apple.idleassetsd/snapshots/asset-preview-\(id).jpg"
             let preview: String
-            if FileManager.default.fileExists(atPath: localSnap) {
+            if FileManager.default.fileExists(atPath: localUserThumb) {
+                preview = URL(fileURLWithPath: localUserThumb).absoluteString
+            } else if FileManager.default.fileExists(atPath: localSnap) {
                 preview = URL(fileURLWithPath: localSnap).absoluteString
             } else {
                 preview = asset["previewImage"] as? String ?? ""

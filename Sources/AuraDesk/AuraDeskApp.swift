@@ -58,6 +58,12 @@ struct MenuBarQuickMenu: View {
             }
         }
 
+        if let item = store.items.first(where: { $0.id == (store.activeDesktopID ?? store.activeLockScreenID) }) ?? store.items.first {
+            Button("Apply to Lock Screen Now") {
+                Task { await store.setLockScreenAndAerialScreenSaver(item: item) }
+            }
+        }
+
         if !store.items.isEmpty {
             Divider()
             Menu("Quick Switch Video") {
