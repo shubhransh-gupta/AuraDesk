@@ -26,7 +26,7 @@
 - **True 3-Surface Synchronization**:
   - **Desktop Engine**: Uses `CGWindowLevelForKey(.desktopWindow)` and hardware-accelerated `AVQueuePlayer` + `AVPlayerLooper` for seamless gapless loops.
   - **Screen Saver Engine**: Full-screen multi-display 4K screen saver with idle timer and Sonoma clock overlay.
-  - **Lock Screen Engine**: Remuxes any `.mp4` / `.mov` / `.m4v` into macOS Sonoma / Sequoia / Tahoe's native Aerial pipeline (`/Library/Application Support/com.apple.idleassetsd/Customer/4KSDR240FPS/`) while backing up the original Apple asset for 1-click restoration.
+  - **Lock Screen Engine**: Remuxes any `.mp4` / `.mov` / `.m4v` into macOS Sonoma / Sequoia / Tahoe's native Aerial pipeline (`~/Library/Application Support/com.apple.wallpaper/aerials/videos/`) with zero administrator prompts and 1-click original asset restoration.
 - **Zero-Drain Power Management**: Automatically pauses video decoding when your display sleeps or locks, consuming **< 0.3% CPU** via Apple Silicon / Intel hardware video decoding.
 - **Custom 4K Video Import & Built-In 4K Synthesizer**: Drag-and-drop any local `.mp4`, `.mov`, or `.m4v` file, or generate a procedural 4K HEVC wallpaper on the fly.
 
