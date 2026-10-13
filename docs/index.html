@@ -177,6 +177,35 @@
       animation: pulseSparkle 2.4s infinite ease-in-out;
     }
 
+    @keyframes floatGentle {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-7px); }
+    }
+    .animate-float {
+      animation: floatGentle 5s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.25)); }
+      50% { filter: drop-shadow(0 0 28px rgba(255, 255, 255, 0.65)); }
+    }
+    .animate-glow {
+      animation: glowPulse 3.5s infinite ease-in-out;
+    }
+
+    @keyframes pulseGlowRing {
+      0% { transform: scale(0.96); opacity: 0.8; }
+      100% { transform: scale(1.4); opacity: 0; }
+    }
+    .pulse-ring {
+      position: absolute;
+      inset: -4px;
+      border-radius: inherit;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      animation: pulseGlowRing 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+      pointer-events: none;
+    }
+
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #040407; }
     ::-webkit-scrollbar-thumb { background: #64748B; border-radius: 3px; }
@@ -219,30 +248,79 @@
 
   <main class="relative z-10 max-w-[1320px] mx-auto px-6">
 
-    <!-- 1. HERO + TOP 4K WALLPAPERS FIRST -->
-    <section class="pt-14 pb-10">
-      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-10 border-b border-white/20">
-        <div class="max-w-3xl">
-          <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-[5px] bg-white/10 border border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.18)] mb-5">
-            <span class="text-white sparkle-badge">⚡</span>
-            <span class="text-[11px] font-mono font-semibold uppercase tracking-[0.14em] text-white">EcoFlow™ Zero-Drain Battery Engine • &lt; 0.2% CPU • macOS 14+ Sonoma / Sequoia / Tahoe</span>
+    <!-- 1. VISUAL HERO WITH 3D DISPLAY & LIVE 4K MOTION -->
+    <section class="pt-8 pb-10 border-b border-white/20">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <!-- Left: Punchy Badges, Chrome Headline, Visual Metric Cards & CTAs -->
+        <div class="lg:col-span-6 space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-[5px] bg-white/10 border border-white/40 shadow-[0_0_20px_rgba(255,255,255,0.22)]">
+            <span class="text-white sparkle-badge text-xs">⚡</span>
+            <span class="text-[11px] font-mono font-extrabold uppercase tracking-[0.16em] text-white">ECOFLOW™ &lt; 0.2% CPU • ALL-DAY BATTERY</span>
           </div>
-          <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-[1.04] text-chrome-grad mb-4">
-            350+ Built-In 4K Wallpapers.<br />Desktop, Screen Saver & Lock Screen.
+
+          <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-[1.0] text-chrome-grad">
+            4K LIVE MOTION.<br />
+            <span class="text-white text-2xl sm:text-4xl font-mono uppercase tracking-tight">DESKTOP • SAVER • LOCK</span>
           </h1>
-          <p class="text-zinc-200 text-base sm:text-lg max-w-2xl leading-relaxed">
-            No need to search for video files. Pick from our curated collection of <strong class="text-white font-bold underline decoration-white/50 underline-offset-4">350+ 4K Ultra HD 60/240fps live wallpapers</strong> right at the top of the app and apply them with zero battery drain.
-          </p>
+
+          <!-- Visual Metric Pill Grid (No Narrative Copy) -->
+          <div class="grid grid-cols-3 gap-2.5 pt-1">
+            <div class="silver-sharp-card p-3 text-center">
+              <div class="text-xl sm:text-2xl font-black text-chrome-grad font-mono">&lt; 0.2%</div>
+              <div class="text-[9px] font-mono uppercase tracking-wider text-zinc-300 mt-0.5">CPU LOAD</div>
+            </div>
+            <div class="silver-sharp-card p-3 text-center">
+              <div class="text-xl sm:text-2xl font-black text-white font-mono">350+</div>
+              <div class="text-[9px] font-mono uppercase tracking-wider text-zinc-300 mt-0.5">4K PRESETS</div>
+            </div>
+            <div class="silver-sharp-card p-3 text-center">
+              <div class="text-xl sm:text-2xl font-black text-chrome-grad font-mono">~42 MB</div>
+              <div class="text-[9px] font-mono uppercase tracking-wider text-zinc-300 mt-0.5">RAM USAGE</div>
+            </div>
+          </div>
+
+          <!-- Quick CTAs -->
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary px-6 py-3.5 text-xs font-mono uppercase tracking-wider flex items-center gap-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+              <span>Download AuraDesk.app</span>
+            </a>
+            <a href="https://github.com/shubhransh-gupta/AuraDesk" target="_blank" class="btn-silver-secondary px-5 py-3.5 text-xs font-mono uppercase tracking-wider flex items-center gap-2">
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              <span>GitHub v1.2.0</span>
+            </a>
+          </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-3 shrink-0">
-          <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary px-6 py-3.5 text-xs font-mono uppercase tracking-wider flex items-center gap-2.5">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
-            <span>Download AuraDesk.app (Free)</span>
-          </a>
-          <a href="#top-4k-wallpapers" class="btn-silver-secondary px-5 py-3.5 text-xs font-mono uppercase tracking-wider">
-            ✦ Explore Real 4K Previews
-          </a>
+        <!-- Right: Animated Hardware Display with Live Playing 4K Video Inset -->
+        <div class="lg:col-span-6 relative">
+          <div class="silver-sharp-card p-2.5 relative overflow-hidden animate-float">
+            <div class="relative h-64 sm:h-80 rounded-[6px] border border-white/40 overflow-hidden bg-black shadow-[0_0_35px_rgba(255,255,255,0.25)]">
+              <video src="assets/previews/wp_1.mp4" poster="assets/previews/wp_1.jpg" autoplay loop muted playsinline class="w-full h-full object-cover"></video>
+              
+              <!-- Floating live status overlay indicators -->
+              <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/45 p-4 flex flex-col justify-between pointer-events-none">
+                <div class="flex items-center justify-between">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] bg-black/85 text-white border border-white/40 text-[10px] font-mono font-bold">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    LIVE 4K • 60 FPS
+                  </span>
+                  <span class="px-2 py-0.5 rounded-[4px] bg-white text-black font-mono font-extrabold text-[9px] shadow-[0_0_12px_rgba(255,255,255,0.8)]">
+                    3 SURFACES SYNCED
+                  </span>
+                </div>
+                <div class="flex items-end justify-between">
+                  <div>
+                    <div class="text-sm sm:text-base font-black text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">Cosmic Singularity</div>
+                    <div class="text-[10px] font-mono text-zinc-300">Apple Silicon Metal Direct VRAM</div>
+                  </div>
+                  <span class="text-[10px] font-mono font-bold px-2 py-1 bg-black/90 text-white rounded border border-white/30">
+                    ⚡ 0.18% CPU
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -253,10 +331,12 @@
         <div class="flex items-center gap-3">
           <div class="w-1.5 h-6 bg-white shadow-[0_0_14px_#FFFFFF]"></div>
           <div>
-            <h2 class="text-lg font-extrabold tracking-wider uppercase font-mono text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.45)]">
-              ✦ OUR TOP 4K WALLPAPERS • REAL VIDEO PREVIEWS
-            </h2>
-            <p class="text-xs text-zinc-200">Actual 4K wallpapers bundled inside AuraDesk Pro for instant 1-click apply to Desktop, Screen Saver & Lock Screen</p>
+            <div class="flex items-center gap-2">
+              <h2 class="text-lg font-extrabold tracking-wider uppercase font-mono text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.45)]">
+                ✦ 4K ULTRA HD GALLERY
+              </h2>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-[3px] bg-white text-black font-extrabold">12 LIVE SAMPLES</span>
+            </div>
           </div>
         </div>
 
@@ -285,13 +365,17 @@
           <div class="w-1.5 h-6 bg-white shadow-[0_0_14px_#FFFFFF]"></div>
           <div>
             <h2 class="text-lg font-extrabold tracking-wider uppercase font-mono text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.45)]">
-              ✦ NATIVE MACOS PRO WORKSPACE • BLACK & SILVER CHROME
+              ✦ NATIVE MACOS PRO WORKSPACE
             </h2>
-            <p class="text-xs text-zinc-200">Engineered with Swift & SwiftUI — zero Electron bloat, native AVQueuePlayer + idleassetsd Lock Screen pipeline</p>
+            <div class="flex flex-wrap items-center gap-2 mt-1">
+              <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white/10 border border-white/30 text-white font-bold">SWIFTUI NATIVE</span>
+              <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white/10 border border-white/30 text-white font-bold">AVQUEUEPLAYER</span>
+              <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white/10 border border-white/30 text-white font-bold">IDLEASSETSD</span>
+            </div>
           </div>
         </div>
         <span class="hidden sm:inline-block text-[11px] font-mono font-bold text-white border border-white/40 bg-white/10 shadow-[0_0_16px_rgba(255,255,255,0.2)] px-3 py-1 rounded-[5px]">
-          ✦ &lt; 0.3% CPU • METAL GPU ACCELERATED
+          ✦ &lt; 0.2% CPU • METAL DIRECT
         </span>
       </div>
 
@@ -359,12 +443,12 @@
           <div class="lg:col-span-9 p-6 flex flex-col justify-between">
             <div>
               <div class="flex flex-wrap items-center justify-between gap-4 pb-4 mb-5 border-b border-white/20">
-                <div>
-                  <div class="text-xs font-mono font-extrabold text-white uppercase tracking-wider">✦ OUR TOP 4K WALLPAPERS • INSTANT 1-CLICK APPLY</div>
-                  <div class="text-[11px] text-zinc-300">Click "Apply All 3" on any wallpaper to set Desktop, Screen Saver, and Lock Screen simultaneously</div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-mono font-extrabold text-white uppercase tracking-wider">✦ TOP 4K WALLPAPERS</span>
+                  <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white/15 text-white">1-CLICK APPLY</span>
                 </div>
                 <div class="px-3 py-1.5 rounded-[5px] bg-black/80 border border-white/30 text-[11px] font-mono text-zinc-200">
-                  🔍 Search 350+ 4K wallpapers...
+                  🔍 350+ 4K presets online...
                 </div>
               </div>
 
@@ -434,154 +518,284 @@
       </div>
     </section>
 
-    <!-- 4. THREE-SURFACE ARCHITECTURE (SHARP BLACK & SILVER GRID) -->
+    <!-- 4. PRECISION 3-SURFACE MACOS ENGINE (PURE VISUAL + 3D HARDWARE RENDERS) -->
     <section id="architecture" class="py-12">
       <div class="flex items-center gap-3 mb-8">
         <div class="w-1.5 h-6 bg-white shadow-[0_0_14px_#FFFFFF]"></div>
         <div>
           <h2 class="text-lg font-extrabold tracking-wider uppercase font-mono text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.45)]">
-            ✦ PRECISION 3-SURFACE MACOS ENGINE
+            ✦ PRECISION 3-SURFACE SYNCHRONIZATION
           </h2>
-          <p class="text-xs text-zinc-200">Unlike basic desktop players, AuraDesk drives all three macOS visual layers natively</p>
+          <div class="flex items-center gap-2 mt-1">
+            <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white text-black font-extrabold">HARDWARE ACCELERATED</span>
+            <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white/10 border border-white/30 text-white font-bold">MULTI-MONITOR READY</span>
+          </div>
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div class="silver-sharp-card p-6 flex flex-col justify-between">
+        <!-- 01 Desktop Layer -->
+        <div class="silver-sharp-card p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between mb-4">
               <span class="text-[10px] font-mono font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-[4px] bg-white text-black shadow-[0_0_14px_rgba(255,255,255,0.5)]">01 / DESKTOP LAYER</span>
               <span class="text-xs font-mono text-zinc-300">CGWindowLevel</span>
             </div>
-            <img src="assets/mac-desktop.png" alt="4K Desktop Engine" class="w-full h-40 object-contain mb-4 drop-shadow-[0_0_18px_rgba(255,255,255,0.2)]" />
-            <h3 class="text-base font-bold text-white mb-2">Sub-Icon 4K Desktop Canvas</h3>
-            <p class="text-xs text-zinc-200 leading-relaxed">
-              Renders 4K 60/240fps video directly behind your desktop icons and Dock using hardware-accelerated <code class="text-white font-semibold">AVPlayerLooper</code> across all connected displays.
-            </p>
+            <div class="relative overflow-hidden rounded-[8px] bg-black/40 p-2 mb-4 border border-white/20">
+              <img src="assets/mac-desktop.png" alt="4K Desktop Engine" class="w-full h-44 object-contain animate-float drop-shadow-[0_0_24px_rgba(255,255,255,0.25)] group-hover:scale-105 transition duration-500" />
+            </div>
+            <h3 class="text-base font-bold text-white mb-3">Sub-Icon 4K Desktop Canvas</h3>
+            <div class="space-y-1.5 font-mono text-[10px]">
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">PIPELINE</span>
+                <span class="text-white font-bold">AVPlayerLooper Gapless</span>
+              </div>
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">FRAME RATE</span>
+                <span class="text-white font-bold">60 / 240 FPS Native</span>
+              </div>
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">DISPLAYS</span>
+                <span class="text-white font-bold">Multi-Monitor Auto-Span</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="silver-sharp-card p-6 flex flex-col justify-between">
+        <!-- 02 Screen Saver -->
+        <div class="silver-sharp-card p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between mb-4">
               <span class="text-[10px] font-mono font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-[4px] bg-white text-black shadow-[0_0_14px_rgba(255,255,255,0.5)]">02 / SCREEN SAVER</span>
               <span class="text-xs font-mono text-zinc-300">Sonoma Clock</span>
             </div>
-            <img src="assets/mac-screensaver.png" alt="4K Screen Saver Engine" class="w-full h-40 object-contain mb-4 drop-shadow-[0_0_18px_rgba(255,255,255,0.2)]" />
-            <h3 class="text-base font-bold text-white mb-2">Built-In 4K Idle Screen Saver</h3>
-            <p class="text-xs text-zinc-200 leading-relaxed">
-              Automatically launches a full-screen 4K cinema screen saver with an optional macOS Sonoma-style typography clock overlay and instant mouse/key wake.
-            </p>
+            <div class="relative overflow-hidden rounded-[8px] bg-black/40 p-2 mb-4 border border-white/20">
+              <img src="assets/mac-screensaver.png" alt="4K Screen Saver Engine" class="w-full h-44 object-contain animate-float drop-shadow-[0_0_24px_rgba(255,255,255,0.25)] group-hover:scale-105 transition duration-500" />
+            </div>
+            <h3 class="text-base font-bold text-white mb-3">4K Idle Cinema Screen Saver</h3>
+            <div class="space-y-1.5 font-mono text-[10px]">
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">CLOCK OVERLAY</span>
+                <span class="text-white font-bold">macOS Sonoma Typography</span>
+              </div>
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">IDLE TIMER</span>
+                <span class="text-white font-bold">5m • 15m • 30m Configurable</span>
+              </div>
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">WAKE RESPONSE</span>
+                <span class="text-white font-bold">&lt; 10ms Zero Lag</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div id="lockscreen-engine" class="silver-sharp-card p-6 flex flex-col justify-between">
+        <!-- 03 Lock Screen -->
+        <div id="lockscreen-engine" class="silver-sharp-card p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between mb-4">
               <span class="text-[10px] font-mono font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-[4px] bg-white text-black shadow-[0_0_14px_rgba(255,255,255,0.5)]">03 / LOCK SCREEN</span>
               <span class="text-xs font-mono text-zinc-300">idleassetsd</span>
             </div>
-            <img src="assets/mac-lockscreen.png" alt="Native Lock Screen Engine" class="w-full h-40 object-contain mb-4 drop-shadow-[0_0_18px_rgba(255,255,255,0.2)]" />
-            <h3 class="text-base font-bold text-white mb-2">Native macOS Lock Screen Injection</h3>
-            <p class="text-xs text-zinc-200 leading-relaxed">
-              Seamless zero-reencode <code class="text-white font-semibold">.mov</code> remuxing into <code class="text-white font-semibold">com.apple.idleassetsd</code> with automatic backup and 1-click default Apple Aerial restoration.
-            </p>
+            <div class="relative overflow-hidden rounded-[8px] bg-black/40 p-2 mb-4 border border-white/20">
+              <img src="assets/mac-lockscreen.png" alt="Native Lock Screen Engine" class="w-full h-44 object-contain animate-float drop-shadow-[0_0_24px_rgba(255,255,255,0.25)] group-hover:scale-105 transition duration-500" />
+            </div>
+            <h3 class="text-base font-bold text-white mb-3">Native Lock Screen Injection</h3>
+            <div class="space-y-1.5 font-mono text-[10px]">
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">INTEGRATION</span>
+                <span class="text-white font-bold">Native Apple Aerials</span>
+              </div>
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">RE-ENCODING</span>
+                <span class="text-white font-bold">Zero Re-Encode Remux</span>
+              </div>
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">SAFETY</span>
+                <span class="text-white font-bold">1-Click Original Reset</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 4.5 ECOFLOW BATTERY & MENU BAR ARCHITECTURE -->
+    <!-- 4.5 ECOFLOW BATTERY & MENU BAR ARCHITECTURE (ANIMATED METERS & HARDWARE CARDS) -->
     <section id="ecoflow-energy" class="py-12 border-t border-white/20">
-      <div class="mb-10 text-center max-w-2xl mx-auto">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-[4px] bg-white/10 border border-white/30 text-[10px] font-mono font-bold uppercase tracking-widest text-white mb-3 shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-          ⚡ ECOFLOW™ ENERGY ENGINE (NEW IN v1.2.0)
+      <div class="mb-8 text-center max-w-xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-[4px] bg-white/10 border border-white/30 text-[10px] font-mono font-bold uppercase tracking-widest text-white mb-2 shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+          ⚡ ECOFLOW™ ENERGY ENGINE (v1.2.0)
         </div>
-        <h2 class="text-2xl sm:text-4xl font-black text-chrome-grad mb-3">All-Day Battery. Zero Anxiety.</h2>
-        <p class="text-xs sm:text-sm text-zinc-200 leading-relaxed">
-          Unlike heavy Electron or web-wrapper wallpaper tools that chew through 15-25% CPU, AuraDesk Pro is engineered with native Apple Silicon Metal acceleration and IOKit battery monitoring to sip under <strong class="text-white font-semibold">0.2% CPU</strong>.
-        </p>
+        <h2 class="text-2xl sm:text-4xl font-black text-chrome-grad">All-Day Battery. Zero Anxiety.</h2>
       </div>
 
-      <!-- Stat Badges -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div class="silver-sharp-card p-4 text-center">
-          <div class="text-2xl sm:text-3xl font-black text-chrome-grad font-mono">&lt; 0.2%</div>
-          <div class="text-[10px] font-mono uppercase tracking-wider text-zinc-300 mt-1">Average CPU Load</div>
+      <!-- Animated Comparison Meters (Visual Only) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <!-- CPU Comparison Meter -->
+        <div class="silver-sharp-card p-5">
+          <div class="flex items-center justify-between text-xs font-mono font-bold text-white mb-3">
+            <span>⚡ CPU UTILIZATION LOAD</span>
+            <span class="text-[10px] text-zinc-300">LOWER IS BETTER</span>
+          </div>
+          <div class="space-y-3 font-mono text-xs">
+            <div>
+              <div class="flex justify-between text-[11px] mb-1">
+                <span class="text-white font-bold">✦ AuraDesk Pro (Metal Direct)</span>
+                <span class="text-emerald-400 font-extrabold">&lt; 0.2% CPU</span>
+              </div>
+              <div class="w-full h-3 rounded-[3px] bg-white/10 border border-white/20 overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-white to-zinc-200 rounded-[2px] shadow-[0_0_12px_#FFFFFF]" style="width: 2%;"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-[11px] mb-1">
+                <span class="text-zinc-400">Typical Wallpaper Apps (Web/Electron)</span>
+                <span class="text-zinc-400">18.5% CPU</span>
+              </div>
+              <div class="w-full h-3 rounded-[3px] bg-white/10 border border-white/20 overflow-hidden">
+                <div class="h-full bg-zinc-600 rounded-[2px]" style="width: 74%;"></div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="silver-sharp-card p-4 text-center">
-          <div class="text-2xl sm:text-3xl font-black text-white font-mono">~42 MB</div>
-          <div class="text-[10px] font-mono uppercase tracking-wider text-zinc-300 mt-1">RAM Footprint</div>
-        </div>
-        <div class="silver-sharp-card p-4 text-center">
-          <div class="text-2xl sm:text-3xl font-black text-chrome-grad font-mono">100%</div>
-          <div class="text-[10px] font-mono uppercase tracking-wider text-zinc-300 mt-1">Metal Direct Render</div>
-        </div>
-        <div class="silver-sharp-card p-4 text-center">
-          <div class="text-2xl sm:text-3xl font-black text-white font-mono">0 Icon</div>
-          <div class="text-[10px] font-mono uppercase tracking-wider text-zinc-300 mt-1">Dock Clutter (Menu Bar)</div>
+
+        <!-- RAM Comparison Meter -->
+        <div class="silver-sharp-card p-5">
+          <div class="flex items-center justify-between text-xs font-mono font-bold text-white mb-3">
+            <span>💾 MEMORY / RAM CONSUMPTION</span>
+            <span class="text-[10px] text-zinc-300">LOWER IS BETTER</span>
+          </div>
+          <div class="space-y-3 font-mono text-xs">
+            <div>
+              <div class="flex justify-between text-[11px] mb-1">
+                <span class="text-white font-bold">✦ AuraDesk Pro (Bounded Buffer)</span>
+                <span class="text-emerald-400 font-extrabold">~42 MB</span>
+              </div>
+              <div class="w-full h-3 rounded-[3px] bg-white/10 border border-white/20 overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-white to-zinc-200 rounded-[2px] shadow-[0_0_12px_#FFFFFF]" style="width: 9%;"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-[11px] mb-1">
+                <span class="text-zinc-400">Typical Wallpaper Apps (Web/Electron)</span>
+                <span class="text-zinc-400">480 MB</span>
+              </div>
+              <div class="w-full h-3 rounded-[3px] bg-white/10 border border-white/20 overflow-hidden">
+                <div class="h-full bg-zinc-600 rounded-[2px]" style="width: 96%;"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Feature Grid -->
+      <!-- Feature Visual Hardware Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="silver-sharp-card p-6 flex flex-col justify-between">
+        <!-- 01 IOKit Battery Card -->
+        <div class="silver-sharp-card p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between mb-4">
               <span class="text-[10px] font-mono font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-[4px] bg-white text-black shadow-[0_0_14px_rgba(255,255,255,0.5)]">IOKIT POWER SENSING</span>
               <span class="text-xs font-mono text-zinc-300">Auto-Detect</span>
             </div>
-            <h3 class="text-base font-bold text-white mb-2">Battery & Low Power Mode Pause</h3>
-            <p class="text-xs text-zinc-200 leading-relaxed">
-              Listens to macOS power source events via <code class="text-white font-semibold">IOPSCopyPowerSourcesInfo</code>. Instantly pauses video playback or drops to 30fps when running on MacBook battery or when macOS Low Power Mode activates.
-            </p>
+            <div class="relative overflow-hidden rounded-[8px] bg-black/40 p-2 mb-4 border border-white/20">
+              <img src="assets/mac-battery.png" alt="IOKit Battery Optimization" class="w-full h-36 object-contain animate-float drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] group-hover:scale-105 transition duration-500" />
+            </div>
+            <h3 class="text-base font-bold text-white mb-3">Power Source Awareness</h3>
+            <div class="space-y-1.5 font-mono text-[10px]">
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">BATTERY POWER</span>
+                <span class="text-white font-bold">Auto-Pause Playback</span>
+              </div>
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">LOW POWER MODE</span>
+                <span class="text-white font-bold">Zero Energy Draw</span>
+              </div>
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">ECO STEP-DOWN</span>
+                <span class="text-white font-bold">30 FPS Dynamic Cap</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="silver-sharp-card p-6 flex flex-col justify-between">
+        <!-- 02 Metal GPU Card -->
+        <div class="silver-sharp-card p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between mb-4">
               <span class="text-[10px] font-mono font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-[4px] bg-white text-black shadow-[0_0_14px_rgba(255,255,255,0.5)]">ZERO-COPY METAL</span>
-              <span class="text-xs font-mono text-zinc-300">GPU VRAM</span>
+              <span class="text-xs font-mono text-zinc-300">Direct VRAM</span>
             </div>
-            <h3 class="text-base font-bold text-white mb-2">Direct Hardware Video Decoding</h3>
-            <p class="text-xs text-zinc-200 leading-relaxed">
-              Decodes 4K 60fps / 240fps video streams straight into Apple Silicon Unified Memory using <code class="text-white font-semibold">drawsAsynchronously = true</code> and direct Metal frame composition, completely bypassing the CPU.
-            </p>
+            <div class="relative overflow-hidden rounded-[8px] bg-black/40 p-2 mb-4 border border-white/20">
+              <img src="assets/mac-mchip.png" alt="Apple Silicon GPU Metal Engine" class="w-full h-36 object-contain animate-float drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] group-hover:scale-105 transition duration-500" />
+            </div>
+            <h3 class="text-base font-bold text-white mb-3">Hardware Video Decoder</h3>
+            <div class="space-y-1.5 font-mono text-[10px]">
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">COMPOSITION</span>
+                <span class="text-white font-bold">Direct Metal GPU VRAM</span>
+              </div>
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">CPU LOAD</span>
+                <span class="text-white font-bold">Zero Rasterization</span>
+              </div>
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">CODECS</span>
+                <span class="text-white font-bold">HEVC / AV1 / ProRes</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="silver-sharp-card p-6 flex flex-col justify-between">
+        <!-- 03 Menu Bar Agent Card -->
+        <div class="silver-sharp-card p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between mb-4">
-              <span class="text-[10px] font-mono font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-[4px] bg-white text-black shadow-[0_0_14px_rgba(255,255,255,0.5)]">ALWAYS-RUN BACKGROUND</span>
-              <span class="text-xs font-mono text-zinc-300">Menu Bar Agent</span>
+              <span class="text-[10px] font-mono font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-[4px] bg-white text-black shadow-[0_0_14px_rgba(255,255,255,0.5)]">ALWAYS-RUN AGENT</span>
+              <span class="text-xs font-mono text-zinc-300">Menu Bar</span>
             </div>
-            <h3 class="text-base font-bold text-white mb-2">Hidden From Dock, Lives in Menu Bar</h3>
-            <p class="text-xs text-zinc-200 leading-relaxed">
-              AuraDesk runs as a lightweight menu bar accessory (<code class="text-white font-semibold">.accessory</code>). Closing the window keeps wallpapers running smoothly in the background without taking up space in your Dock. Includes an exit confirmation safeguard to prevent accidental stoppage.
-            </p>
+            <div class="relative overflow-hidden rounded-[8px] bg-black/40 p-2 mb-4 border border-white/20 flex items-center justify-center">
+              <img src="assets/moon-icon.png" alt="Always-Run Menu Bar Agent" class="w-24 h-24 my-6 object-contain animate-float drop-shadow-[0_0_25px_rgba(255,255,255,0.4)] group-hover:scale-110 transition duration-500" />
+            </div>
+            <h3 class="text-base font-bold text-white mb-3">Zero Dock Clutter</h3>
+            <div class="space-y-1.5 font-mono text-[10px]">
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">APP STATUS</span>
+                <span class="text-white font-bold">Menu Bar Accessory</span>
+              </div>
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">DOCK ICON</span>
+                <span class="text-white font-bold">0 Dock Icon Footprint</span>
+              </div>
+              <div class="flex items-center justify-between p-1.5 rounded bg-white/5 border border-white/15">
+                <span class="text-zinc-400">ACCIDENTAL QUIT</span>
+                <span class="text-white font-bold">Modal Confirmation Guard</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 5. FINAL CTA BANNER -->
+    <!-- 5. FINAL VISUAL CTA BANNER -->
     <section class="py-12">
-      <div class="silver-sharp-card p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
-        <div>
-          <div class="text-[11px] font-mono font-bold uppercase tracking-[0.16em] text-zinc-200 mb-2">✦ 100% Free • MIT Licensed • Zero Paywalls</div>
-          <h2 class="text-2xl sm:text-4xl font-black text-chrome-grad mb-2">Upgrade Your Mac to 4K Motion Today.</h2>
-          <p class="text-sm text-zinc-200 max-w-xl">
-            Download the prebuilt Universal macOS application bundle with 350+ curated 4K wallpapers built right in.
-          </p>
+      <div class="silver-sharp-card p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-5">
+          <img src="assets/moon-icon.png" class="w-14 h-14 rounded-[12px] shadow-[0_0_25px_rgba(255,255,255,0.5)] shrink-0" alt="AuraDesk Moon" />
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-black text-chrome-grad mb-1.5">Upgrade Your Mac to 4K Motion.</h2>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white/15 text-white font-bold">macOS 14+</span>
+              <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white/15 text-white font-bold">APPLE SILICON & INTEL</span>
+              <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white text-black font-extrabold">100% FREE MIT</span>
+            </div>
+          </div>
         </div>
         <div class="flex flex-wrap gap-3 shrink-0">
           <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip" class="btn-chrome-primary px-6 py-3.5 text-xs font-mono uppercase tracking-wider">
             ✦ Download AuraDesk.app
           </a>
           <a href="https://github.com/shubhransh-gupta/AuraDesk" target="_blank" class="btn-silver-secondary px-5 py-3.5 text-xs font-mono uppercase tracking-wider">
-            View Source on GitHub
+            GitHub
           </a>
         </div>
       </div>
