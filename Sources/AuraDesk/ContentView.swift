@@ -520,7 +520,7 @@ public struct ContentView: View {
                     RoundedRectangle(cornerRadius: 7, style: .continuous)
                         .fill(AuraTheme.chromeButtonGradient)
                         .frame(width: 32, height: 32)
-                    Image(systemName: "play.display")
+                    Image(systemName: "moon.stars.fill")
                         .font(.system(size: 15, weight: .bold))
                         .foregroundStyle(.black)
                 }

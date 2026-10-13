@@ -40,6 +40,8 @@ cat > "${CONTENTS_DIR}/Info.plist" <<EOF
     <string>6.0</string>
     <key>CFBundleName</key>
     <string>${APP_NAME}</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>

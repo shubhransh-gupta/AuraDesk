@@ -22,7 +22,9 @@ let package = Package(
                 .copy("Resources/mac-lockscreen.png"),
                 .copy("Resources/mac-mchip.png"),
                 .copy("Resources/mac-multimonitor.png"),
-                .copy("Resources/mac-screensaver.png")
+                .copy("Resources/mac-screensaver.png"),
+                .copy("Resources/AppIcon.icns"),
+                .copy("Resources/moon-icon.png")
             ],
             linkerSettings: [
                 .linkedFramework("AppKit"),

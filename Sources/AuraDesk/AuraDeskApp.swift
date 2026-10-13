@@ -15,7 +15,7 @@ struct AuraDeskApp: App {
         }
         .defaultSize(width: 1160, height: 760)
 
-        MenuBarExtra("AuraDesk", systemImage: "sparkles.tv.fill") {
+        MenuBarExtra("AuraDesk", systemImage: "moon.stars.fill") {
             MenuBarQuickMenu()
         }
     }
@@ -88,6 +88,19 @@ struct MenuBarQuickMenu: View {
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.regular)
+        let bundleURL = Bundle.main.bundleURL
+        let iconCandidates = [
+            Bundle.main.url(forResource: "AppIcon", withExtension: "icns"),
+            Bundle.main.url(forResource: "moon-icon", withExtension: "png"),
+            bundleURL.appendingPathComponent("Contents/Resources/AppIcon.icns"),
+            bundleURL.appendingPathComponent("Contents/Resources/moon-icon.png")
+        ].compactMap { $0 }
+        for url in iconCandidates {
+            if let img = NSImage(contentsOf: url) {
+                NSApp.applicationIconImage = img
+                break
+            }
+        }
         NSApp.activate(ignoringOtherApps: true)
     }
 
