@@ -14,8 +14,10 @@ final class PlayerContainerView: NSView {
         self.playerLayer = AVPlayerLayer(player: player)
         super.init(frame: .zero)
         self.wantsLayer = true
+        self.canDrawConcurrently = true
         self.playerLayer.videoGravity = gravity
         self.playerLayer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
+        self.playerLayer.drawsAsynchronously = true // Direct Metal compositor: zero CPU blit
         self.layer?.addSublayer(self.playerLayer)
     }
 
@@ -148,12 +150,31 @@ public final class DesktopWallpaperController: ObservableObject {
         }
     }
 
+    @Published public private(set) var isPausedForPowerSavings: Bool = false
+
+    public func pauseForPowerSavings() {
+        guard isPlaying, !isPausedForPowerSavings else { return }
+        isPausedForPowerSavings = true
+        queuePlayer?.pause()
+    }
+
+    public func resumeFromPowerSavings() {
+        guard isPausedForPowerSavings else { return }
+        isPausedForPowerSavings = false
+        if isPlaying {
+            queuePlayer?.playImmediately(atRate: playbackSpeed)
+        }
+    }
+
     public func playVideo(url: URL) {
         stop()
 
         currentVideoURL = url
-        let asset = AVURLAsset(url: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
-        let templateItem = AVPlayerItem(asset: asset)
+        let asset = AVURLAsset(url: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey: false])
+        let templateItem = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: ["playable", "tracks", "duration"])
+        // Ultra-low RAM footprint: only buffer 1 second of 4K video ahead
+        templateItem.preferredForwardBufferDuration = 1.0
+        templateItem.canUseNetworkResourcesForLiveStreamingWhilePaused = false
 
         let player = AVQueuePlayer()
         player.isMuted = isMuted
@@ -169,8 +190,14 @@ public final class DesktopWallpaperController: ObservableObject {
         self.queuePlayer = player
         rebuildWindowsForScreens()
 
-        player.playImmediately(atRate: playbackSpeed)
         isPlaying = true
+        isPausedForPowerSavings = false
+
+        if EnergyEngine.shared.shouldPausePlayback {
+            pauseForPowerSavings()
+        } else {
+            player.playImmediately(atRate: playbackSpeed)
+        }
     }
 
     public func togglePlayPause() {
@@ -178,9 +205,11 @@ public final class DesktopWallpaperController: ObservableObject {
         if isPlaying {
             player.pause()
             isPlaying = false
+            isPausedForPowerSavings = false
         } else {
             player.playImmediately(atRate: playbackSpeed)
             isPlaying = true
+            isPausedForPowerSavings = false
         }
     }
 
@@ -198,6 +227,7 @@ public final class DesktopWallpaperController: ObservableObject {
         windows.removeAll()
         containerViews.removeAll()
         isPlaying = false
+        isPausedForPowerSavings = false
         currentVideoURL = nil
     }
 

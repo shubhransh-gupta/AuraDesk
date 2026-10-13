@@ -60,6 +60,36 @@ public final class WallpaperStore: ObservableObject {
         }
     }
 
+    // Always-Run Menu Bar Mode (hides Dock icon, runs in top Menu Bar)
+    @Published public var runInBackgroundMenuBarOnly: Bool = true {
+        didSet {
+            saveState()
+            updateAppActivationPolicy()
+        }
+    }
+
+    @Published public var hasConfirmedAlwaysRunMode: Bool = false {
+        didSet {
+            saveState()
+        }
+    }
+
+    @Published public var showAlwaysRunConfirmationSheet: Bool = false
+
+    @Published public var isStudioWindowOpen: Bool = true {
+        didSet {
+            updateAppActivationPolicy()
+        }
+    }
+
+    public func updateAppActivationPolicy() {
+        if runInBackgroundMenuBarOnly && !isStudioWindowOpen {
+            NSApp.setActivationPolicy(.accessory)
+        } else {
+            NSApp.setActivationPolicy(.regular)
+        }
+    }
+
     @Published public var isGeneratingSample: Bool = false
     @Published public var selectedSection: ContentView.SidebarSection = .discover4K
     @Published public var isDropTargeted: Bool = false
@@ -181,6 +211,10 @@ public final class WallpaperStore: ObservableObject {
         if let idStr = defaults.string(forKey: "auradesk.activeLockScreenID") {
             activeLockScreenID = UUID(uuidString: idStr)
         }
+        if defaults.object(forKey: "auradesk.runInBackgroundMenuBarOnly") != nil {
+            runInBackgroundMenuBarOnly = defaults.bool(forKey: "auradesk.runInBackgroundMenuBarOnly")
+        }
+        hasConfirmedAlwaysRunMode = defaults.bool(forKey: "auradesk.hasConfirmedAlwaysRunMode")
     }
 
     public func saveState() {
@@ -193,6 +227,8 @@ public final class WallpaperStore: ObservableObject {
         defaults.set(videoGravity.rawValue, forKey: "auradesk.videoGravity")
         defaults.set(playbackSpeed, forKey: "auradesk.playbackSpeed")
         defaults.set(pauseOnScreenSleep, forKey: "auradesk.pauseOnScreenSleep")
+        defaults.set(runInBackgroundMenuBarOnly, forKey: "auradesk.runInBackgroundMenuBarOnly")
+        defaults.set(hasConfirmedAlwaysRunMode, forKey: "auradesk.hasConfirmedAlwaysRunMode")
         defaults.set(activeDesktopID?.uuidString, forKey: "auradesk.activeDesktopID")
         defaults.set(activeScreenSaverID?.uuidString, forKey: "auradesk.activeScreenSaverID")
         defaults.set(activeLockScreenID?.uuidString, forKey: "auradesk.activeLockScreenID")

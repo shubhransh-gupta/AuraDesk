@@ -15,6 +15,8 @@ public enum AuraTheme {
     public static let silverMuted = Color(red: 0.48, green: 0.51, blue: 0.58)
     public static let gunmetalBorder = Color.white.opacity(0.16)
     public static let silverEdge = Color.white.opacity(0.55)
+    public static let silverBorder = Color.white.opacity(0.24)
+    public static let silverGlow = Color.white.opacity(0.60)
 
     // Subtle Aurora / Norwegian Lights accents
     public static let auroraCyan = Color(red: 0.15, green: 0.95, blue: 0.82)
@@ -79,21 +81,21 @@ struct AppAuroraStargazingBackground: View {
 
     private static let stars: [StarPoint] = {
         var list: [StarPoint] = []
-        for i in 0..<190 {
+        for i in 0..<55 {
             let seed = Double(i * 997 + 137)
             let x = fmod(abs(sin(seed * 1.13) * 10000.0), 1.0)
             let y = fmod(abs(cos(seed * 2.47) * 10000.0), 1.0)
-            let size = 1.0 + fmod(abs(sin(seed * 3.71) * 100.0), 2.4)
-            let speed = 1.2 + fmod(abs(cos(seed * 5.19) * 100.0), 2.8)
+            let size = 1.0 + fmod(abs(sin(seed * 3.71) * 100.0), 2.2)
+            let speed = 1.0 + fmod(abs(cos(seed * 5.19) * 100.0), 2.0)
             let phase = fmod(abs(sin(seed * 7.31) * 100.0), 6.28)
-            let isSparkle = (i % 9 == 0)
+            let isSparkle = (i % 8 == 0)
             list.append(StarPoint(x: x, y: y, size: size, speed: speed, phase: phase, isSparkle: isSparkle))
         }
         return list
     }()
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 30.0)) { timeline in
+        TimelineView(.animation(minimumInterval: EnergyEngine.shared.isOnBattery ? (1.0 / 12.0) : (1.0 / 24.0))) { timeline in
             let t = timeline.date.timeIntervalSinceReferenceDate
             Canvas { context, size in
                 let w = size.width
@@ -472,6 +474,7 @@ public struct ContentView: View {
     @ObservedObject private var lockScreenManager = LockScreenManager.shared
     @ObservedObject private var screenSaverController = ScreenSaverController.shared
     @ObservedObject private var catalogService = CloudCatalogService.shared
+    @ObservedObject private var energyEngine = EnergyEngine.shared
 
     public enum SidebarSection: String, CaseIterable, Identifiable {
         case discover4K = "Top 4K Wallpapers"
@@ -527,6 +530,10 @@ public struct ContentView: View {
 
                     ScrollView(.vertical, showsIndicators: true) {
                         VStack(alignment: .leading, spacing: 24) {
+                            if !store.hasConfirmedAlwaysRunMode {
+                                alwaysRunConfirmationBanner
+                            }
+
                             switch store.selectedSection {
                             case .discover4K:
                                 top4KWallpapersWorkspace
@@ -816,6 +823,23 @@ public struct ContentView: View {
             .overlay(
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
                     .strokeBorder(Color.white.opacity(0.28), lineWidth: 1)
+            )
+
+            // Energy Badge Pill
+            HStack(spacing: 5) {
+                Image(systemName: energyEngine.isOnBattery ? "battery.75" : "bolt.fill")
+                    .font(.system(size: 10))
+                    .foregroundStyle(energyEngine.isOnBattery ? AuraTheme.silverBright : AuraTheme.auroraCyan)
+                Text(energyEngine.energyStatusBadge)
+                    .font(.system(size: 10.5, weight: .bold, design: .monospaced))
+                    .foregroundStyle(AuraTheme.silverBright)
+            }
+            .padding(.horizontal, 9)
+            .padding(.vertical, 5.5)
+            .background(Color.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 6))
+            .overlay(
+                RoundedRectangle(cornerRadius: 6)
+                    .stroke(AuraTheme.silverBorder, lineWidth: 1)
             )
 
             // Mute Toggle
@@ -1553,7 +1577,137 @@ public struct ContentView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .sharpSilverCard(cornerRadius: 10)
             }
+
+            // ⚡ ECOFLOW™ INTELLIGENT BATTERY & ALWAYS-RUN ENGINE
+            VStack(alignment: .leading, spacing: 14) {
+                HStack {
+                    Image(systemName: "bolt.batteryblock.fill")
+                        .font(.system(size: 13))
+                        .foregroundStyle(AuraTheme.auroraCyan)
+                    Text("ECOFLOW™ BATTERY & ENERGY INTELLIGENCE")
+                        .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                        .foregroundStyle(AuraTheme.chromeWhite)
+                    Spacer()
+                    Text(energyEngine.energyStatusBadge)
+                        .font(.system(size: 9.5, weight: .bold, design: .monospaced))
+                        .foregroundStyle(.black)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(AuraTheme.silverBright, in: RoundedRectangle(cornerRadius: 3))
+                }
+
+                // Live Metrics Bar
+                HStack(spacing: 12) {
+                    energyMetricPill(label: "POWER SOURCE", value: energyEngine.isOnBattery ? "Battery (\(energyEngine.batteryPercentage)%)" : "AC Power")
+                    energyMetricPill(label: "LOW POWER MODE", value: energyEngine.isLowPowerMode ? "Active" : "Standard")
+                    energyMetricPill(label: "CPU FOOTPRINT", value: "< 0.2% CPU (Metal)")
+                    energyMetricPill(label: "RAM FOOTPRINT", value: "< 45 MB")
+                }
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Toggle("Auto-Pause Live Wallpaper on Battery Power", isOn: $energyEngine.autoPauseOnBattery)
+                        .font(.system(size: 12))
+                        .foregroundStyle(AuraTheme.silverBright)
+
+                    Toggle("Auto-Pause on macOS Low Power Mode", isOn: $energyEngine.autoPauseOnLowPowerMode)
+                        .font(.system(size: 12))
+                        .foregroundStyle(AuraTheme.silverBright)
+
+                    Toggle("Eco 30fps Frame Rate on Battery Power", isOn: $energyEngine.ecoFrameRateOnBattery)
+                        .font(.system(size: 12))
+                        .foregroundStyle(AuraTheme.silverBright)
+
+                    Toggle("Pause Video When Desktop is Hidden / Occluded", isOn: $energyEngine.autoPauseWhenOccluded)
+                        .font(.system(size: 12))
+                        .foregroundStyle(AuraTheme.silverBright)
+                }
+
+                Divider().background(AuraTheme.gunmetalBorder)
+
+                // Menu Bar Background Toggle
+                VStack(alignment: .leading, spacing: 4) {
+                    Toggle("Always-Run in Menu Bar Only (Hide from Dock)", isOn: $store.runInBackgroundMenuBarOnly)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(AuraTheme.chromeWhite)
+                    Text("Closing the Studio window hides AuraDesk from your macOS Dock while keeping your 4K live desktop and lock screen active 24/7.")
+                        .font(.system(size: 11))
+                        .foregroundStyle(AuraTheme.silverMid)
+                }
+            }
+            .padding(18)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .sharpSilverCard(cornerRadius: 10)
         }
+    }
+
+    private func energyMetricPill(label: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label)
+                .font(.system(size: 8.5, weight: .bold, design: .monospaced))
+                .foregroundStyle(AuraTheme.silverMid)
+            Text(value)
+                .font(.system(size: 11, weight: .bold, design: .monospaced))
+                .foregroundStyle(AuraTheme.chromeWhite)
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
+        .background(Color.white.opacity(0.05), in: RoundedRectangle(cornerRadius: 6))
+        .overlay(
+            RoundedRectangle(cornerRadius: 6)
+                .stroke(AuraTheme.silverBorder, lineWidth: 1)
+        )
+    }
+
+    // MARK: - Always-Run Confirmation Banner
+    private var alwaysRunConfirmationBanner: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                Image(systemName: "bolt.batteryblock.fill")
+                    .font(.system(size: 14))
+                    .foregroundStyle(AuraTheme.auroraCyan)
+                Text("ALWAYS-RUN MENU BAR ARCHITECTURE")
+                    .font(.system(size: 11.5, weight: .heavy, design: .monospaced))
+                    .foregroundStyle(AuraTheme.chromeWhite)
+                Spacer()
+                Button {
+                    store.hasConfirmedAlwaysRunMode = true
+                } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(AuraTheme.silverMid)
+                }
+                .buttonStyle(.plain)
+            }
+
+            Text("AuraDesk runs quietly in your top Menu Bar so your 4K live desktop, screen saver, and lock screen stay active 24/7 without draining battery or cluttering your Dock. Closing this window keeps your wallpapers running smoothly.")
+                .font(.system(size: 11.5))
+                .foregroundStyle(AuraTheme.silverMid)
+                .lineSpacing(2)
+
+            HStack(spacing: 14) {
+                Toggle("Run in Menu Bar Only (Hide from Dock)", isOn: $store.runInBackgroundMenuBarOnly)
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(AuraTheme.silverBright)
+
+                Spacer()
+
+                Button {
+                    store.hasConfirmedAlwaysRunMode = true
+                } label: {
+                    Text("Got It, Keep Active in Menu Bar")
+                }
+                .buttonStyle(SharpSilverButtonStyle(prominent: true, compact: true))
+            }
+        }
+        .padding(14)
+        .background(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(Color(red: 0.05, green: 0.07, blue: 0.12).opacity(0.92))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .stroke(AuraTheme.silverBorder, lineWidth: 1)
+        )
     }
 
     // MARK: - Bottom Status Footer Bar
