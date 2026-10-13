@@ -421,6 +421,50 @@ struct Local4KThumbnailView: View {
     }
 }
 
+// MARK: - Moon Brand Icon View
+struct MoonBrandIconView: View {
+    var size: CGFloat = 32
+
+    private var moonImage: NSImage? {
+        let candidates = [
+            Bundle.main.url(forResource: "moon-icon", withExtension: "png"),
+            Bundle.main.bundleURL.appendingPathComponent("Contents/Resources/moon-icon.png"),
+            Bundle.main.bundleURL.appendingPathComponent("AuraDesk_AuraDesk.bundle/moon-icon.png"),
+            URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent("Sources/AuraDesk/Resources/moon-icon.png"),
+            URL(fileURLWithPath: "Sources/AuraDesk/Resources/moon-icon.png")
+        ].compactMap { $0 }
+
+        for url in candidates {
+            if FileManager.default.fileExists(atPath: url.path),
+               let img = NSImage(contentsOf: url) {
+                return img
+            }
+        }
+        return NSApp.applicationIconImage
+    }
+
+    var body: some View {
+        ZStack {
+            if let img = moonImage {
+                Image(nsImage: img)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: size, height: size)
+                    .shadow(color: Color.white.opacity(0.45), radius: 6, x: 0, y: 0)
+            } else {
+                ZStack {
+                    RoundedRectangle(cornerRadius: size * 0.22, style: .continuous)
+                        .fill(AuraTheme.chromeButtonGradient)
+                        .frame(width: size, height: size)
+                    Image(systemName: "moon.fill")
+                        .font(.system(size: size * 0.5, weight: .bold))
+                        .foregroundStyle(.black)
+                }
+            }
+        }
+    }
+}
+
 // MARK: - Main ContentView
 public struct ContentView: View {
     @ObservedObject private var store = WallpaperStore.shared
@@ -516,14 +560,7 @@ public struct ContentView: View {
         VStack(alignment: .leading, spacing: 0) {
             // App Brand Header
             HStack(spacing: 12) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 7, style: .continuous)
-                        .fill(AuraTheme.chromeButtonGradient)
-                        .frame(width: 32, height: 32)
-                    Image(systemName: "moon.stars.fill")
-                        .font(.system(size: 15, weight: .bold))
-                        .foregroundStyle(.black)
-                }
+                MoonBrandIconView(size: 32)
 
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 6) {
