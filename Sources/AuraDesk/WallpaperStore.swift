@@ -83,10 +83,14 @@ public final class WallpaperStore: ObservableObject {
     }
 
     public func updateAppActivationPolicy() {
-        if runInBackgroundMenuBarOnly && !isStudioWindowOpen {
-            NSApp.setActivationPolicy(.accessory)
-        } else {
-            NSApp.setActivationPolicy(.regular)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            let app = NSApplication.shared
+            if self.runInBackgroundMenuBarOnly && !self.isStudioWindowOpen {
+                app.setActivationPolicy(.accessory)
+            } else {
+                app.setActivationPolicy(.regular)
+            }
         }
     }
 
