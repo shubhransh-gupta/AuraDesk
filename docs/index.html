@@ -209,6 +209,15 @@
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #040407; }
     ::-webkit-scrollbar-thumb { background: #64748B; border-radius: 3px; }
+
+    /* Hide ugly scrollbars on terminal code snippets */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
   </style>
 </head>
 <body class="antialiased selection:bg-white selection:text-black">
@@ -290,7 +299,7 @@
               <span class="text-[10px] font-mono text-zinc-400">Zero Setup • Auto Quarantine Fix</span>
             </div>
             <div class="flex items-center justify-between gap-3 bg-zinc-950 px-3 py-2.5 rounded-[5px] border border-white/20">
-              <code class="text-xs sm:text-sm font-mono text-white select-all overflow-x-auto whitespace-nowrap">
+              <code class="text-xs sm:text-sm font-mono text-white select-all overflow-x-auto whitespace-nowrap no-scrollbar">
                 <span class="text-zinc-500">$ </span><span id="hero-curl-cmd">curl -fsSL https://raw.githubusercontent.com/shubhransh-gupta/AuraDesk/main/install.sh | bash</span>
               </code>
               <button onclick="copyCommand('hero-curl-cmd', this)" class="shrink-0 btn-chrome-primary px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-wider font-extrabold cursor-pointer">
@@ -370,10 +379,10 @@
             </div>
             <div class="text-xs font-mono text-zinc-300 mb-4">Downloads latest binary, clears quarantine, and installs into /Applications.</div>
             <div class="p-3 rounded-[6px] bg-black/95 border border-white/25 flex items-center justify-between gap-3 text-xs font-mono">
-              <div class="overflow-x-auto text-white select-all">
+              <div class="overflow-x-auto text-white select-all no-scrollbar whitespace-nowrap">
                 <span id="cmd-curl">curl -fsSL https://raw.githubusercontent.com/shubhransh-gupta/AuraDesk/main/install.sh | bash</span>
               </div>
-              <button onclick="copyCommand('cmd-curl', this)" class="shrink-0 px-3 py-1.5 text-[10px] uppercase font-extrabold rounded bg-white text-black hover:bg-zinc-200 transition shadow-[0_0_10px_rgba(255,255,255,0.5)]">
+              <button onclick="copyCommand('cmd-curl', this)" class="shrink-0 px-3 py-1.5 text-[10px] uppercase font-extrabold rounded bg-white text-black hover:bg-zinc-200 transition shadow-[0_0_10px_rgba(255,255,255,0.5)] cursor-pointer">
                 Copy
               </button>
             </div>
@@ -391,10 +400,10 @@
             </div>
             <div class="text-xs font-mono text-zinc-300 mb-4">Official tap cask with automatic update and uninstall support.</div>
             <div class="p-3 rounded-[6px] bg-black/95 border border-white/25 flex items-center justify-between gap-3 text-xs font-mono">
-              <div class="overflow-x-auto text-white select-all">
+              <div class="overflow-x-auto text-white select-all no-scrollbar whitespace-nowrap">
                 <span id="cmd-brew">brew install --cask shubhransh-gupta/tap/auradesk</span>
               </div>
-              <button onclick="copyCommand('cmd-brew', this)" class="shrink-0 px-3 py-1.5 text-[10px] uppercase font-extrabold rounded bg-white/20 text-white hover:bg-white hover:text-black transition">
+              <button onclick="copyCommand('cmd-brew', this)" class="shrink-0 px-3 py-1.5 text-[10px] uppercase font-extrabold rounded bg-white/20 text-white hover:bg-white hover:text-black transition cursor-pointer">
                 Copy
               </button>
             </div>
@@ -919,7 +928,7 @@
           <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white text-black font-extrabold">FASTEST</span>
         </div>
         <div class="flex items-center justify-between gap-3 bg-zinc-950 px-3 py-2.5 rounded-[5px] border border-white/20">
-          <code class="text-xs font-mono text-white select-all overflow-x-auto whitespace-nowrap">
+          <code class="text-xs font-mono text-white select-all overflow-x-auto whitespace-nowrap no-scrollbar">
             <span class="text-zinc-500">$ </span><span id="modal-cmd-curl">curl -fsSL https://raw.githubusercontent.com/shubhransh-gupta/AuraDesk/main/install.sh | bash</span>
           </code>
           <button onclick="copyCommand('modal-cmd-curl', this)" class="shrink-0 btn-chrome-primary px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-wider font-extrabold cursor-pointer">
@@ -940,7 +949,7 @@
           <span class="text-[10px] font-mono text-zinc-400">brew.sh</span>
         </div>
         <div class="flex items-center justify-between gap-3 bg-zinc-950 px-3 py-2 rounded-[5px] border border-white/15">
-          <code class="text-xs font-mono text-white select-all overflow-x-auto whitespace-nowrap">
+          <code class="text-xs font-mono text-white select-all overflow-x-auto whitespace-nowrap no-scrollbar">
             <span class="text-zinc-500">$ </span><span id="modal-cmd-brew">brew install --cask shubhransh-gupta/tap/auradesk</span>
           </code>
           <button onclick="copyCommand('modal-cmd-brew', this)" class="shrink-0 px-3 py-1.5 text-[10px] uppercase font-bold rounded bg-white/20 hover:bg-white hover:text-black text-white transition cursor-pointer">
