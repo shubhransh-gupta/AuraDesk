@@ -1,14 +1,22 @@
 # ✦ AuraDesk Pro — 4K Live Desktop, Screen Saver & Lock Screen Engine for macOS
 
 <p align="center">
-  <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip">
-    <img src="https://img.shields.io/badge/Download-AuraDesk.app_(macOS)-FFFFFF?style=for-the-badge&logo=apple&logoColor=000000" alt="Download AuraDesk.app" />
+  <a href="https://github.com/shubhransh-gupta/AuraDesk/stargazers">
+    <img src="https://img.shields.io/github/stars/shubhransh-gupta/AuraDesk?style=for-the-badge&logo=github&color=FFFFFF&labelColor=18181B&label=Star" alt="GitHub Stars" />
+  </a>
+  <a href="https://github.com/shubhransh-gupta/AuraDesk/network/members">
+    <img src="https://img.shields.io/github/forks/shubhransh-gupta/AuraDesk?style=for-the-badge&logo=github&color=E2E8F0&labelColor=18181B&label=Fork" alt="GitHub Forks" />
+  </a>
+  <a href="https://github.com/shubhransh-gupta/AuraDesk/releases/latest">
+    <img src="https://img.shields.io/github/v/release/shubhransh-gupta/AuraDesk?style=for-the-badge&color=FFFFFF&labelColor=18181B" alt="Latest Release" />
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-FFFFFF?style=for-the-badge&labelColor=18181B" alt="MIT License" />
   </a>
   <a href="https://shubhransh-gupta.github.io/AuraDesk/">
     <img src="https://img.shields.io/badge/Website-Live_4K_Showcase-E2E8F0?style=for-the-badge&logo=safari&logoColor=000000" alt="Live Website" />
   </a>
   <img src="https://img.shields.io/badge/macOS-14.0%2B_(Sonoma_%7C_Sequoia_%7C_Tahoe)-18181B?style=for-the-badge&logo=apple&logoColor=white" alt="macOS 14+" />
-  <img src="https://img.shields.io/badge/License-MIT_(100%25_Free)-18181B?style=for-the-badge" alt="MIT License" />
 </p>
 
 **AuraDesk Pro** is a 100% free, open-source native macOS application built with Swift and SwiftUI that brings **4K 60/240fps live video wallpapers** to all three macOS surfaces simultaneously:
