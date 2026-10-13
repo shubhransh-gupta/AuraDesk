@@ -17,7 +17,8 @@ public final class LockScreenManager: ObservableObject {
         "\(userManifestDir)/entries.json"
     }
 
-    // Legacy macOS (Sonoma 14) system-level Aerial directories:
+    // System bundled Aerial directories and entries:
+    private let systemExtensionEntriesPath = "/System/Library/ExtensionKit/Extensions/WallpaperAerialsExtension.appex/Contents/Resources/entries.json"
     private let systemCustomerDir = "/Library/Application Support/com.apple.idleassetsd/Customer"
     private let systemAerials4KDir = "/Library/Application Support/com.apple.idleassetsd/Customer/4KSDR240FPS"
     private let systemEntriesPath = "/Library/Application Support/com.apple.idleassetsd/Customer/entries.json"
@@ -48,8 +49,8 @@ public final class LockScreenManager: ObservableObject {
         var nameMap: [String: (name: String, category: String)] = [:]
         let localizedStrings = loadLocalizedStrings()
 
-        // 1. Try user entries.json first, then fall back to system entries.json
-        let manifestPaths = [userEntriesPath, systemEntriesPath]
+        // 1. Scan user entries, system extension bundled entries, and customer entries
+        let manifestPaths = [userEntriesPath, systemExtensionEntriesPath, systemEntriesPath]
         for path in manifestPaths {
             if let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
                let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
@@ -115,29 +116,29 @@ public final class LockScreenManager: ObservableObject {
             }
         }
 
-        // 4. If still empty, add default candidate slots from nameMap
-        if targets.isEmpty {
-            let defaults = [
-                "4207734D-74FE-4F92-B5E1-6EC8DEE24A15", // Golden Gate Sunset
-                "9680B8EB-CE2A-4395-AF41-402801F4D6A6", // Dubai
-                "6511D2B5-E185-4886-9505-B4004E920D27", // Golden Gate Day
-                "3FD9FD5C-6DC5-4362-9932-4087C942F1C5"  // Golden Gate Evening
-            ]
-            for id in defaults {
-                let info = nameMap[id] ?? ("macOS Aerial (\(id.prefix(8)))", "Aerial 4K")
-                let fullPath = (userAerialsDir as NSString).appendingPathComponent("\(id).mov")
-                let backupURL = backupDirectoryURL.appendingPathComponent("\(id).mov")
-                targets.append(
-                    AerialTargetAsset(
-                        id: id,
-                        name: info.name,
-                        category: info.category,
-                        filePath: fullPath,
-                        isDownloaded: false,
-                        hasBackup: fm.fileExists(atPath: backupURL.path)
-                    )
+        // 4. Always provide universal standard Aerial candidate slots from nameMap
+        let defaults = [
+            "4207734D-74FE-4F92-B5E1-6EC8DEE24A15", // Golden Gate Sunset (Standard Default)
+            "9680B8EB-CE2A-4395-AF41-402801F4D6A6", // Dubai (Standard Customer)
+            "009BA758-7060-4479-8EE8-FB9B40C8FB97", // Korea and Japan Night
+            "29BDF297-EB43-403A-8719-A78DA11A2948", // San Francisco
+            "81CA5ACD-E682-4D8B-A948-0F147EB6ED4F"  // Yosemite
+        ]
+        for id in defaults where !seenIDs.contains(id) {
+            let info = nameMap[id] ?? ("macOS Aerial (\(id.prefix(8)))", "Aerial 4K")
+            let fullPath = (userAerialsDir as NSString).appendingPathComponent("\(id).mov")
+            let backupURL = backupDirectoryURL.appendingPathComponent("\(id).mov")
+            seenIDs.insert(id)
+            targets.append(
+                AerialTargetAsset(
+                    id: id,
+                    name: info.name,
+                    category: info.category,
+                    filePath: fullPath,
+                    isDownloaded: false,
+                    hasBackup: fm.fileExists(atPath: backupURL.path)
                 )
-            }
+            )
         }
 
         targets.sort { $0.name < $1.name }
@@ -246,27 +247,32 @@ public final class LockScreenManager: ObservableObject {
                 try? fm.removeItem(atPath: userTargetMovPath)
             }
             try fm.copyItem(atPath: preparedMovURL.path, toPath: userTargetMovPath)
-            try? fm.setAttributes([.posixPermissions: 0o600], ofItemAtPath: userTargetMovPath)
+            // Ensure file has world-readable permissions (0o644) so wallpaper daemons running under system/sandbox contexts can read it
+            try? fm.setAttributes([.posixPermissions: 0o644], ofItemAtPath: userTargetMovPath)
 
             // 3. If system directory also exists and is writable, copy there too
             if fm.fileExists(atPath: systemAerials4KDir) && fm.isWritableFile(atPath: systemAerials4KDir) {
                 let sysDest = "\(systemAerials4KDir)/\(targetID).mov"
                 if fm.fileExists(atPath: sysDest) { try? fm.removeItem(atPath: sysDest) }
                 try? fm.copyItem(atPath: preparedMovURL.path, toPath: sysDest)
+                try? fm.setAttributes([.posixPermissions: 0o644], ofItemAtPath: sysDest)
             }
 
             // 4. Configure Index.plist for Lock Screen & Screen Saver
             statusMessage = "Configuring macOS Lock Screen preference..."
             try updateWallpaperStoreIndexPlist(assetID: targetID, alsoSetDesktop: alsoSetNativeDesktop)
 
-            // 5. Restart macOS wallpaper daemons cleanly
+            // 5. Ensure macOS screensaver defaults point to WallpaperAerialsExtension
+            configureSystemScreensaverDefaults()
+
+            // 6. Restart macOS wallpaper daemons cleanly
             statusMessage = "Refreshing native macOS Lock Screen & Screen Saver..."
             restartWallpaperDaemons()
 
             refreshTargets()
             let targetName = availableTargets.first(where: { $0.id == targetID })?.name ?? targetID
             statusIsError = false
-            statusMessage = "Active on Lock Screen: '\(item.title)' (via \(targetName))"
+            statusMessage = "Active on Lock Screen & Saver: '\(item.title)' (via \(targetName))"
         } catch {
             statusIsError = true
             statusMessage = "Lock Screen error: \(error.localizedDescription)"
@@ -413,15 +419,48 @@ public final class LockScreenManager: ObservableObject {
         return outputURL
     }
 
+    private func configureSystemScreensaverDefaults() {
+        let screensaverProcess = Process()
+        screensaverProcess.executableURL = URL(fileURLWithPath: "/usr/bin/defaults")
+        screensaverProcess.arguments = [
+            "-currentHost", "write", "com.apple.screensaver",
+            "moduleDict", "-dict",
+            "moduleName", "WallpaperAerialsExtension",
+            "path", "/System/Library/ExtensionKit/Extensions/WallpaperAerialsExtension.appex",
+            "type", "0"
+        ]
+        try? screensaverProcess.run()
+        screensaverProcess.waitUntilExit()
+
+        // Also ensure idleTime is configured if zero or missing
+        let idleCheckProcess = Process()
+        idleCheckProcess.executableURL = URL(fileURLWithPath: "/usr/bin/defaults")
+        idleCheckProcess.arguments = [
+            "-currentHost", "write", "com.apple.screensaver", "idleTime", "-int", "300"
+        ]
+        try? idleCheckProcess.run()
+        idleCheckProcess.waitUntilExit()
+    }
+
     private func updateWallpaperStoreIndexPlist(assetID: String, alsoSetDesktop: Bool) throws {
         let storeDir = (NSHomeDirectory() as NSString).appendingPathComponent("Library/Application Support/com.apple.wallpaper/Store")
         let plistPath = (storeDir as NSString).appendingPathComponent("Index.plist")
         let fm = FileManager.default
 
-        guard fm.fileExists(atPath: plistPath),
-              let rawData = try? Data(contentsOf: URL(fileURLWithPath: plistPath)),
-              var root = try PropertyListSerialization.propertyList(from: rawData, options: .mutableContainersAndLeaves, format: nil) as? [String: Any] else {
-            return
+        try? fm.createDirectory(atPath: storeDir, withIntermediateDirectories: true)
+
+        var root: [String: Any]
+        if fm.fileExists(atPath: plistPath),
+           let rawData = try? Data(contentsOf: URL(fileURLWithPath: plistPath)),
+           let parsed = try? PropertyListSerialization.propertyList(from: rawData, options: .mutableContainersAndLeaves, format: nil) as? [String: Any] {
+            root = parsed
+        } else {
+            root = [
+                "AllSpacesAndDisplays": [:] as [String: Any],
+                "SystemDefault": [:] as [String: Any],
+                "Displays": [:] as [String: Any],
+                "Spaces": [:] as [String: Any]
+            ]
         }
 
         let configDict: [String: Any] = ["assetID": assetID]
@@ -480,6 +519,21 @@ public final class LockScreenManager: ObservableObject {
                 }
             }
             root["Displays"] = displays
+        }
+
+        // Also update any explicit spaces configurations in Spaces
+        if var spaces = root["Spaces"] as? [String: Any] {
+            for (spaceKey, val) in spaces {
+                if var spaceDict = val as? [String: Any] {
+                    spaceDict["Idle"] = aerialSection
+                    if alsoSetDesktop {
+                        spaceDict["Desktop"] = aerialSection
+                        spaceDict["Type"] = "linked"
+                    }
+                    spaces[spaceKey] = spaceDict
+                }
+            }
+            root["Spaces"] = spaces
         }
 
         let updatedData = try PropertyListSerialization.data(fromPropertyList: root, format: .binary, options: 0)

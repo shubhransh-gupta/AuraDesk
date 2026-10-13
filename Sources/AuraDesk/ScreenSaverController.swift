@@ -117,8 +117,16 @@ public final class ScreenSaverController: ObservableObject {
     public static let shared = ScreenSaverController()
 
     @Published public private(set) var isActive: Bool = false
-    @Published public var idleTimeoutMinutes: Double = 0
-    @Published public var showClockOnScreenSaver: Bool = true
+    @Published public var idleTimeoutMinutes: Double = 5.0 {
+        didSet {
+            UserDefaults.standard.set(idleTimeoutMinutes, forKey: "auradesk.screenSaver.idleTimeoutMinutes")
+        }
+    }
+    @Published public var showClockOnScreenSaver: Bool = true {
+        didSet {
+            UserDefaults.standard.set(showClockOnScreenSaver, forKey: "auradesk.screenSaver.showClock")
+        }
+    }
 
     private var windows: [ScreenSaverWindow] = []
     private var queuePlayer: AVQueuePlayer?
@@ -127,6 +135,18 @@ public final class ScreenSaverController: ObservableObject {
     private var activeVideoURL: URL?
 
     private init() {
+        let defaults = UserDefaults.standard
+        if defaults.object(forKey: "auradesk.screenSaver.idleTimeoutMinutes") != nil {
+            self.idleTimeoutMinutes = defaults.double(forKey: "auradesk.screenSaver.idleTimeoutMinutes")
+        } else {
+            self.idleTimeoutMinutes = 5.0
+        }
+        if defaults.object(forKey: "auradesk.screenSaver.showClock") != nil {
+            self.showClockOnScreenSaver = defaults.bool(forKey: "auradesk.screenSaver.showClock")
+        } else {
+            self.showClockOnScreenSaver = true
+        }
+
         startIdleMonitor()
     }
 

@@ -69,6 +69,16 @@ fi
 # Strip quarantine attribute to avoid Gatekeeper popups
 xattr -cr "$TARGET_APP" 2>/dev/null || true
 
+# Initialize macOS Aerial & Wallpaper pipeline directories
+AERIAL_DIR="$HOME/Library/Application Support/com.apple.wallpaper/aerials/videos"
+STORE_DIR="$HOME/Library/Application Support/com.apple.wallpaper/Store"
+mkdir -p "$AERIAL_DIR" "$STORE_DIR" 2>/dev/null || true
+chmod 755 "$AERIAL_DIR" 2>/dev/null || true
+
+# Pre-configure macOS screensaver extension defaults
+defaults -currentHost write com.apple.screensaver moduleDict -dict moduleName "WallpaperAerialsExtension" path "/System/Library/ExtensionKit/Extensions/WallpaperAerialsExtension.appex" type 0 2>/dev/null || true
+defaults -currentHost write com.apple.screensaver idleTime -int 300 2>/dev/null || true
+
 echo ""
 echo -e "${GREEN}✔ AuraDesk Pro installed successfully into /Applications!${RESET}"
 echo ""
