@@ -40,9 +40,34 @@
 
 ## ✦ Quick Install
 
-1. **[Download `AuraDesk-macOS.zip` from the Latest Release](https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip)**
-2. Unzip and move **`AuraDesk.app`** to your `/Applications` folder.
-3. Launch **AuraDesk.app** and click **`Apply All 3`** on any 4K wallpaper in the **Top 4K Wallpapers** workspace.
+### Method 1: One-Line Terminal Installer (Fastest)
+
+Run this single command in Terminal to download, unpack into `/Applications`, and launch immediately:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/shubhransh-gupta/AuraDesk/main/install.sh | bash
+```
+
+### Method 2: Homebrew Cask
+
+Install via the official tap:
+
+```bash
+brew install --cask shubhransh-gupta/tap/auradesk
+```
+
+Or tap once and install:
+
+```bash
+brew tap shubhransh-gupta/tap
+brew install --cask auradesk
+```
+
+### Method 3: Direct Download
+
+1. **[Download `AuraDesk-macOS.zip` from Latest Release](https://github.com/shubhransh-gupta/AuraDesk/releases/latest/download/AuraDesk-macOS.zip)**
+2. Unzip and drag **`AuraDesk.app`** to your `/Applications` folder.
+3. Open **AuraDesk** and apply any of the 350+ 4K presets in one click.
 
 ---
 

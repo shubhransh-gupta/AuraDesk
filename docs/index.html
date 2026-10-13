@@ -290,6 +290,28 @@
               <span>GitHub v1.2.0</span>
             </a>
           </div>
+
+          <!-- 1-Line Terminal Install Options (curl & brew) -->
+          <div class="pt-2 space-y-2">
+            <div class="p-2.5 rounded-[6px] bg-black/90 border border-white/25 flex items-center justify-between gap-3 text-xs font-mono shadow-[0_0_15px_rgba(255,255,255,0.08)]">
+              <div class="flex items-center gap-2 overflow-x-auto text-zinc-300">
+                <span class="text-white select-none">⚡</span>
+                <span id="cmd-curl" class="text-white">curl -fsSL https://raw.githubusercontent.com/shubhransh-gupta/AuraDesk/main/install.sh | bash</span>
+              </div>
+              <button onclick="copyCommand('cmd-curl', this)" class="shrink-0 px-2.5 py-1 text-[10px] uppercase font-bold rounded bg-white text-black hover:bg-zinc-200 transition shadow-[0_0_8px_rgba(255,255,255,0.4)]">
+                Copy
+              </button>
+            </div>
+            <div class="p-2.5 rounded-[6px] bg-black/75 border border-white/20 flex items-center justify-between gap-3 text-xs font-mono">
+              <div class="flex items-center gap-2 overflow-x-auto text-zinc-300">
+                <span class="text-white select-none">🍺</span>
+                <span id="cmd-brew" class="text-white">brew install --cask shubhransh-gupta/tap/auradesk</span>
+              </div>
+              <button onclick="copyCommand('cmd-brew', this)" class="shrink-0 px-2.5 py-1 text-[10px] uppercase font-bold rounded bg-white/20 text-white hover:bg-white hover:text-black transition">
+                Copy
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Right: Animated Hardware Display with Live Playing 4K Video Inset -->
@@ -1067,6 +1089,20 @@
     }
 
     requestAnimationFrame(animateSky);
+
+    // Copy to clipboard helper
+    function copyCommand(elementId, btn) {
+      const text = document.getElementById(elementId).innerText.trim();
+      navigator.clipboard.writeText(text).then(() => {
+        const oldText = btn.innerText;
+        btn.innerText = "COPIED!";
+        btn.classList.add("bg-emerald-400", "text-black");
+        setTimeout(() => {
+          btn.innerText = oldText;
+          btn.classList.remove("bg-emerald-400", "text-black");
+        }, 2000);
+      });
+    }
   </script>
 </body>
 </html>
